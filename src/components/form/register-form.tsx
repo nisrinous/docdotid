@@ -1,8 +1,10 @@
+import React from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { authRegisterSchema } from "@/lib/validation/auth";
+import { emailRegisterSchema } from "@/lib/validation/auth";
+import { registerEmail } from "@/lib/db";
 import {
   Form,
   FormControl,
@@ -14,19 +16,27 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
-type Inputs = z.infer<typeof authRegisterSchema>;
+type Inputs = z.infer<typeof emailRegisterSchema>;
 
 const RegisterForm = () => {
+  const [isSending, setIsSending] = React.useState(false);
+
   const form = useForm<Inputs>({
-    resolver: zodResolver(authRegisterSchema),
+    resolver: zodResolver(emailRegisterSchema),
     defaultValues: {
-      name: "",
       email: "",
     },
   });
 
-  function onSubmit(formData: Inputs) {
-    console.log(formData);
+  async function onSubmit(formData: Inputs) {
+    try {
+      setIsSending(true);
+      await registerEmail(formData.email);
+    } catch (error) {
+      console.error("Error registering user:", error);
+    } finally {
+      setIsSending(false);
+    }
   }
 
   return (
@@ -36,19 +46,6 @@ const RegisterForm = () => {
           className="grid gap-4"
           onSubmit={(...args) => void form.handleSubmit(onSubmit)(...args)}
         >
-          <FormField
-            control={form.control}
-            name="name"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Full Name</FormLabel>
-                <FormControl>
-                  <Input type="text" placeholder="Full name" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
           <FormField
             control={form.control}
             name="email"
@@ -62,10 +59,8 @@ const RegisterForm = () => {
               </FormItem>
             )}
           />
-
-          <Button type="submit">
-            Register
-            <span className="sr-only">Register</span>
+          <Button type="submit" disabled={isSending} className="my-5 w-full">
+            Submit
           </Button>
         </form>
       </Form>

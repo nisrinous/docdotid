@@ -3,6 +3,7 @@ import RegisterForm from "@/components/form/register-form";
 import {
   Card,
   CardContent,
+  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
@@ -14,8 +15,8 @@ export default function Register() {
       <div className="h-screen flex flex-row gap-5 justify-center items-center">
         <div className="mx-auto lg:w-1/4 w-sm mb-10 md:mb-0">
           <Card>
-            <CardHeader className="space-y-1">
-              <CardTitle className="text-4xl text-center">Sign Up</CardTitle>
+            <CardHeader className="space-y-1 text-center">
+              <CardTitle className="text-4xl">Register</CardTitle>
             </CardHeader>
             <CardContent className="grid gap-4">
               <RegisterForm />
