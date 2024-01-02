@@ -51,3 +51,28 @@ export async function createUser(link: string, password: string) {
     throw error;
   }
 }
+
+export async function loginUser(email: string, password: string) {
+  try {
+    const response = await fetch(`${API_ENDPOINT}/auth/login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        email: email,
+        password: password,
+      }),
+    });
+
+    if (response.status === 200) {
+      toast.success("Log in successfull!");
+      router.push(`${APP_ENDPOINT}/`);
+      return response.json();
+    } else {
+      const errorData = await response.json();
+      throw new Error(errorData.message || "Unknown error");
+    }
+  } catch (error) {
+    toast.error("Error logging in:" + error);
+    throw error;
+  }
+}
