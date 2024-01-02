@@ -3,6 +3,10 @@ import { NextResponse, type NextRequest } from "next/server";
 export function middleware(request: NextRequest) {
   const role = request.cookies.get("role")?.value;
 
+  if (request.nextUrl.pathname === "/") {
+    return NextResponse.next();
+  }
+
   if (request.nextUrl.pathname == "/" && role === "admin") {
     return NextResponse.redirect(request.nextUrl.origin + "/admin/home");
   }
