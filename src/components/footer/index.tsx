@@ -64,18 +64,18 @@ function InstagramIcon(
 }
 const Footer = () => {
   return (
-    <div className="bg-[#5CACE5] flex flex-row justify-center text-white">
-      <div className="flex flex-col p-10">
-        <p className="pb-1 font-black text-2xl">DOCDOT.ID</p>
+    <div className="bg-[#5CACE5] flex sm:flex-row justify-center text-white flex-col">
+      <div className="flex flex-col m-3 sm:m-10">
+        <p className="pb-1 font-black text-3xl">DOCDOT.ID</p>
         <ul>
-          <li className="pb-1">About Us</li>
-          <li className="pb-1">FAQ</li>
-          <li className="pb-1">Terms and conditions</li>
-          <li className="pb-1">Privacy Policy</li>
-          <li className="pb-1">Corporate Partnership</li>
+          <li className="pb-2">About Us</li>
+          <li className="pb-2">FAQ</li>
+          <li className="pb-2">Terms and conditions</li>
+          <li className="pb-2">Privacy Policy</li>
+          <li>Corporate Partnership</li>
         </ul>
       </div>
-      <div className="flex flex-col p-10">
+      <div className="flex flex-col m-3 sm:m-10">
         <p className="pb-2 font-black text-2xl">Consumer Complaints Service</p>
         <ul>
           <li className="pb-3">
@@ -90,7 +90,7 @@ const Footer = () => {
           </li>
         </ul>
       </div>
-      <div className="flex flex-col p-10">
+      <div className="flex flex-col m-3 sm:m-10">
         <p className="pb-2 font-black text-2xl">Social Media</p>
         <div className="flex flex-row pb-2">
           <ul className="flex flex-col">
