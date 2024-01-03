@@ -17,7 +17,7 @@ const ProductCategories = () => {
             >
               <CardContent className="p-1 flex flex-col items-center justify-center">
                 <img
-                  src={`promo` + (index + 1) + `.svg`}
+                  src={`productcategory${index + 1}.svg`}
                   className="h-full rounded-full border-[1px]"
                 ></img>
               </CardContent>
