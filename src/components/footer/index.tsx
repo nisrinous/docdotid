@@ -64,7 +64,7 @@ function InstagramIcon(
 }
 const Footer = () => {
   return (
-    <div className="bg-[#5CACE5] flex sm:flex-row justify-center text-white flex-col">
+    <div className="bg-sky-700 flex sm:flex-row justify-center text-white flex-col">
       <div className="flex flex-col m-3 sm:m-10">
         <p className="pb-1 font-black text-3xl">DOCDOT.ID</p>
         <ul>

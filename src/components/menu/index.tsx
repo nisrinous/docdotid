@@ -45,14 +45,14 @@ const Menu = () => {
         <ul className="flex flex-row gap-5 ">
           <li
             className={`text-sm font-normal ${
-              isActive("/") ? "text-[#5CCCE5]" : "hover:text-[#5CACE5]"
+              isActive("/") ? "text-sky-700" : "hover:text-[#5CACE5]"
             }`}
           >
             <Link href="/">Home</Link>
           </li>
           <li
             className={`text-sm font-normal ${
-              isActive("/products") ? "text-[#5CCCE5]" : "hover:text-[#5CACE5]"
+              isActive("/products") ? "text-sky-700" : "hover:text-[#5CACE5]"
             }`}
           >
             <Link href="/products">Our Products</Link>
@@ -60,7 +60,7 @@ const Menu = () => {
           <li
             className={`text-sm font-normal ${
               isActive("/telemedicines")
-                ? "text-[#5CCCE5]"
+                ? "text-sky-700"
                 : "hover:text-[#5CACE5]"
             }`}
           >
