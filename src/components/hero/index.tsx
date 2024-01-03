@@ -1,5 +1,3 @@
-import { GiMedicines } from "react-icons/gi";
-import { FaUserDoctor } from "react-icons/fa6";
 import Link from "next/link";
 
 const Hero = () => {
@@ -18,7 +16,7 @@ const Hero = () => {
         <div className="px-10 flex flex-row justify-center items-center gap-20 md:justify-start md:items-start md:gap-10">
           <Link href="/telemedicines">
             <div className="flex flex-col justify-center items-center">
-              <FaUserDoctor size={60} />
+              <img src="Phonendoscope.svg" className="h-20"></img>
               <p className="leading-7 [&:not(:first-child)]:mt-6">
                 Telemedicine
               </p>
@@ -26,7 +24,7 @@ const Hero = () => {
           </Link>
           <Link href="/products">
             <div className="flex flex-col justify-center items-center">
-              <GiMedicines size={60} />
+              <img src="Caduceus.svg" className="h-20"></img>
               <p className="leading-7 [&:not(:first-child)]:mt-6">
                 Shop Wellness Essentials
               </p>
