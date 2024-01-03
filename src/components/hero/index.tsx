@@ -34,7 +34,7 @@ const Hero = () => {
           </Link>
         </div>
       </div>
-      <img src="Doctors-pana.svg" className="w-1/2 px-10"></img>
+      <img src="Doctors-pana.svg" className="hidden md:block w-1/2 px-10"></img>
     </div>
   );
 };
