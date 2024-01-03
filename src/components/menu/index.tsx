@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { RxHamburgerMenu } from "react-icons/rx";
+import CartIcon from "../cart/cart-icon";
 
 const Menu = () => {
   const router = useRouter();
@@ -41,33 +42,36 @@ const Menu = () => {
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-      <div className="hidden md:flex flex-row gap-10 items-center">
-        <ul className="flex flex-row gap-5 ">
-          <li
-            className={`text-sm font-normal ${
-              isActive("/") ? "text-sky-700" : "hover:text-[#5CACE5]"
-            }`}
-          >
-            <Link href="/">Home</Link>
-          </li>
-          <li
-            className={`text-sm font-normal ${
-              isActive("/products") ? "text-sky-700" : "hover:text-[#5CACE5]"
-            }`}
-          >
-            <Link href="/products">Our Products</Link>
-          </li>
-          <li
-            className={`text-sm font-normal ${
-              isActive("/telemedicines")
-                ? "text-sky-700"
-                : "hover:text-[#5CACE5]"
-            }`}
-          >
-            <Link href="/telemedicines">Telemedicine</Link>
-          </li>
-        </ul>
-        <Button className="px-10">Login</Button>
+      <div className="flex flex-row justify-center items-center gap-5">
+        <div className="hidden md:flex flex-row gap-10 items-center">
+          <ul className="flex flex-row gap-5 ">
+            <li
+              className={`text-sm font-normal ${
+                isActive("/") ? "text-sky-700" : "hover:text-[#5CACE5]"
+              }`}
+            >
+              <Link href="/">Home</Link>
+            </li>
+            <li
+              className={`text-sm font-normal ${
+                isActive("/products") ? "text-sky-700" : "hover:text-[#5CACE5]"
+              }`}
+            >
+              <Link href="/products">Our Products</Link>
+            </li>
+            <li
+              className={`text-sm font-normal ${
+                isActive("/telemedicines")
+                  ? "text-sky-700"
+                  : "hover:text-[#5CACE5]"
+              }`}
+            >
+              <Link href="/telemedicines">Telemedicine</Link>
+            </li>
+          </ul>
+          <Button className="px-10">Login</Button>
+        </div>
+        <CartIcon />
       </div>
     </>
   );
