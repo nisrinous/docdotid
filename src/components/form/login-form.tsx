@@ -36,8 +36,6 @@ const LoginForm = () => {
       await loginUser(formData.email, formData.password);
     } catch (error) {
       console.error("Error registering user:", error);
-    } finally {
-      setIsSending(false);
     }
   }
 
