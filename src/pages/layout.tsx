@@ -10,8 +10,7 @@ type Layout = {
 export default function Layout({ children }: Layout) {
   const router = useRouter();
 
-  if (router.pathname.includes("/auth/login")) return children;
-  if (router.pathname.includes("/auth/register")) return children;
+  if (router.pathname.includes("/auth")) return children;
 
   return (
     <>

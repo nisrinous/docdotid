@@ -34,8 +34,6 @@ const RegisterForm = () => {
       await registerEmail(formData.email);
     } catch (error) {
       console.error("Error registering user:", error);
-    } finally {
-      setIsSending(false);
     }
   }
 
