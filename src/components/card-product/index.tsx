@@ -5,7 +5,18 @@ import { useState } from "react";
 
 const CardProduct = () => {
   const [addedToCart, setAddedToCart] = useState<boolean>(false);
+  const [counter, setCounter] = useState<number>(1);
 
+  const increment = () => {
+    setCounter(counter + 1);
+  };
+  const decrement = () => {
+    setCounter(counter - 1);
+  };
+
+  const handleAddToCart = () => {
+    setAddedToCart(true);
+  };
   return (
     <>
       <Card className="p-2 w-40 flex flex-col justify-between">
@@ -19,13 +30,26 @@ const CardProduct = () => {
               Rp 13.000
             </p>
           </Link>
-          <Button
-            disabled={addedToCart}
-            className="h-8 px-6"
-            onClick={() => setAddedToCart(true)}
-          >
-            {addedToCart ? "Added" : "Add to cart"}
-          </Button>
+          {!addedToCart && (
+            <Button
+              disabled={addedToCart}
+              className="h-8 px-6"
+              onClick={handleAddToCart}
+            >
+              Add to cart
+            </Button>
+          )}
+          {addedToCart && (
+            <div className="flex flex-row items-center justify-center gap-2">
+              <Button onClick={decrement} className="h-6 w-6 p-0">
+                -
+              </Button>
+              <p className="border-b-2 px-2">{counter}</p>
+              <Button onClick={increment} className="h-6 w-6 p-0">
+                +
+              </Button>
+            </div>
+          )}
         </CardFooter>
       </Card>
     </>
