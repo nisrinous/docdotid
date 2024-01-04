@@ -21,8 +21,9 @@ type Inputs = z.infer<typeof createAccountSchema>;
 
 export function PasswordForm() {
   const router = useRouter();
+  const email = router.query.email as string;
+  const code = router.query.code as string;
 
-  const { link } = router.query;
   const [isSending, setIsSending] = React.useState(false);
 
   const form = useForm<Inputs>({
@@ -36,11 +37,9 @@ export function PasswordForm() {
   async function onSubmit(formData: Inputs) {
     try {
       setIsSending(true);
-      await createUser(formData.password, link as string);
+      await createUser(formData.password, email, code);
     } catch (error) {
-      console.error("Error registering user:", error);
-    } finally {
-      setIsSending(false);
+      console.error("Error creating account:", error);
     }
   }
 

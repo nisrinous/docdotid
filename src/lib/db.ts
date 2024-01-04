@@ -1,4 +1,4 @@
-import router from "next/router";
+import router, { useRouter } from "next/router";
 import toast from "react-hot-toast";
 
 const API_ENDPOINT = "http://localhost:8080";
@@ -30,24 +30,30 @@ export async function registerEmail(email: string) {
   }
 }
 
-export async function createUser(link: string, password: string) {
+export async function createUser(
+  password: string,
+  email: string,
+  code: string
+) {
   try {
-    const response = await fetch(`${API_ENDPOINT}/auth/verify/${link}`, {
+    fetch(`${API_ENDPOINT}/auth/verify/?email=${email}&code=${code}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         password: password,
       }),
-    });
-
-    if (response.status === 201) {
-      toast.success("Account registered successfully");
-      router.push(`${APP_ENDPOINT}/auth/login`);
-      return response.json();
-    } else {
-      const errorData = await response.json();
-      throw new Error(errorData.message || "Unknown error");
-    }
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.data.id) {
+          toast.success("Account registered successfully");
+          router.push(`${APP_ENDPOINT}/auth/login`);
+          console.log(data.data.id);
+          return data.data.id;
+        } else {
+          throw new Error(data.message || "Unknown error");
+        }
+      });
   } catch (error) {
     toast.error("Error creating account:" + error);
     throw error;
