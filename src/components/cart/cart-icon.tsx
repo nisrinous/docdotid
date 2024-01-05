@@ -2,7 +2,7 @@ import { FaShoppingCart } from "react-icons/fa";
 import { useState } from "react";
 
 const CartIcon = () => {
-  const [cartItemsCount, setCartItemsCount] = useState(3);
+  const [cartItemsCount, setCartItemsCount] = useState(0);
 
   return (
     <div className="relative">

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Button } from "../ui/button";
 
 const CartSticky = () => {
-  const [cartItemsCount, setCartItemsCount] = useState(3);
+  const [cartItemsCount, setCartItemsCount] = useState(0);
 
   return (
     <>
