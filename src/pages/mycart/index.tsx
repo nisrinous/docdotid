@@ -1,4 +1,5 @@
 import CartItemCard from "@/components/card/cart-item-card";
+import DeliveryCourierCard from "@/components/card/delivery-courier-card";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -27,8 +28,12 @@ export default function MyCart() {
               <CartItemCard quantity={0} />
             </Card>
           </div>
+          <div className="flex flex-col gap-3 mb-10">
+            <DeliveryCourierCard />
+          </div>
+
           <Link href="/products">
-            <Button className="w-full" variant="ghost">
+            <Button className="w-full" variant="outline">
               + Add other item
             </Button>
           </Link>
