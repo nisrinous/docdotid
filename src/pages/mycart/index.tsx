@@ -1,5 +1,8 @@
 import CartItemCard from "@/components/card/cart-item-card";
+import { Button } from "@/components/ui/button";
+import { Card, CardHeader } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
+import Link from "next/link";
 
 export default function MyCart() {
   return (
@@ -16,10 +19,17 @@ export default function MyCart() {
             </div>
           </div>
           <div className="py-5 flex flex-col gap-3">
-            <CartItemCard quantity={4} />
-            <CartItemCard quantity={6} />
+            <Card className="px-5 w-full flex flex-col justify-start items-start gap-1">
+              <CardHeader className="p-0 pb-2 w-full flex flex-row items-center justify-between border-b-2">
+                <h3 className="text-lg mt-3">Pharmacy Name</h3>
+              </CardHeader>
+              <CartItemCard quantity={2} />
+              <CartItemCard quantity={0} />
+            </Card>
           </div>
-          <p></p>
+          <Link href="/products">
+            <Button className="w-full">+ Add other item</Button>
+          </Link>
         </div>
         <div className="hidden md:block md:col-span-1">
           <h3 className="scroll-m-20 text-xl md:text-2xl border-b-2 pb-2">
