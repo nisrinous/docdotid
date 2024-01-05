@@ -1,11 +1,11 @@
 import Link from "next/link";
 import { Card, CardContent, CardFooter } from "../ui/card";
 import { Button } from "../ui/button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const CardProduct = () => {
   const [addedToCart, setAddedToCart] = useState<boolean>(false);
-  const [counter, setCounter] = useState<number>(1);
+  const [counter, setCounter] = useState<number>(0);
 
   const increment = () => {
     setCounter(counter + 1);
@@ -16,7 +16,15 @@ const CardProduct = () => {
 
   const handleAddToCart = () => {
     setAddedToCart(true);
+    increment();
   };
+
+  useEffect(() => {
+    if (counter === 0) {
+      setAddedToCart(false);
+    }
+  }, [counter]);
+
   return (
     <>
       <Card className="p-2 w-40 flex flex-col justify-between">
