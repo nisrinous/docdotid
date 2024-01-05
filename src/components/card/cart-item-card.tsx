@@ -23,7 +23,7 @@ const CartItemCard = ({ quantity }: { quantity: number }) => {
             <p className="text-zinc-600 leading-none text-xs">Product Price</p>
           </div>
           <div className="flex flex-col justify-start items-start p-0">
-            <ManageQuantityButton counter={quantity} />
+            <ManageQuantityButton quantity={quantity} />
           </div>
         </div>
         <Dialog>

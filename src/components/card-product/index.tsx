@@ -2,7 +2,6 @@ import Link from "next/link";
 import { Card, CardContent, CardFooter } from "../ui/card";
 import { Button } from "../ui/button";
 import { useEffect, useState } from "react";
-import ManageQuantityButton from "../button/manage-quantity-button";
 
 const CardProduct = () => {
   const [addedToCart, setAddedToCart] = useState<boolean>(false);
@@ -10,6 +9,9 @@ const CardProduct = () => {
 
   const increment = () => {
     setCounter(counter + 1);
+  };
+  const decrement = () => {
+    setCounter(counter - 1);
   };
 
   const handleAddToCart = () => {
@@ -45,7 +47,17 @@ const CardProduct = () => {
               Add to cart
             </Button>
           )}
-          {addedToCart && <ManageQuantityButton counter={counter} />}
+          {addedToCart && (
+            <div className="flex flex-row items-center justify-center gap-2">
+              <Button onClick={decrement} className="h-6 w-6 p-0">
+                -
+              </Button>
+              <p className="border-b-2 px-2">{counter}</p>
+              <Button onClick={increment} className="h-6 w-6 p-0">
+                +
+              </Button>
+            </div>
+          )}
         </CardFooter>
       </Card>
     </>
