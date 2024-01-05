@@ -1,5 +1,6 @@
 import CartItemCard from "@/components/card/cart-item-card";
 import DeliveryCourierCard from "@/components/card/delivery-courier-card";
+import ShippingAddressCard from "@/components/card/shipping-address-card";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader } from "@/components/ui/card";
 // import { Checkbox } from "@/components/ui/checkbox";
@@ -18,6 +19,9 @@ export default function MyCart() {
                 Select All Items
               </label>
             </div> */}
+          </div>
+          <div className="mt-5">
+            <ShippingAddressCard />
           </div>
           <div className="py-5 flex flex-col gap-3">
             <Card className="px-5 w-full flex flex-col justify-start items-start gap-1">
