@@ -60,7 +60,7 @@ export default function MyCart() {
             </div>
           </div>
           <Link href="/products">
-            <Button className="w-full my-10 h-12 px-0 mx-0">Checkout</Button>
+            <Button className="w-full my-5 h-12 px-0 mx-0">Checkout</Button>
           </Link>
         </div>
       </div>

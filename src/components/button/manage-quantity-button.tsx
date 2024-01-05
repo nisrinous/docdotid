@@ -14,7 +14,7 @@ const ManageQuantityButton = ({ quantity }: { quantity: number }) => {
   return (
     <>
       {quantity > 0 && (
-        <div className="flex flex-row items-center justify-center gap-2 w-full">
+        <div className="flex flex-row justify-between gap-2 w-full">
           <Button onClick={decrement} className="h-6 w-6 p-0">
             -
           </Button>
@@ -25,8 +25,10 @@ const ManageQuantityButton = ({ quantity }: { quantity: number }) => {
         </div>
       )}
       {!(quantity > 0) && (
-        <div className="flex flex-row items-center justify-center gap-2 w-full">
-          <p className="px-5 text-zinc-400 leading-none text-xs">Sold out</p>
+        <div className="flex flex-row justify-start gap-2 w-full text-left">
+          <p className="p-0 md:px-5 text-zinc-400 leading-none text-xs text-left">
+            Sold out
+          </p>
         </div>
       )}
     </>
