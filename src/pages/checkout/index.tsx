@@ -1,6 +1,4 @@
 import PaymentMethodCard from "@/components/card/payment-method-card";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
 
 export default function MyCart() {
   return (
@@ -25,7 +23,7 @@ export default function MyCart() {
                 img_path="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Bank_Central_Asia.svg/440px-Bank_Central_Asia.svg.png"
               />
               <PaymentMethodCard
-                method="Bank Mandiri"
+                method="Mandiri"
                 img_path="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/Bank_Mandiri_logo_2016.svg/440px-Bank_Mandiri_logo_2016.svg.png"
               />
               <PaymentMethodCard
@@ -55,7 +53,7 @@ export default function MyCart() {
         </div>
         <div className="col-span-3 md:block md:col-span-1">
           <h3 className="scroll-m-20 text-xl md:text-2xl border-b-2 mt-1 mb-3 pb-5">
-            Purchase Summary
+            Summary
           </h3>
           <div className="flex flex-col gap-3">
             <div className="flex flex-row justify-between mt-2">

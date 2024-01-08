@@ -10,6 +10,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import Link from "next/link";
 
 const PaymentMethodCard = ({
   method,
@@ -43,9 +44,11 @@ const PaymentMethodCard = ({
 
         <DialogFooter>
           <DialogClose>
-            <Button type="submit" className="mt-10">
-              Pay with {method}
-            </Button>
+            <Link href="/checkout/payment">
+              <Button type="submit" className="mt-10">
+                Pay with {method}
+              </Button>
+            </Link>
           </DialogClose>
         </DialogFooter>
       </DialogContent>
