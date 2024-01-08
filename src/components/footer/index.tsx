@@ -81,7 +81,7 @@ const Footer = () => {
           <li className="pb-3">
             <p>PT Media Dokter Investama</p>
             <p>Jl. H.R. Rasuna Said Kav B32-33, Jakarta Selatan</p>
-            <p>help@halodoc.com / 021-5095-9900</p>
+            <p>help@doc.id / 021-5095-9900</p>
           </li>
           <li>
             <p>Direktorat Jenderal Perlindungan Konsumen dan Tertib Niaga</p>

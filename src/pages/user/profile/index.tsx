@@ -4,6 +4,13 @@ import axios from "axios";
 import { Button } from "@/components/ui/button";
 import { z } from "zod";
 import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const ProfileDataSchema = z.object({
   photo: z.string(),
@@ -91,7 +98,22 @@ const ProfilePage = () => {
           </label>
           <label>
             Gender:
-            <select
+            <Select>
+              <SelectTrigger>
+                <SelectValue placeholder="Select gender" />
+              </SelectTrigger>
+              <SelectContent className="items-center justify-center">
+                <SelectItem value="Male" className="p-2">
+                  {" "}
+                  <p className="ml-5">Male</p>
+                </SelectItem>
+                <SelectItem value="Female" className="p-2">
+                  {" "}
+                  <p>Female</p>
+                </SelectItem>
+              </SelectContent>
+            </Select>
+            {/* <select
               onChange={(e) =>
                 setUpdatedData({
                   ...updatedData,
@@ -101,7 +123,7 @@ const ProfilePage = () => {
             >
               <option value="male">Male</option>
               <option value="female">Female</option>
-            </select>
+            </select> */}
           </label>
           <label>
             Age:
@@ -142,7 +164,7 @@ const ProfilePage = () => {
             />
             <div className="text-red-500">{validationErrors.weight}</div>
           </label>
-          <Button onClick={handleUpdateProfile}>Update Profile</Button>
+          <Button onClick={handleUpdateProfile}>Save</Button>
         </div>
       </div>
     );
@@ -215,7 +237,7 @@ const ProfilePage = () => {
           />
           <div className="text-red-500">{validationErrors.weight}</div>
         </label>
-        <Button onClick={handleUpdateProfile}>Update Profile</Button>
+        <Button onClick={handleUpdateProfile}>Save</Button>
       </div>
     </div>
   );
