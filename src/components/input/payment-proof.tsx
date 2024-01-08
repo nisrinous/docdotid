@@ -12,11 +12,9 @@ import Link from "next/link";
 
 const UploadPaymentProof = () => {
   const [img, setImg] = useState<string>("");
-  const [isUploading, setIsUploading] = useState<boolean>(false);
+  const [isUploading, setIsUploading] = useState<boolean>(true);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setIsUploading(true);
-
     const files = e.target.files;
     if (!files) return;
 

@@ -1,14 +1,7 @@
 import OrderItemCard from "@/components/card/order-item-card";
 import UploadPaymentProof from "@/components/input/payment-proof";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-
-import { useRouter } from "next/router";
 
 export default function UploadProof() {
-  const router = useRouter();
-  const { method } = router.query;
   return (
     <>
       <div className="container my-10 grid grid-cols-1 grid-rows-2 md:grid-cols-3 md:grid-rows-1 gap-10 pb-5">
