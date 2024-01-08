@@ -11,40 +11,45 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 
-const PaymentMethodCard = ({ method }: { method: string }) => {
+const PaymentMethodCard = ({
+  method,
+  img_path,
+}: {
+  method: string;
+  img_path?: string;
+}) => {
   return (
-    <div className="px-10">
-      <h5 className="py-2">{method}</h5>
-
-      <Dialog>
-        <DialogTrigger asChild>
-          <CardHeader className="flex flex-row items-center p-1 w-full">
+    <Dialog>
+      <DialogTrigger asChild>
+        <Card className="mb-2 p-1">
+          <CardHeader className="flex flex-row items-center p-1 w-full gap-1">
+            <img src={img_path} className="mt-1 max-w-16 max-h-8 px-1"></img>
             <Button
-              variant="outline"
+              variant="link"
               className="text-base justify-start items-center py-0 w-full"
             >
               {method}
             </Button>
           </CardHeader>
-        </DialogTrigger>
-        <DialogContent className="w-[425px]">
-          <DialogHeader>
-            <DialogTitle>Pay with {method}?</DialogTitle>
-            <DialogDescription>
-              Make sure the order and payment method chosen are appropriate.
-            </DialogDescription>
-          </DialogHeader>
+        </Card>
+      </DialogTrigger>
+      <DialogContent className="w-[425px]">
+        <DialogHeader>
+          <DialogTitle>Pay with {method}?</DialogTitle>
+          <DialogDescription>
+            Make sure the order and payment method chosen are appropriate.
+          </DialogDescription>
+        </DialogHeader>
 
-          <DialogFooter>
-            <DialogClose>
-              <Button type="submit" className="mt-10">
-                Pay with {method}
-              </Button>
-            </DialogClose>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-    </div>
+        <DialogFooter>
+          <DialogClose>
+            <Button type="submit" className="mt-10">
+              Pay with {method}
+            </Button>
+          </DialogClose>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 };
 

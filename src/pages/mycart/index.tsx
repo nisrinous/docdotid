@@ -58,14 +58,16 @@ export default function MyCart() {
               <p className="text-zinc-600 leading-none text-sm">Rp total</p>
             </div>
             <div className="flex flex-row justify-between border-b-[1px] pb-3">
-              <p className="text-zinc-600 leading-none text-sm">Service fee</p>
+              <p className="text-zinc-600 leading-none text-sm">
+                Service charge 10%
+              </p>
               <p className="text-zinc-600 leading-none text-sm">Rp total</p>
             </div>
             <div className="flex flex-row justify-between py-5">
               <p className="text-zinc-600 leading-none text-base">
                 Total price
               </p>
-              <p className="leading-none text-base">Rp total</p>
+              <p className="leading-none text-base text-orange-600">Rp total</p>
             </div>
           </div>
           <Link href="/checkout">
