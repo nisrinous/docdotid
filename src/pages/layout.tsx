@@ -11,6 +11,7 @@ export default function Layout({ children }: Layout) {
   const router = useRouter();
 
   if (router.pathname.includes("/auth")) return children;
+  if (router.pathname.includes("/admin")) return children;
 
   return (
     <>
