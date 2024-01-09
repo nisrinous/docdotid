@@ -1,17 +1,22 @@
 import "@/styles/globals.css";
 import type { AppProps } from "next/app";
-import { Toaster } from "react-hot-toast";
-import Layout from "./layout";
+
 import { Provider } from "react-redux";
-import { store } from "@/store/store";
+import { store, persistor } from "@/store/store";
+import { PersistGate } from "redux-persist/integration/react";
+
+import Layout from "./layout";
+import { Toaster } from "react-hot-toast";
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <Provider store={store}>
-      <Layout>
-        <Component {...pageProps} />
-        <Toaster />
-      </Layout>
+      <PersistGate loading={null} persistor={persistor}>
+        <Layout>
+          <Component {...pageProps} />
+          <Toaster />
+        </Layout>
+      </PersistGate>
     </Provider>
   );
 }
