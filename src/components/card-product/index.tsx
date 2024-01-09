@@ -3,7 +3,7 @@ import { Card, CardContent, CardFooter } from "../ui/card";
 import { Button } from "../ui/button";
 import { useEffect, useState } from "react";
 
-const CardProduct = () => {
+const CardProduct = ({ productId }: { productId?: number }) => {
   const [addedToCart, setAddedToCart] = useState<boolean>(false);
   const [counter, setCounter] = useState<number>(0);
 
@@ -26,7 +26,7 @@ const CardProduct = () => {
   }, [counter]);
 
   return (
-    <>
+    <Link href={`/product/${productId}`}>
       <Card className="p-2 w-40 flex flex-col justify-between">
         <CardContent className="p-1 flex flex-col items-center justify-center">
           <img src="Caduceus.svg" className="h-full"></img>
@@ -60,7 +60,7 @@ const CardProduct = () => {
           )}
         </CardFooter>
       </Card>
-    </>
+    </Link>
   );
 };
 

@@ -29,7 +29,7 @@ export default function MyCart() {
             <DeliveryCourierCard />
           </div>
 
-          <Link href="/products">
+          <Link href="/product">
             <Button className="w-full" variant="outline">
               + Add other item
             </Button>

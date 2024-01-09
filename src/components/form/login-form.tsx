@@ -55,6 +55,7 @@ const LoginForm = () => {
           const userRole = decodedToken.role;
           dispatch(setUserId(userId));
           dispatch(setUserRole(userRole));
+          console.log(decodedToken);
         } else {
           throw new Error("Invalid token format or missing user_id/role");
         }
