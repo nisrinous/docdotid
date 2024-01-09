@@ -32,7 +32,7 @@ const ProfileMenu = () => {
               <Link href="/">Profile</Link>
             </DropdownMenuItem>
             <DropdownMenuItem>
-              <Link href="/products">Purchase History</Link>
+              <Link href="/product">Purchase History</Link>
             </DropdownMenuItem>
 
             <DropdownMenuSeparator />

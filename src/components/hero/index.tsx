@@ -22,7 +22,7 @@ const Hero = () => {
               </p>
             </div>
           </Link>
-          <Link href="/products">
+          <Link href="/product">
             <div className="flex flex-col justify-center items-center">
               <img src="Caduceus.svg" className="h-20"></img>
               <p className="leading-7 [&:not(:first-child)]:mt-6">
