@@ -104,26 +104,13 @@ const ProfilePage = () => {
               </SelectTrigger>
               <SelectContent className="items-center justify-center">
                 <SelectItem value="Male" className="p-2">
-                  {" "}
                   <p className="ml-5">Male</p>
                 </SelectItem>
                 <SelectItem value="Female" className="p-2">
-                  {" "}
-                  <p>Female</p>
+                  <p className="ml-5">Female</p>
                 </SelectItem>
               </SelectContent>
             </Select>
-            {/* <select
-              onChange={(e) =>
-                setUpdatedData({
-                  ...updatedData,
-                  gender: e.target.value as "male" | "female",
-                })
-              }
-            >
-              <option value="male">Male</option>
-              <option value="female">Female</option>
-            </select> */}
           </label>
           <label>
             Age:
