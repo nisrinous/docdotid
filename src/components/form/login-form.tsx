@@ -18,7 +18,8 @@ import { Button } from "@/components/ui/button";
 import { PasswordInput } from "../input/password";
 
 import { useDispatch } from "react-redux";
-import { setToken } from "@/store/slices/authSlice";
+import { setToken, setUserId, setUserRole } from "@/store/slices/authSlice";
+import jwt from "jsonwebtoken";
 import toast from "react-hot-toast";
 
 type Inputs = z.infer<typeof LoginSchema>;
@@ -42,6 +43,21 @@ const LoginForm = () => {
       const token = data?.data?.access_token;
       if (token) {
         dispatch(setToken(token));
+
+        const decodedToken = jwt.decode(token);
+        if (
+          decodedToken &&
+          typeof decodedToken === "object" &&
+          "user_id" in decodedToken &&
+          "role" in decodedToken
+        ) {
+          const userId = decodedToken.user_id;
+          const userRole = decodedToken.role;
+          dispatch(setUserId(userId));
+          dispatch(setUserRole(userRole));
+        } else {
+          throw new Error("Invalid token format or missing user_id/role");
+        }
       } else {
         throw new Error(data?.message || "Unknown error");
       }

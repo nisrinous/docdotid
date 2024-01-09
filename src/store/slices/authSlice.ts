@@ -19,6 +19,11 @@ const authSlice = createSlice({
     setUserId(state, action: PayloadAction<number>) {
       state.userId = action.payload;
     },
+    deleteUser: (state) => {
+      state.token = "";
+      state.userRole = "";
+      state.userId = 0;
+    },
   },
 });
 

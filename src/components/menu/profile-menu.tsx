@@ -9,7 +9,17 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { FaRegUserCircle } from "react-icons/fa";
 
+import { useDispatch } from "react-redux";
+import { setToken } from "@/store/slices/authSlice";
+import { Button } from "../ui/button";
+
 const ProfileMenu = () => {
+  const dispatch = useDispatch();
+
+  const handleLogout = () => {
+    dispatch(setToken(""));
+  };
+
   return (
     <>
       <div className="">
@@ -27,8 +37,14 @@ const ProfileMenu = () => {
 
             <DropdownMenuSeparator />
             <DropdownMenuItem>
-              <Link href="/auth/login" className="font-semibold">
-                Logout
+              <Link href="/" className="font-semibold">
+                <Button
+                  variant="link"
+                  className="p-0 m-0"
+                  onClick={handleLogout}
+                >
+                  Logout
+                </Button>
               </Link>
             </DropdownMenuItem>
           </DropdownMenuContent>
