@@ -4,7 +4,7 @@ import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { emailRegisterSchema } from "@/lib/validation/auth";
-import { registerEmail } from "@/lib/db";
+import { registerEmail } from "@/lib/fetcher/auth";
 import {
   Form,
   FormControl,

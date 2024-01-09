@@ -14,7 +14,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { createUser } from "@/lib/db";
+import { createUser } from "@/lib/fetcher/auth";
 import { PasswordInput } from "../input/password";
 
 type Inputs = z.infer<typeof createAccountSchema>;

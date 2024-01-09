@@ -3,7 +3,6 @@ import DeliveryCourierCard from "@/components/card/delivery-courier-card";
 import ShippingAddressCard from "@/components/card/shipping-address-card";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader } from "@/components/ui/card";
-// import { Checkbox } from "@/components/ui/checkbox";
 import Link from "next/link";
 
 export default function MyCart() {
@@ -13,12 +12,6 @@ export default function MyCart() {
         <div className="col-span-3 md:col-span-2 flex flex-col">
           <div className="flex flex-row justify-between gap-4 border-b-2 pb-5">
             <h3 className="scroll-m-20 text-2xl md:text-3xl">My Cart</h3>
-            {/* <div className="flex items-center space-x-2 ">
-              <Checkbox id="terms" />
-              <label className="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                Select All Items
-              </label>
-            </div> */}
           </div>
           <div className="mt-5">
             <ShippingAddressCard />

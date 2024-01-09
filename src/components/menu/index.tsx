@@ -8,11 +8,10 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button";
 import { RxHamburgerMenu } from "react-icons/rx";
-import CartIcon from "../cart/cart-icon";
+import { Button } from "../ui/button";
 
-const Menu = () => {
+const Menu = ({ token }: { token?: string }) => {
   const router = useRouter();
   const isActive = (path: string) => router.pathname === path;
 
@@ -33,15 +32,20 @@ const Menu = () => {
             <DropdownMenuItem>
               <Link href="/telemedicines">Telemedicine</Link>
             </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <Link href="/auth/login" className="font-semibold">
-                Login
-              </Link>
-            </DropdownMenuItem>
+            {!token && (
+              <>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem>
+                  <Link href="/auth/login" className="font-semibold">
+                    Login
+                  </Link>
+                </DropdownMenuItem>
+              </>
+            )}
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
+
       <div className="flex flex-row justify-center items-center gap-5">
         <div className="hidden md:flex flex-row gap-10 items-center">
           <ul className="flex flex-row gap-5 ">
@@ -66,12 +70,15 @@ const Menu = () => {
                   : "hover:text-[#5CACE5]"
               }`}
             >
-              <Link href="/telemedicines">Telemedicine</Link>
+              <Link href="/telemedicine">Telemedicine</Link>
             </li>
           </ul>
-          <Button className="px-10">Login</Button>
+          {!token && (
+            <Link href="/auth/login">
+              <Button className="px-10 hidden md:block">Login</Button>
+            </Link>
+          )}
         </div>
-        <CartIcon />
       </div>
     </>
   );
