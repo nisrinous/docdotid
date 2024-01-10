@@ -1,33 +1,22 @@
-import { useState } from "react";
-import { getCoordinates } from "../api/geocoding";
+import AsideBar from "@/components/aside-bar";
 
 const Home: React.FC = () => {
-  const [place, setPlace] = useState("");
-  const [coordinates, setCoordinates] = useState<{
-    lat: number;
-    lng: number;
-  } | null>(null);
-
-  const handleSearch = async () => {
-    const result = await getCoordinates(place);
-    setCoordinates(result);
-  };
-
   return (
-    <div>
-      <input
-        type="text"
-        value={place}
-        onChange={(e) => setPlace(e.target.value)}
-      />
-      <button onClick={handleSearch}>Search</button>
-
-      {coordinates && (
-        <div>
-          <p>Latitude: {coordinates.lat}</p>
-          <p>Longitude: {coordinates.lng}</p>
+    <div className="flex">
+      <AsideBar />
+      <div className="w-full mx-10 mt-5">
+        <h1 className="text-black text-2xl my-2 mb-8">Dashboard</h1>
+        <div className="w-full flex gap-10">
+          <div className="w-1/2 bg-blue-200 rounded-lg h-60">Hello</div>
+          <div className="w-1/2 bg-red-200 rounded-lg h-60">Hello</div>
         </div>
-      )}
+
+        <div className="mt-8">
+          <h2 className="text-xl">Earnings by Pharmacy</h2>
+
+          <table></table>
+        </div>
+      </div>
     </div>
   );
 };
