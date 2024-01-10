@@ -10,18 +10,28 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import AsideBar from "@/components/aside-bar";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
 
 interface Category {
   id: number;
   name: string;
 }
 
-const fetcher = async (url: string) => {
-  const response = await axios.get(url);
-  return response.data;
-};
-
 const Index = () => {
+  const { token } = useSelector((state: RootState) => state.user);
+
+  const fetcher = async (url: string) => {
+    const response = await axios.get("http://10.20.191.163:8080/categories", {
+      //   withCredentials: true,
+      headers: {
+        authorization: token,
+        "Content-Type": "application/json",
+      },
+    });
+    return response.data;
+  };
+
   const { data: categories, error } = useSWR<Category[]>(
     "/api/categories",
     fetcher
