@@ -1,7 +1,11 @@
 import CardProduct from "@/components/card-product";
 import ProductCategories from "@/components/categories/product-categories";
+import { ProductResponse } from "@/types";
+
+import { useState } from "react";
 
 export default function Products() {
+  const [productData, setProductData] = useState<ProductResponse[]>([]);
   return (
     <>
       <ProductCategories />
