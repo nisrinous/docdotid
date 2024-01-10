@@ -36,7 +36,7 @@ const AsideBar: React.FC = () => {
   return (
     <div className="w-1/5">
       {isAsideVisible && (
-        <div className=" h-screen bg-sky-700 text-white p-4 transition-width duration-300 ease-in-out">
+        <div className="h-screen bg-sky-700 text-white p-4 transition-width duration-300 ease-in-out">
           <div className="flex justify-between">
             <LogoSideBar />
             <div>
