@@ -1,6 +1,8 @@
 import { NextResponse, type NextRequest } from "next/server";
+import { UseAuthMiddleware } from "./lib/authMiddleware";
 
 export function middleware(request: NextRequest) {
+  // const role = UseAuthMiddleware();
   const role = request.cookies.get("role")?.value;
 
   if (request.nextUrl.pathname === "/") {
