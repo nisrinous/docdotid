@@ -5,3 +5,8 @@ export type ProductResponse = {
   sellingUnit: number;
   image: string;
 };
+
+export type ProductCategoriesResponse = {
+  id: number;
+  name: string;
+};
