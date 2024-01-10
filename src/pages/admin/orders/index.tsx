@@ -28,7 +28,7 @@ const fetcher = async (url: string) => {
 };
 const handleSearch = async (url: string) => {};
 
-const Index = () => {
+const Orders = () => {
   const [selectedStatus, setSelectedStatus] = useState<string | null>();
   const { data: categories, error } = useSWR<Category[]>(
     "/api/categories",
@@ -98,4 +98,4 @@ const Index = () => {
   );
 };
 
-export default Index;
+export default Orders;
