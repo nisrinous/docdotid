@@ -2,9 +2,7 @@ import useSWR from "swr";
 import axios from "axios";
 import {
   Table,
-  TableBody,
   TableCaption,
-  TableCell,
   TableHead,
   TableHeader,
   TableRow,
@@ -25,7 +23,7 @@ const Index = () => {
     const response = await axios.get("http://10.20.191.163:8080/categories", {
       //   withCredentials: true,
       headers: {
-        authorization: token,
+        authorization: `bearer ${token}`,
         "Content-Type": "application/json",
       },
     });
