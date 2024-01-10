@@ -28,7 +28,7 @@ const AsideBar: React.FC = () => {
   return (
     <div className="w-1/5">
       {isAsideVisible && (
-        <div className=" h-screen bg-sky-700 text-white p-4 transition-width duration-300 ease-in-out">
+        <div className="h-screen bg-sky-700 text-white p-4 transition-width duration-300 ease-in-out">
           <div className="flex justify-between">
             <LogoSideBar />
             <div>
@@ -111,8 +111,8 @@ const AsideBar: React.FC = () => {
               <>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  height="30"
-                  width="30"
+                  height="16"
+                  width="14"
                   viewBox="0 0 448 512"
                 >
                   <path
