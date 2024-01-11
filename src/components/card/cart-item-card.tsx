@@ -14,7 +14,7 @@ import ManageQuantityButton from "../button/manage-quantity-button";
 const CartItemCard = ({ quantity }: { quantity: number }) => {
   return (
     <>
-      <CardContent className="p-0 py-2 flex flex-row justify-start items-center w-full border-b-2 mb-3">
+      <CardContent className="p-0 pb-3 flex flex-row justify-start items-center w-full border-b-2 mb-3">
         <img src="Caduceus.svg" className="h-16 w-16 p-1 border-2"></img>
         <div className="flex flex-col gap-2 md:flex-row justify-around items-center w-full">
           <div className="flex flex-col justify-start items-start md:justify-center md:items-start">
