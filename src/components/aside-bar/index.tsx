@@ -3,6 +3,10 @@ import LogoSideBar from "../logo/logo-sidebar";
 import { BiSolidDashboard } from "react-icons/bi";
 import { GiMedicines } from "react-icons/gi";
 import { FaUsers } from "react-icons/fa";
+import { RxHamburgerMenu } from "react-icons/rx";
+import { IoLogOut } from "react-icons/io5";
+import { RiHospitalFill } from "react-icons/ri";
+
 import {
   FaFilePrescription,
   FaChartSimple,
@@ -44,59 +48,56 @@ const AsideBar: React.FC = () => {
                 onClick={() => setIsAsideVisible(false)}
                 className="  text-white px-2 py-1 mt-4 "
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  height="20"
-                  width="20"
-                  viewBox="0 0 448 512"
-                >
-                  <path
-                    d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"
-                    fill="white"
-                  />
-                </svg>
+                <RxHamburgerMenu size={20} />
               </button>
             </div>
           </div>
           <div className="flex flex-col gap-8 mt-20">
-            <div className="flex gap-8">
+            <div className="flex gap-8 rounded-md px-2 py-2 hover:bg-[#5CCCE5]">
               <BiSolidDashboard size={30} />
-              <Link href="/admin/" className="text-white text-xl">
+              <Link href="/admin/" className="text-white text-lg">
                 Dashboard
               </Link>
             </div>
-            <div className="flex gap-8">
+            <div className="flex gap-8 rounded-md px-2 py-2 hover:bg-[#5CCCE5]">
               <FaUsers size={30} />
-              <Link href="/admin/users" className="text-white text-xl">
+              <Link href="/admin/users" className="text-white text-lg">
                 Manage Users
               </Link>
             </div>
 
-            <div className="flex gap-8">
+            <div className="flex gap-8 rounded-md px-2 py-2 hover:bg-[#5CCCE5]">
               <FaBriefcaseMedical size={30} />
-              <Link href="/admin/categories" className="text-white text-xl">
+              <Link href="/admin/categories" className="text-white text-lg">
                 Manage Categories
               </Link>
             </div>
 
-            <div className="flex gap-8">
+            <div className="flex gap-8 rounded-md px-2 py-2 hover:bg-[#5CCCE5]">
               <GiMedicines size={30} />
-              <Link href="/admin/products" className="text-white text-xl">
+              <Link href="/admin/products" className="text-white text-lg">
                 Manage Products
               </Link>
             </div>
 
-            <div className="flex gap-8">
+            <div className="flex gap-8 rounded-md px-2 py-2 hover:bg-[#5CCCE5]">
               <FaFilePrescription size={25} />
-              <Link href="/admin/orders" className="text-white text-xl">
+              <Link href="/admin/orders" className="text-white text-lg">
                 Manage Orders
               </Link>
             </div>
 
-            <div className="flex gap-8">
-              <FaChartSimple size={30} />
-              <Link href="/admin/pharmacy" className="text-white text-xl">
+            <div className="flex gap-8 rounded-md px-2 py-2 hover:bg-[#5CCCE5]">
+              <RiHospitalFill size={30} />
+              <Link href="/admin/pharmacy" className="text-white text-lg">
                 Manage Pharmacy
+              </Link>
+            </div>
+
+            <div className="flex gap-8 rounded-md px-2 py-2 hover:bg-[#5CCCE5]">
+              <IoLogOut size={30} />
+              <Link href="/" className="text-white text-lg">
+                Log Out
               </Link>
             </div>
           </div>
@@ -107,19 +108,9 @@ const AsideBar: React.FC = () => {
         <div className="bg-sky-700 h-screen w-20 p-4 ">
           <button
             onClick={() => setIsAsideVisible(true)}
-            className="flex justify-center px-2 py-1 mt-4"
+            className="flex justify-center px-2 py-1 mt-4 text-white"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              height="20"
-              width="20"
-              viewBox="0 0 448 512"
-            >
-              <path
-                d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"
-                fill="white"
-              />
-            </svg>
+            <RxHamburgerMenu size={20} />
           </button>
         </div>
       )}
