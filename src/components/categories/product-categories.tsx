@@ -34,27 +34,29 @@ const ProductCategories = () => {
           Shop Wellness Essentials
         </h3>
         <p className="text-zinc-400 mb-5">Browse our products by categories</p>
-        <div className="grid grid-cols-3 md:grid-cols-6 lg:grid-cols-10 gap-4">
-          {productsData.map((item, index) => (
-            <Card
-              key={index}
-              className="p-2 border-none shadow-none flex flex-col justify-between "
-            >
-              <CardContent className="p-1 flex flex-col items-center justify-between">
-                <img
-                  src={`productcategory${index + 1}.svg`}
-                  className="h-full rounded-full border-[1px]"
-                ></img>
-              </CardContent>
-              <CardFooter className="items-center justify-center p-0">
-                <Link href="/product" className="hover:underline">
-                  <p className="p-2 text-center leading-none text-sm md:text-base md:leading-none">
-                    {item.name}
-                  </p>
-                </Link>
-              </CardFooter>
-            </Card>
-          ))}
+        <div className="flex justify-center">
+          <div className="flex flex-wrap justify-center">
+            {productsData?.map((item, index) => (
+              <Card
+                key={index}
+                className="p-2 border-none shadow-none flex flex-col justify-between "
+              >
+                <CardContent className="p-1 flex flex-col items-center justify-between">
+                  <img
+                    src={`productcategory${index + 1}.svg`}
+                    className="h-full rounded-full border-[1px]"
+                  ></img>
+                </CardContent>
+                <CardFooter className="items-center justify-center p-0">
+                  <Link href="/product" className="hover:underline">
+                    <p className="p-2 text-center leading-none text-sm md:text-base md:leading-none">
+                      {item.name}
+                    </p>
+                  </Link>
+                </CardFooter>
+              </Card>
+            ))}
+          </div>
         </div>
       </div>
     </>
