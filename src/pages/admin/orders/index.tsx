@@ -29,7 +29,6 @@ const fetcher = async (url: string) => {
 const handleSearch = async (url: string) => {};
 
 const Orders = () => {
-  const { token } = useSelector((state: RootState) => state.user);
   const [selectedStatus, setSelectedStatus] = useState<string | null>();
   const { data: categories, error } = useSWR<Category[]>(
     "/api/categories",
