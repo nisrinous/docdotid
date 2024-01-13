@@ -15,3 +15,19 @@ export async function getProducts(token: string) {
     console.error("" + error);
   }
 }
+
+export async function deleteCategory(token: string, id: any) {
+  try {
+    const response = await fetch(`${API_ENDPOINT}/categories/${id}`, {
+      method: "DELETE",
+      headers: {
+        authorization: `bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("" + error);
+  }
+}

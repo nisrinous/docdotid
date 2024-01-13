@@ -6,6 +6,7 @@ import { RootState } from "@/store/store";
 import { getProducts } from "@/lib/fetcher/products";
 import { Label } from "@/components/ui/label";
 import { menus } from "@/utils/menus";
+import { deleteCategory } from "@/lib/fetcher/products";
 import {
   Dialog,
   DialogContent,
@@ -47,76 +48,16 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useEffect, useState } from "react";
+import { DeleteModal } from "@/components/delete-modal";
+import useSWR from "swr";
 
-export const columns: ColumnDef<ProductCategoriesResponse, any>[] = [
-  {
-    id: "select",
-    header: ({ table }) => (
-      <Checkbox
-        checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && "indeterminate")
-        }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false,
-  },
-  {
-    accessorKey: "id",
-    header: "ID",
-    cell: ({ row }) => <div className="capitalize">{row.getValue("id")}</div>,
-  },
-  {
-    accessorKey: "name",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Name
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
-    cell: ({ row }) => <div className="lowercase">{row.getValue("name")}</div>,
-  },
-  {
-    id: "actions",
-    header: "Actions",
-    enableHiding: false,
-    cell: ({ row }) => {
-      const payment = row.original;
-
-      return (
-        <div className="flex gap-5">
-          <Button variant="link">Edit</Button>
-          <Button variant="link" onClick={handleDelete}>
-            Delete
-          </Button>
-        </div>
-      );
-    },
-  },
-];
-
-export default function DataTableDemo() {
+export default function Categories() {
   const { token } = useSelector((state: RootState) => state.user);
   const [productsData, setProductsData] = useState<ProductCategoriesResponse[]>(
     []
   );
 
-  const fetcher = async () => {
+  const fetchData = async () => {
     try {
       const data = await getProducts(token);
       console.log("ini data", data);
@@ -126,9 +67,14 @@ export default function DataTableDemo() {
     }
   };
 
-  useEffect(() => {
-    fetcher();
-  });
+  const { error: isError, isValidating: isLoading } = useSWR(
+    ["/categories", token],
+    fetchData
+  );
+
+  // useEffect(() => {
+  //   fetcher();
+  // });
   console.log("ini products Data", productsData);
   const data: ProductCategoriesResponse[] = productsData;
 
@@ -140,6 +86,68 @@ export default function DataTableDemo() {
     React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
 
+  const columns: ColumnDef<ProductCategoriesResponse, any>[] = [
+    {
+      id: "select",
+      header: ({ table }) => (
+        <Checkbox
+          checked={
+            table.getIsAllPageRowsSelected() ||
+            (table.getIsSomePageRowsSelected() && "indeterminate")
+          }
+          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+          aria-label="Select all"
+        />
+      ),
+      cell: ({ row }) => (
+        <Checkbox
+          checked={row.getIsSelected()}
+          onCheckedChange={(value) => row.toggleSelected(!!value)}
+          aria-label="Select row"
+        />
+      ),
+      enableSorting: false,
+      enableHiding: false,
+    },
+    {
+      accessorKey: "id",
+      header: "ID",
+      cell: ({ row }) => <div className="capitalize">{row.getValue("id")}</div>,
+    },
+    {
+      accessorKey: "name",
+      header: ({ column }) => {
+        return (
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            Name
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </Button>
+        );
+      },
+      cell: ({ row }) => <div>{row.getValue("name")}</div>,
+    },
+    {
+      id: "actions",
+      header: "Actions",
+      enableHiding: false,
+      cell: ({ row }) => {
+        const id = row.getValue("id");
+
+        return (
+          <div className="flex gap-5">
+            <Button variant="link">Edit</Button>
+            <DeleteModal token={token} id={id} />
+            {/* <Button variant="link" onClick={() => DeleteModal(token, id)}>
+              Delete
+            </Button> */}
+          </div>
+        );
+      },
+    },
+  ];
   const table = useReactTable({
     data,
     columns,
@@ -191,7 +199,7 @@ export default function DataTableDemo() {
                   <DialogTitle>Add New Product Category</DialogTitle>
                   <DialogDescription>
                     Input details for the new product category here. Click save
-                    when you're done.
+                    when done.
                   </DialogDescription>
                 </DialogHeader>
                 <div className="grid gap-4 py-4">
