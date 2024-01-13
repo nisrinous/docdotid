@@ -5,16 +5,6 @@ import { ProductCategoriesResponse } from "@/types";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { getProducts } from "@/lib/fetcher/products";
-import { Label } from "@/components/ui/label";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -178,7 +168,7 @@ export default function OrderPage() {
     <div className="flex">
       <AsideBar />
       <div className="w-full mx-10 mt-5">
-        <h1 className="text-black text-3xl mt-2 font-bold">Manage Orders</h1>
+        <h1 className="text-black text-3xl mt-2 font-bold">Manage Users</h1>
         <div className="flex items-center justify-between py-4">
           <Input
             placeholder="Filter orders by pharmacy..."
