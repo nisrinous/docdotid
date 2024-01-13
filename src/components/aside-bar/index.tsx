@@ -6,12 +6,7 @@ import { FaUsers } from "react-icons/fa";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { IoLogOut } from "react-icons/io5";
 import { RiHospitalFill } from "react-icons/ri";
-
-import {
-  FaFilePrescription,
-  FaChartSimple,
-  FaBriefcaseMedical,
-} from "react-icons/fa6";
+import { FaFilePrescription, FaBriefcaseMedical } from "react-icons/fa6";
 import Link from "next/link";
 
 const AsideBar: React.FC = () => {
