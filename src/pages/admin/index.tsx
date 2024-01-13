@@ -1,9 +1,10 @@
-import AsideBar from "@/components/aside-bar";
+import Sidebar from "@/components/aside-bar";
+import { menus } from "@/utils/menus";
 
-const Home: React.FC = () => {
+export default function Home(): JSX.Element {
   return (
     <div className="flex">
-      <AsideBar />
+      <Sidebar menus={menus} />
       <div className="w-full mx-10 mt-5">
         <h1 className="text-black text-2xl my-2 mb-8">Dashboard</h1>
         <div className="w-full flex gap-10">
@@ -19,6 +20,4 @@ const Home: React.FC = () => {
       </div>
     </div>
   );
-};
-
-export default Home;
+}
