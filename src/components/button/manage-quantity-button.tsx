@@ -1,14 +1,19 @@
 import { useState } from "react";
 import { Button } from "../ui/button";
+import { useDispatch } from "react-redux";
+import { incrementCart, decrementCart } from "@/store/slices/cartSlice";
 
 const ManageQuantityButton = ({ quantity }: { quantity: number }) => {
   const [qty, setQty] = useState<number>(quantity);
+  const dispatch = useDispatch();
 
   const increment = () => {
     setQty(qty + 1);
+    dispatch(incrementCart());
   };
   const decrement = () => {
     setQty(qty - 1);
+    dispatch(decrementCart());
   };
 
   return (
