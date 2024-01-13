@@ -21,7 +21,6 @@ const CartItemCard = ({ quantity }: { quantity: number }) => {
         ></img>
         <div className="flex flex-col gap-2 md:flex-row justify-around items-center w-full">
           <div className="flex flex-col justify-start items-start md:justify-center md:items-start">
-            <p className="text-zinc-400 leading-none text-xs">Category</p>
             <p className="text-left">Product Name</p>
             <p className="text-zinc-600 leading-none text-xs">Product Price</p>
             <p className="text-green-700">on stock</p>
