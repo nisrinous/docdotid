@@ -7,7 +7,7 @@ const CartIcon = () => {
 
   return (
     <div className="relative">
-      <Link href="/mycart">
+      <Link href="/cart">
         <FaShoppingCart />
       </Link>
       {cartItemsCount > 0 && (
