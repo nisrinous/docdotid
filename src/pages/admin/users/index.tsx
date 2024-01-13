@@ -5,6 +5,8 @@ import { ProductCategoriesResponse } from "@/types";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { getProducts } from "@/lib/fetcher/products";
+import Sidebar from "@/components/aside-bar";
+import { menus } from "@/utils/menus";
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -166,7 +168,7 @@ export default function OrderPage() {
 
   return (
     <div className="flex">
-      <AsideBar />
+      <Sidebar menus={menus} />
       <div className="w-full mx-10 mt-5">
         <h1 className="text-black text-3xl mt-2 font-bold">Manage Users</h1>
         <div className="flex items-center justify-between py-4">
