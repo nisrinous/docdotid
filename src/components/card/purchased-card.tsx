@@ -15,7 +15,10 @@ const PurchasedCard = ({ type, id }: { type: string; id: number }) => {
         <CardContent className="p-2 w-full flex flex-row gap-5 md:gap-10 justify-between">
           <div className="flex flex-row gap-10">
             <div className="flex flex-row justify-center items-center gap-3">
-              <img src="Caduceus.svg" className="border-2 p-1"></img>
+              <img
+                src="https://res-console.cloudinary.com/minevf/media_explorer_thumbnails/671ced60670f98cc3aa7a40e901548a5/detailed"
+                className="border-2 p-1"
+              ></img>
               <div className="gap-0">
                 <p className="leading-none text-sm ">Product Name</p>
                 <p className="text-zinc-500 leading-none text-sm ">
