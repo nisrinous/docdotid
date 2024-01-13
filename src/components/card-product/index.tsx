@@ -22,7 +22,7 @@ const CardProduct = ({ productId }: { productId?: number }) => {
 
   const handleAddToCart = () => {
     setAddedToCart(true);
-    dispatch(incrementCart());
+    increment();
   };
 
   useEffect(() => {
