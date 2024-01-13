@@ -29,6 +29,7 @@ const fetcher = async (url: string) => {
 const handleSearch = async (url: string) => {};
 
 const Orders = () => {
+  const { token } = useSelector((state: RootState) => state.user);
   const [selectedStatus, setSelectedStatus] = useState<string | null>();
   const { data: categories, error } = useSWR<Category[]>(
     "/api/categories",
@@ -37,9 +38,6 @@ const Orders = () => {
   const handleStatusChange = (newStatus: string) => {
     setSelectedStatus(newStatus);
   };
-
-  //   if (error) return <div>Error loading data</div>;
-  //   if (!categories) return <div>Loading...</div>;
 
   return (
     <div className="flex flex-row">
