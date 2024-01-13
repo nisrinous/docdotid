@@ -1,7 +1,7 @@
 import router from "next/router";
 import toast from "react-hot-toast";
 
-const API_ENDPOINT = "http://10.20.191.163:8080";
+const API_ENDPOINT = "http://10.20.191.12:8080";
 const APP_ENDPOINT = "http://localhost:3000";
 
 export async function registerEmail(email: string) {

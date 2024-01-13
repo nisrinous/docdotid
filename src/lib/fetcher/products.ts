@@ -1,4 +1,4 @@
-const API_ENDPOINT = "http://10.20.191.163:8080";
+const API_ENDPOINT = "http://10.20.191.12:8080";
 
 export async function getProducts(token: string) {
   try {
