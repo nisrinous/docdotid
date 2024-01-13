@@ -5,6 +5,16 @@ import { ProductCategoriesResponse } from "@/types";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { getProducts } from "@/lib/fetcher/products";
+import { Label } from "@/components/ui/label";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -40,39 +50,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useEffect, useState } from "react";
-
-// const data: ProductCategoriesResponse[] = [
-//   {
-//     id: "m5gr84i9",
-//     amount: 316,
-//     status: "success",
-//     email: "ken99@yahoo.com",
-//   },
-//   {
-//     id: "3u1reuv4",
-//     amount: 242,
-//     status: "success",
-//     email: "Abe45@gmail.com",
-//   },
-//   {
-//     id: "derv1ws0",
-//     amount: 837,
-//     status: "processing",
-//     email: "Monserrat44@gmail.com",
-//   },
-//   {
-//     id: "5kma53ae",
-//     amount: 874,
-//     status: "success",
-//     email: "Silas22@gmail.com",
-//   },
-//   {
-//     id: "bhqecj4p",
-//     amount: 721,
-//     status: "failed",
-//     email: "carmella@hotmail.com",
-//   },
-// ];
 
 export const columns: ColumnDef<ProductCategoriesResponse[]>[] = [
   {
@@ -146,7 +123,7 @@ export const columns: ColumnDef<ProductCategoriesResponse[]>[] = [
       );
     },
   },
-];
+] as ColumnDef<ProductCategoriesResponse[]>[];
 
 export default function DataTableDemo() {
   const { token } = useSelector((state: RootState) => state.user);
@@ -204,15 +181,44 @@ export default function DataTableDemo() {
         <h1 className="text-black text-2xl mt-2 font-bold">
           Manage Product Categories
         </h1>
-        <div className="flex items-center py-4">
+        <div className="flex items-center justify-between py-4">
           <Input
             placeholder="Filter categories..."
-            value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
+            value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
             onChange={(event) =>
               table.getColumn("email")?.setFilterValue(event.target.value)
             }
             className="max-w-sm"
           />
+          <div className="flex gap-3">
+          <Dialog>
+      <DialogTrigger asChild>
+        <Button variant="outline" className="bg-sky-300 hover:bg-sky-200">Add New</Button>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-[425px]">
+        <DialogHeader>
+          <DialogTitle>Add New Product Category</DialogTitle>
+          <DialogDescription>
+           Input details for the new product category here. Click save when you're done.
+          </DialogDescription>
+        </DialogHeader>
+        <div className="grid gap-4 py-4">
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor="name" className="text-right">
+              Category Name
+            </Label>
+            <Input
+              id="name"
+              defaultValue=""
+              className="col-span-3"
+            />
+          </div>
+        </div>
+        <DialogFooter>
+          <Button type="submit">Save changes</Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" className="ml-auto">
@@ -239,6 +245,7 @@ export default function DataTableDemo() {
                 })}
             </DropdownMenuContent>
           </DropdownMenu>
+          </div>
         </div>
         <div className="rounded-md border">
           <Table>
