@@ -1,5 +1,4 @@
 "use client";
-
 import * as React from "react";
 import { ProductCategoriesResponse } from "@/types";
 import { useSelector } from "react-redux";
@@ -14,7 +13,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
+} from "@/components/ui/dialog";
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -51,7 +50,7 @@ import {
 } from "@/components/ui/table";
 import { useEffect, useState } from "react";
 
-export const columns: ColumnDef<ProductCategoriesResponse[]>[] = [
+export const columns: ColumnDef<ProductCategoriesResponse, any>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -96,6 +95,7 @@ export const columns: ColumnDef<ProductCategoriesResponse[]>[] = [
   },
   {
     id: "actions",
+    header: "Actions",
     enableHiding: false,
     cell: ({ row }) => {
       const payment = row.original;
@@ -123,7 +123,7 @@ export const columns: ColumnDef<ProductCategoriesResponse[]>[] = [
       );
     },
   },
-] as ColumnDef<ProductCategoriesResponse[]>[];
+];
 
 export default function DataTableDemo() {
   const { token } = useSelector((state: RootState) => state.user);
@@ -145,7 +145,7 @@ export default function DataTableDemo() {
     console.log(productsData);
   });
 
-  console.log("productsDATA",productsData);
+  console.log("productsDATA", productsData);
 
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -191,60 +191,62 @@ export default function DataTableDemo() {
             className="max-w-sm"
           />
           <div className="flex gap-3">
-          <Dialog>
-      <DialogTrigger asChild>
-        <Button variant="outline" className="bg-sky-300 hover:bg-sky-200">Add New</Button>
-      </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
-          <DialogTitle>Add New Product Category</DialogTitle>
-          <DialogDescription>
-           Input details for the new product category here. Click save when you're done.
-          </DialogDescription>
-        </DialogHeader>
-        <div className="grid gap-4 py-4">
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="name" className="text-right">
-              Category Name
-            </Label>
-            <Input
-              id="name"
-              defaultValue=""
-              className="col-span-3"
-            />
-          </div>
-        </div>
-        <DialogFooter>
-          <Button type="submit">Save changes</Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="ml-auto">
-                Columns <ChevronDown className="ml-2 h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              {table
-                .getAllColumns()
-                .filter((column) => column.getCanHide())
-                .map((column) => {
-                  return (
-                    <DropdownMenuCheckboxItem
-                      key={column.id}
-                      className="capitalize"
-                      checked={column.getIsVisible()}
-                      onCheckedChange={(value) =>
-                        column.toggleVisibility(!!value)
-                      }
-                    >
-                      {column.id}
-                    </DropdownMenuCheckboxItem>
-                  );
-                })}
-            </DropdownMenuContent>
-          </DropdownMenu>
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button
+                  variant="outline"
+                  className="bg-sky-300 hover:bg-sky-200"
+                >
+                  Add New
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-[425px]">
+                <DialogHeader>
+                  <DialogTitle>Add New Product Category</DialogTitle>
+                  <DialogDescription>
+                    Input details for the new product category here. Click save
+                    when you're done.
+                  </DialogDescription>
+                </DialogHeader>
+                <div className="grid gap-4 py-4">
+                  <div className="grid grid-cols-4 items-center gap-4">
+                    <Label htmlFor="name" className="text-right">
+                      Category Name
+                    </Label>
+                    <Input id="name" defaultValue="" className="col-span-3" />
+                  </div>
+                </div>
+                <DialogFooter>
+                  <Button type="submit">Save changes</Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" className="ml-auto">
+                  Columns <ChevronDown className="ml-2 h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                {table
+                  .getAllColumns()
+                  .filter((column) => column.getCanHide())
+                  .map((column) => {
+                    return (
+                      <DropdownMenuCheckboxItem
+                        key={column.id}
+                        className="capitalize"
+                        checked={column.getIsVisible()}
+                        onCheckedChange={(value) =>
+                          column.toggleVisibility(!!value)
+                        }
+                      >
+                        {column.id}
+                      </DropdownMenuCheckboxItem>
+                    );
+                  })}
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </div>
         <div className="rounded-md border">
@@ -284,7 +286,7 @@ export default function DataTableDemo() {
                     ))}
                   </TableRow>
                 ))
-              ) : ( */}
+              ) : (
                 <TableRow>
                   <TableCell
                     colSpan={columns.length}
@@ -293,7 +295,7 @@ export default function DataTableDemo() {
                     No results.
                   </TableCell>
                 </TableRow>
-              )}
+              )} */}
             </TableBody>
           </Table>
         </div>
