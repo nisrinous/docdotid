@@ -29,7 +29,10 @@ const CardProduct = ({ productId }: { productId?: number }) => {
     <Link href={`/product/${productId}`}>
       <Card className="p-2 w-40 flex flex-col justify-between">
         <CardContent className="p-1 flex flex-col items-center justify-center">
-          <img src="Caduceus.svg" className="h-full"></img>
+          <img
+            src="https://res-console.cloudinary.com/minevf/media_explorer_thumbnails/671ced60670f98cc3aa7a40e901548a5/detailed"
+            className="h-full"
+          ></img>
         </CardContent>
         <CardFooter className="flex flex-col gap-2 items-center justify-center p-0">
           <Link href="/telemedicines/cardiologist">

@@ -6,26 +6,26 @@ import { ProductCategoriesResponse } from "@/types";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { Button } from "../ui/button";
+import useSWR from "swr";
 
 const ProductCategories = () => {
   const { token } = useSelector((state: RootState) => state.user);
 
-  const [productsData, setProductsData] = useState<ProductCategoriesResponse[]>(
-    []
-  );
-
-  const fetcher = async () => {
+  const fetchData = async () => {
     try {
       const data = await getProducts(token);
-      setProductsData(data.data);
+      return data;
     } catch (error) {
       console.error("" + error);
+      throw error;
     }
   };
 
-  useEffect(() => {
-    fetcher();
-  });
+  const {
+    data: productsData,
+    error: isError,
+    isValidating: isLoading,
+  } = useSWR(["/categories", token], fetchData);
 
   return (
     <>
@@ -34,30 +34,40 @@ const ProductCategories = () => {
           Shop Wellness Essentials
         </h3>
         <p className="text-zinc-400 mb-5">Browse our products by categories</p>
-        <div className="flex justify-center">
-          <div className="flex flex-wrap justify-center">
-            {productsData?.map((item, index) => (
-              <Card
-                key={index}
-                className="p-2 border-none shadow-none flex flex-col justify-between "
-              >
-                <CardContent className="p-1 flex flex-col items-center justify-between">
-                  <img
-                    src={`productcategory${index + 1}.svg`}
-                    className="h-full rounded-full border-[1px]"
-                  ></img>
-                </CardContent>
-                <CardFooter className="items-center justify-center p-0">
-                  <Link href="/product" className="hover:underline">
-                    <p className="p-2 text-center leading-none text-sm md:text-base md:leading-none">
-                      {item.name}
-                    </p>
-                  </Link>
-                </CardFooter>
-              </Card>
-            ))}
+        {isLoading ? (
+          <p className="text-zinc-400 mb-5">Loading...</p>
+        ) : isError ? (
+          <div className="flex justify-center">
+            <div className="flex flex-wrap justify-center">
+              <p className="text-zinc-400 mb-5">Error while fetching data</p>
+            </div>
           </div>
-        </div>
+        ) : (
+          <div className="flex justify-center">
+            <div className="flex flex-wrap justify-center">
+              {productsData?.map((item, index) => (
+                <Card
+                  key={index}
+                  className="p-2 border-none shadow-none flex flex-col justify-between "
+                >
+                  <CardContent className="p-1 flex flex-col items-center justify-between">
+                    <img
+                      src={`productcategory${index + 1}.svg`}
+                      className="h-full rounded-full border-[1px]"
+                    ></img>
+                  </CardContent>
+                  <CardFooter className="items-center justify-center p-0">
+                    <Link href="/product" className="hover:underline">
+                      <p className="p-2 text-center leading-none text-sm md:text-base md:leading-none">
+                        {item.name}
+                      </p>
+                    </Link>
+                  </CardFooter>
+                </Card>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </>
   );
