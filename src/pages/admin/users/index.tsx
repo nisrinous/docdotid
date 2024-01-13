@@ -5,8 +5,8 @@ import { ProductCategoriesResponse } from "@/types";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { getProducts } from "@/lib/fetcher/products";
-import { menus } from "@/utils/menus";
 import Sidebar from "@/components/aside-bar";
+import { menus } from "@/utils/menus";
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -20,6 +20,7 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react";
+import AsideBar from "@/components/aside-bar";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -169,7 +170,7 @@ export default function OrderPage() {
     <div className="flex">
       <Sidebar menus={menus} />
       <div className="w-full mx-10 mt-5">
-        <h1 className="text-black text-3xl mt-2 font-bold">Manage Orders</h1>
+        <h1 className="text-black text-3xl mt-2 font-bold">Manage Users</h1>
         <div className="flex items-center justify-between py-4">
           <Input
             placeholder="Filter orders by pharmacy..."

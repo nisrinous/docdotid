@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { getProducts } from "@/lib/fetcher/products";
 import { Label } from "@/components/ui/label";
+import { menus } from "@/utils/menus";
 import {
   Dialog,
   DialogContent,
@@ -27,7 +28,7 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react";
-import AsideBar from "@/components/aside-bar";
+import Sidebar from "@/components/aside-bar";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -176,7 +177,7 @@ export default function DataTableDemo() {
 
   return (
     <div className="flex">
-      <AsideBar />
+   <Sidebar menus={menus} />
       <div className="w-full mx-10 mt-5">
         <h1 className="text-black text-2xl mt-2 font-bold">
           Manage Product Categories

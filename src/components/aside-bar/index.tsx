@@ -1,116 +1,98 @@
-import React, { useState, useEffect } from "react";
-import LogoSideBar from "../logo/logo-sidebar";
-import { BiSolidDashboard } from "react-icons/bi";
-import { GiMedicines } from "react-icons/gi";
-import { FaUsers } from "react-icons/fa";
-import { RxHamburgerMenu } from "react-icons/rx";
-import { IoLogOut } from "react-icons/io5";
-import { RiHospitalFill } from "react-icons/ri";
-import { FaFilePrescription, FaBriefcaseMedical } from "react-icons/fa6";
+import React, { FC, useState, useEffect } from "react";
+import { HiMenuAlt3 } from "react-icons/hi";
 import Link from "next/link";
+import LogoSideBar from "../logo/logo-sidebar";
+import { useRouter } from "next/router";
 
-const AsideBar: React.FC = () => {
-  const [isAsideVisible, setIsAsideVisible] = useState(true);
-  const [isAsideMobileVisible, setIsAsideMobileVisible] = useState(false);
+interface MenuItem {
+  name: string;
+  link: string;
+  icon: React.ComponentType<{ size: string }>;
+  margin?: boolean;
+  onClick?: () => void;
+}
+
+interface SidebarProps {
+  menus: MenuItem[];
+}
+
+const Sidebar: FC<SidebarProps> = ({ menus }) => {
+  const router = useRouter();
+  const currentPath = router.pathname;
+  const [open, setOpen] = useState(true);
+
+  const handleToggle = () => {
+    setOpen(!open);
+  };
 
   useEffect(() => {
-    const handleResize = () => {
-      const windowWidth = window.innerWidth;
+    const screenWidth = window.innerWidth;
+    if (screenWidth <= 768) {
+      setOpen(false);
+    }
 
-      if (windowWidth > 1000) {
-        setIsAsideVisible(true);
-        setIsAsideMobileVisible(false);
-      } else {
-        setIsAsideVisible(false);
-      }
+    const handleResize = () => {
+      const newScreenWidth = window.innerWidth;
+      setOpen(newScreenWidth > 768);
     };
 
-    handleResize();
     window.addEventListener("resize", handleResize);
+
     return () => {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
 
   return (
-    <div className="w-1/5">
-      {isAsideVisible && (
-        <div className=" h-screen bg-sky-700 text-white p-4 transition-width duration-300 ease-in-out">
-          <div className="flex justify-between">
+    <div
+      className={`bg-sky-600 min-h-screen ${
+        open ? "w-96" : "w-16"
+      } duration-500 text-gray-100 px-4`}
+    >
+      <div className="py-3 flex justify-end text-white">
+        <>
+          <HiMenuAlt3
+            size={26}
+            className="cursor-pointer"
+            onClick={handleToggle}
+          />
+        </>
+      </div>
+      <div className="mt-4 flex flex-col gap-4 relative">
+        {open && (
+          <div className="mb-5">
             <LogoSideBar />
-            <div>
-              <button
-                onClick={() => setIsAsideVisible(false)}
-                className="  text-white px-2 py-1 mt-4 "
-              >
-                <RxHamburgerMenu size={20} />
-              </button>
-            </div>
           </div>
-          <div className="flex flex-col gap-8 mt-20">
-            <div className="flex gap-8 rounded-md px-2 py-2 hover:bg-[#5CCCE5]">
-              <BiSolidDashboard size={30} />
-              <Link href="/admin/" className="text-white text-lg">
-                Dashboard
-              </Link>
-            </div>
-            <div className="flex gap-8 rounded-md px-2 py-2 hover:bg-[#5CCCE5]">
-              <FaUsers size={30} />
-              <Link href="/admin/users" className="text-white text-lg">
-                Manage Users
-              </Link>
-            </div>
-
-            <div className="flex gap-8 rounded-md px-2 py-2 hover:bg-[#5CCCE5]">
-              <FaBriefcaseMedical size={30} />
-              <Link href="/admin/categories" className="text-white text-lg">
-                Manage Categories
-              </Link>
-            </div>
-
-            <div className="flex gap-8 rounded-md px-2 py-2 hover:bg-[#5CCCE5]">
-              <GiMedicines size={30} />
-              <Link href="/admin/products" className="text-white text-lg">
-                Manage Products
-              </Link>
-            </div>
-
-            <div className="flex gap-8 rounded-md px-2 py-2 hover:bg-[#5CCCE5]">
-              <FaFilePrescription size={25} />
-              <Link href="/admin/orders" className="text-white text-lg">
-                Manage Orders
-              </Link>
-            </div>
-
-            <div className="flex gap-8 rounded-md px-2 py-2 hover:bg-[#5CCCE5]">
-              <RiHospitalFill size={30} />
-              <Link href="/admin/pharmacy" className="text-white text-lg">
-                Manage Pharmacy
-              </Link>
-            </div>
-
-            <div className="flex gap-8 rounded-md px-2 py-2 hover:bg-[#5CCCE5]">
-              <IoLogOut size={30} />
-              <Link href="/" className="text-white text-lg">
-                Log Out
-              </Link>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {!isAsideVisible && (
-        <div className="bg-sky-700 h-screen w-20 p-4 ">
-          <button
-            onClick={() => setIsAsideVisible(true)}
-            className="flex justify-center px-2 py-1 mt-4 text-white"
+        )}
+        {menus.map((menu, i) => (
+          <Link
+            href={menu.link}
+            onClick={menu.onClick}
+            key={i}
+            className={`group flex items-center text-md font-medium p-1 text-white hover:bg-gray-800 hover:text-white rounded-md  focus:bg-gray-800 focus:text-white  ${
+              menu.link === currentPath ? "bg-gray-800" : ""
+            }`}
           >
-            <RxHamburgerMenu size={20} />
-          </button>
-        </div>
-      )}
+            <div>{React.createElement(menu.icon, { size: "20" })}</div>
+            <h2
+              className={` hover:text-white ml-5 whitespace-pre duration-500 ${
+                !open && "opacity-0 translate-x-28 overflow-hidden"
+              }`}
+            >
+              {menu.name}
+            </h2>
+            <h2
+              className={`${
+                open && "hidden"
+              } absolute left-48 bg-sky-600 font-semibold whitespace-pre text-white rounded-md drop-shadow-lg px-0 py-0 w-0 overflow-hidden group-hover:px-2 group-hover:py-1 group-hover:left-14 group-hover:duration-300 group-hover:w-fit group-hover:z-10 `}
+            >
+              {menu.name}
+            </h2>
+          </Link>
+        ))}
+      </div>
     </div>
   );
 };
 
-export default AsideBar;
+export default Sidebar;
