@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import { Card, CardContent, CardHeader } from "../ui/card";
@@ -17,7 +18,7 @@ const PurchasedCard = ({ type, id }: { type: string; id: number }) => {
             <div className="flex flex-row justify-center items-center gap-3">
               <img
                 src="https://res-console.cloudinary.com/minevf/media_explorer_thumbnails/671ced60670f98cc3aa7a40e901548a5/detailed"
-                className="border-2 p-1"
+                className="border-2 p-1 w-16 lg:w-24"
               ></img>
               <div className="gap-0">
                 <p className="leading-none text-sm ">Product Name</p>
@@ -37,9 +38,11 @@ const PurchasedCard = ({ type, id }: { type: string; id: number }) => {
           </div>
 
           <div>
-            <Button variant="link" className="text-sky-700">
-              Details
-            </Button>
+            <Link href="/user/order">
+              <Button variant="link" className="text-sky-700">
+                Details
+              </Button>
+            </Link>
           </div>
         </CardContent>
       </Card>

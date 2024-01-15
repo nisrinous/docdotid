@@ -44,7 +44,7 @@ const PaymentMethodCard = ({
 
         <DialogFooter>
           <DialogClose>
-            <Link href="/checkout/payment">
+            <Link href="/user/checkout/payment">
               <Button type="submit" className="mt-10">
                 Pay with {method}
               </Button>

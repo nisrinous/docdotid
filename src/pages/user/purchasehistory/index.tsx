@@ -28,7 +28,6 @@ export default function PurchaseHistory() {
                   <PurchasedCard id={3} type="Medical " />
                 </TabsContent>
                 <TabsContent value="telemedicines" className="mb-10">
-                  {" "}
                   <PurchasedCard id={3} type="Telemedicine " />
                 </TabsContent>
               </Tabs>

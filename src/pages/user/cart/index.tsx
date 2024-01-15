@@ -67,7 +67,7 @@ export default function MyCart() {
           </div>
           <div className="flex flex-col gap-3 leading-none"></div>
           {cartItemsCount > 0 ? (
-            <Link href="/checkout">
+            <Link href="/user/checkout">
               <Button
                 disabled={cartItemsCount < 1}
                 className="w-full my-5 h-12 px-0 mx-0"
