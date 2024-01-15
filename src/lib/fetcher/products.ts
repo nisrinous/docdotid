@@ -65,7 +65,7 @@ export async function addCategory(token: string, name: string) {
 export async function editCategory(token: string, name: string, id: any) {
   try {
     const response = await fetch(`${API_ENDPOINT}/categories`, {
-      method: "POST",
+      method: "PUT",
       headers: {
         authorization: `bearer ${token}`,
         "Content-Type": "application/json",
