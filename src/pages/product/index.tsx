@@ -1,17 +1,12 @@
 import CardProduct from "@/components/card-product";
 import ProductCategories from "@/components/categories/product-categories";
-import { getProducts } from "@/lib/fetcher/products";
 import { ProductResponse } from "@/types";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 export default function Products() {
   const [productData, setProductData] = useState<ProductResponse[]>([]);
 
-  useEffect(() => {
-    const data = getProducts();
-    setProductData(data);
-  });
   return (
     <>
       <ProductCategories />
@@ -20,8 +15,7 @@ export default function Products() {
           Cardiologist
         </h3>
         <div className="flex justify-center">
-          <div className="container flex flex-wrap gap-4 my-10 justify-start">
-            {" "}
+          <div className="container flex flex-wrap my-10 gap-2 justify-start px-0">
             {Array.from({ length: 10 }).map((_, index) => {
               return <CardProduct key={index} />;
             })}
