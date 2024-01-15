@@ -1,4 +1,5 @@
 import { apiBaseUrl } from "@/config";
+import toast from "react-hot-toast";
 
 const API_ENDPOINT = apiBaseUrl;
 
@@ -28,6 +29,7 @@ export async function deleteCategory(token: string, id: any) {
       },
     });
     const data = await response.json();
+    toast.success("Delete Success!");
     return data;
   } catch (error) {
     console.error("" + error);
@@ -46,9 +48,17 @@ export async function addCategory(token: string, name: string) {
         name: name,
       }),
     });
+
+    if (response.status === 400) {
+      const errorData = await response.json();
+      toast.error(`${errorData.message}`);
+    }
+
     const data = await response.json();
+    toast.success("Data added to databse sucessfully!");
     return data;
   } catch (error) {
     console.error("" + error);
+    // toast.error("Failed to add category");
   }
 }

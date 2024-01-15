@@ -72,9 +72,7 @@ export default function Categories() {
     fetchData
   );
 
-  console.log("ini products Data", productsData);
   const data: ProductCategoriesResponse[] = productsData;
-
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -84,11 +82,18 @@ export default function Categories() {
   const [rowSelection, setRowSelection] = React.useState({});
   const [open, setOpen] = useState(false);
   const [newCategory, setNewCategory] = useState("");
+  const [inputError, setInputError] = useState("");
 
-  const handleInputChange = (event: any) => {
-    setNewCategory(event.target.value);
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const inputValue = event.target.value;
+    setNewCategory(inputValue);
+
+    if (/[0-9!@#$%^&*(),.?":{}|<>]/.test(inputValue)) {
+      setInputError("Input should not contain numbers or special characters.");
+    } else {
+      setInputError("");
+    }
   };
-
   const handleAddCategory = async () => {
     try {
       const result = await addCategory(token, newCategory);
@@ -220,16 +225,28 @@ export default function Categories() {
                     <Label htmlFor="name" className="text-right">
                       Category Name
                     </Label>
+
                     <Input
                       id="name"
                       value={newCategory}
                       onChange={handleInputChange}
-                      className="col-span-3"
+                      className={`col-span-3 focus rounded-md p-2 ${
+                        inputError ? "focus:bg-red-200" : ""
+                      }`}
                     />
+                    {inputError && (
+                      <p className="col-span-4 text-red-500 text-s mt-1">
+                        {inputError}
+                      </p>
+                    )}
                   </div>
                 </div>
                 <DialogFooter>
-                  <Button type="submit" onClick={handleAddCategory}>
+                  <Button
+                    type="submit"
+                    onClick={handleAddCategory}
+                    disabled={inputError !== ""}
+                  >
                     Save changes
                   </Button>
                 </DialogFooter>

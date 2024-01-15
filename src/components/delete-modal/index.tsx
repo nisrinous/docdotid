@@ -8,13 +8,23 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from "../ui/button";
-import { Label } from "../ui/label";
-import { Input } from "../ui/input";
 import { deleteCategory } from "@/lib/fetcher/products";
+import { useState } from "react";
 
 export function DeleteModal({ token, id }: { token: string; id: unknown }) {
+  const [open, setOpen] = useState(false);
+
+  const handleDelete = async () => {
+    try {
+      await deleteCategory(token, id);
+      setOpen(false);
+    } catch (error) {
+      console.error("" + error);
+    }
+  };
+
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button variant="link" className="bg-red-400 hover:bg-red-300">
           Delete
@@ -29,7 +39,7 @@ export function DeleteModal({ token, id }: { token: string; id: unknown }) {
         </DialogHeader>
 
         <DialogFooter>
-          <Button type="submit" onClick={() => deleteCategory(token, id)}>
+          <Button type="submit" onClick={handleDelete}>
             Delete Category
           </Button>
         </DialogFooter>
