@@ -11,7 +11,7 @@ const Telemedicine = () => {
           Cardiologist
         </h3>
         <div className="flex justify-center">
-          <div className="container flex flex-wrap gap-4 my-10 justify-start">
+          <div className="container flex flex-wrap gap-4 my-10 justify-start px-0">
             <CardDoctor />
             <CardDoctor />
             <CardDoctor />
