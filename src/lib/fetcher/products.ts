@@ -2,7 +2,7 @@ import { apiBaseUrl } from "@/config";
 
 const API_ENDPOINT = apiBaseUrl;
 
-export async function getProducts(token: string) {
+export async function getProductCategories(token: string) {
   try {
     const response = await fetch(`${API_ENDPOINT}/categories`, {
       method: "GET",
@@ -30,6 +30,23 @@ export async function deleteCategory(token: string, id: any) {
         "Content-Type": "application/json",
       },
     });
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("" + error);
+  }
+}
+
+export async function getProducts(token: string) {
+  try {
+    const response = await fetch(`${API_ENDPOINT}/products`, {
+      method: "GET",
+      headers: {
+        authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+
     const data = await response.json();
     return data;
   } catch (error) {

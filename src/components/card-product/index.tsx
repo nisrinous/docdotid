@@ -5,8 +5,9 @@ import { useEffect, useState } from "react";
 
 import { useDispatch } from "react-redux";
 import { decrementCart, incrementCart } from "@/store/slices/cartSlice";
+import { ProductsResponse } from "@/types";
 
-const CardProduct = ({ productId }: { productId?: number }) => {
+const CardProduct = ({ product }: { product: ProductsResponse }) => {
   const [addedToCart, setAddedToCart] = useState<boolean>(false);
   const [counter, setCounter] = useState<number>(0);
   const dispatch = useDispatch();
@@ -33,19 +34,16 @@ const CardProduct = ({ productId }: { productId?: number }) => {
 
   return (
     <Card className="p-2 w-40 flex flex-col justify-between">
-      <Link href={`/product/${productId}`}>
+      <Link href={`/product/${product.id}`}>
         <CardContent className="p-1 flex flex-col items-center justify-center">
-          <img
-            src="https://res-console.cloudinary.com/minevf/media_explorer_thumbnails/671ced60670f98cc3aa7a40e901548a5/detailed"
-            className="h-full"
-          ></img>
+          <img src={product.image} className="h-full"></img>
         </CardContent>
       </Link>
       <CardFooter className="flex flex-col gap-2 items-center justify-center p-0">
         <Link href="/telemedicines/cardiologist">
-          <p className="px-2 text-center">Cardiologist</p>
+          <p className="px-2 text-center">{product.name}</p>
           <p className="text-zinc-400 leading-none text-xs text-center mt-1">
-            Rp 13.000
+            $ {product.sellingUnit}
           </p>
         </Link>
         {!addedToCart && (

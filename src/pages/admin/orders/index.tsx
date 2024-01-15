@@ -4,7 +4,7 @@ import * as React from "react";
 import { ProductCategoriesResponse } from "@/types";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
-import { getProducts } from "@/lib/fetcher/products";
+import { getProductCategories } from "@/lib/fetcher/products";
 import { menus } from "@/utils/menus";
 import Sidebar from "@/components/aside-bar";
 import {
@@ -124,7 +124,7 @@ export default function OrderPage() {
 
   const fetcher = async () => {
     try {
-      const data = await getProducts(token);
+      const data = await getProductCategories(token);
       setProductsData(data.data);
     } catch (error) {
       console.error("" + error);

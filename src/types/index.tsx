@@ -1,4 +1,4 @@
-export type ProductResponse = {
+export type ProductsResponse = {
   id: number;
   name: string;
   unitInPack: string;
