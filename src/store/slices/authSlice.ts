@@ -4,6 +4,8 @@ interface AuthState {
   token: string;
   userRole: string;
   userId: number;
+  fixLat: number;
+  fixLng: number;
 }
 
 const authSlice = createSlice({
@@ -24,8 +26,15 @@ const authSlice = createSlice({
       state.userRole = "";
       state.userId = 0;
     },
+    setFixLat(state, action: PayloadAction<number>) {
+      state.fixLat = action.payload;
+    },
+    setFixLng(state, action: PayloadAction<number>) {
+      state.fixLng = action.payload;
+    },
   },
 });
 
-export const { setToken, setUserRole, setUserId } = authSlice.actions;
+export const { setToken, setUserRole, setUserId, setFixLat, setFixLng } =
+  authSlice.actions;
 export default authSlice.reducer;
