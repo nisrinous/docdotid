@@ -53,3 +53,20 @@ export async function getProducts(token: string) {
     console.error("" + error);
   }
 }
+
+export async function getProduct(token: string, productId: string) {
+  try {
+    const response = await fetch(`${API_ENDPOINT}/products/${productId}`, {
+      method: "GET",
+      headers: {
+        authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("" + error);
+  }
+}
