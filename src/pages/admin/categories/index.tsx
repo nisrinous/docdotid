@@ -6,7 +6,6 @@ import { RootState } from "@/store/store";
 import { getProducts } from "@/lib/fetcher/products";
 import { Label } from "@/components/ui/label";
 import { menus } from "@/utils/menus";
-import { deleteCategory } from "@/lib/fetcher/products";
 import {
   Dialog,
   DialogContent,
@@ -47,7 +46,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { DeleteModal } from "@/components/delete-modal";
 import useSWR from "swr";
 
@@ -72,9 +71,6 @@ export default function Categories() {
     fetchData
   );
 
-  // useEffect(() => {
-  //   fetcher();
-  // });
   console.log("ini products Data", productsData);
   const data: ProductCategoriesResponse[] = productsData;
 
@@ -140,9 +136,6 @@ export default function Categories() {
           <div className="flex gap-5">
             <Button variant="link">Edit</Button>
             <DeleteModal token={token} id={id} />
-            {/* <Button variant="link" onClick={() => DeleteModal(token, id)}>
-              Delete
-            </Button> */}
           </div>
         );
       },
@@ -264,7 +257,21 @@ export default function Categories() {
               ))}
             </TableHeader>
             <TableBody>
-              {table.getRowModel().rows?.length ? (
+              {isLoading && (
+                <TableRow>
+                  <TableCell colSpan={columns.length} className="text-center">
+                    Loading...
+                  </TableCell>
+                </TableRow>
+              )}
+              {isError && (
+                <TableRow>
+                  <TableCell colSpan={columns.length} className="text-center">
+                    Error loading data. Please try again later.
+                  </TableCell>
+                </TableRow>
+              )}
+              {table?.getRowModel().rows?.length ? (
                 table.getRowModel().rows.map((row) => (
                   <TableRow
                     key={row.id}
