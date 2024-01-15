@@ -14,7 +14,7 @@ import ManageQuantityButton from "../button/manage-quantity-button";
 const CartItemCard = ({ quantity }: { quantity: number }) => {
   return (
     <>
-      <CardContent className="p-0 pb-3 flex flex-row justify-start items-center w-full border-b-2 mb-3">
+      <CardContent className="p-0 pb-3 flex flex-row justify-start items-center w-full">
         <img
           src="https://res-console.cloudinary.com/minevf/media_explorer_thumbnails/671ced60670f98cc3aa7a40e901548a5/detailed"
           className="h-16 w-16 p-1 border-2"
