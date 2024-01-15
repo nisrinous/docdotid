@@ -82,22 +82,21 @@ export default function Categories() {
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
-
+  const [open, setOpen] = useState(false);
   const [newCategory, setNewCategory] = useState("");
 
-  const handleInputChange = (event) => {
+  const handleInputChange = (event: any) => {
     setNewCategory(event.target.value);
   };
 
   const handleAddCategory = async () => {
     try {
-      const token = "yourAuthToken";
-
       const result = await addCategory(token, newCategory);
 
       console.log("Category added:", result);
 
       setNewCategory("");
+      setOpen(false);
     } catch (error) {
       console.error("Error adding category:", error);
     }
@@ -199,7 +198,7 @@ export default function Categories() {
             className="max-w-sm"
           />
           <div className="flex gap-3">
-            <Dialog>
+            <Dialog open={open} onOpenChange={setOpen}>
               <DialogTrigger asChild>
                 <Button
                   variant="outline"

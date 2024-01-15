@@ -29,10 +29,9 @@ export function DeleteModal({ token, id }: { token: string; id: unknown }) {
         </DialogHeader>
 
         <DialogFooter>
-          <Button type="submit">Delete Category</Button>
-          {/* <Button type="submit" onClick={() => deleteCategory(token, id)}>
+          <Button type="submit" onClick={() => deleteCategory(token, id)}>
             Delete Category
-          </Button> */}
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
