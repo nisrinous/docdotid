@@ -48,6 +48,7 @@ import {
 } from "@/components/ui/table";
 import { useState } from "react";
 import { DeleteModal } from "@/components/delete-modal";
+import { addCategory } from "@/lib/fetcher/products";
 import useSWR from "swr";
 
 export default function Categories() {
@@ -81,6 +82,26 @@ export default function Categories() {
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
+
+  const [newCategory, setNewCategory] = useState("");
+
+  const handleInputChange = (event) => {
+    setNewCategory(event.target.value);
+  };
+
+  const handleAddCategory = async () => {
+    try {
+      const token = "yourAuthToken";
+
+      const result = await addCategory(token, newCategory);
+
+      console.log("Category added:", result);
+
+      setNewCategory("");
+    } catch (error) {
+      console.error("Error adding category:", error);
+    }
+  };
 
   const columns: ColumnDef<ProductCategoriesResponse, any>[] = [
     {
@@ -200,11 +221,18 @@ export default function Categories() {
                     <Label htmlFor="name" className="text-right">
                       Category Name
                     </Label>
-                    <Input id="name" defaultValue="" className="col-span-3" />
+                    <Input
+                      id="name"
+                      value={newCategory}
+                      onChange={handleInputChange}
+                      className="col-span-3"
+                    />
                   </div>
                 </div>
                 <DialogFooter>
-                  <Button type="submit">Save changes</Button>
+                  <Button type="submit" onClick={handleAddCategory}>
+                    Save changes
+                  </Button>
                 </DialogFooter>
               </DialogContent>
             </Dialog>

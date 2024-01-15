@@ -31,3 +31,22 @@ export async function deleteCategory(token: string, id: any) {
     console.error("" + error);
   }
 }
+
+export async function addCategory(token: string, name: string) {
+  try {
+    const response = await fetch(`${API_ENDPOINT}/categories/`, {
+      method: "POST",
+      headers: {
+        authorization: `bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name: name,
+      }),
+    });
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("" + error);
+  }
+}
