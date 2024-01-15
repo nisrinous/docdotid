@@ -1,11 +1,17 @@
 import CardProduct from "@/components/card-product";
 import ProductCategories from "@/components/categories/product-categories";
+import { getProducts } from "@/lib/fetcher/products";
 import { ProductResponse } from "@/types";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function Products() {
   const [productData, setProductData] = useState<ProductResponse[]>([]);
+
+  useEffect(() => {
+    const data = getProducts();
+    setProductData(data);
+  });
   return (
     <>
       <ProductCategories />
@@ -13,10 +19,13 @@ export default function Products() {
         <h3 className="scroll-m-20 text-2xl md:text-3xl tracking-tight text-left mt-5">
           Cardiologist
         </h3>
-        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 flex-row gap-4 place-content-center">
-          {Array.from({ length: 10 }).map((_, index) => {
-            return <CardProduct key={index} />;
-          })}
+        <div className="flex justify-center">
+          <div className="container flex flex-wrap gap-4 my-10 justify-start">
+            {" "}
+            {Array.from({ length: 10 }).map((_, index) => {
+              return <CardProduct key={index} />;
+            })}
+          </div>
         </div>
       </div>
     </>
