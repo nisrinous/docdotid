@@ -1,14 +1,13 @@
 import { Button } from "@/components/ui/button";
 import { CardContent, Card } from "@/components/ui/card";
-import { JSX, SVGProps } from "react";
 
 export function CardDoctor() {
   return (
-    <Card className="w-72 flex flex-row justify-evenly items-center">
+    <Card className="w-full md:w-80 flex flex-row justify-evenly items-center">
       <div className="">
         <img
           alt="Profile Image"
-          className="w-16 lg:w-24 items-center"
+          className="w-24 items-center"
           src="https://res-console.cloudinary.com/minevf/media_explorer_thumbnails/6cb8f67a33376e09150a0ff78061df2e/detailed"
         />
       </div>
