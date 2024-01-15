@@ -46,7 +46,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { DeleteModal } from "@/components/delete-modal";
 import useSWR from "swr";
 
