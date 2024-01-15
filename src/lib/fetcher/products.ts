@@ -8,10 +8,13 @@ export async function getProducts(token: string) {
     const response = await fetch(`${API_ENDPOINT}/categories`, {
       method: "GET",
       headers: {
-        authorization: `bearer ${token}`,
+        authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       },
     });
+    if (!response.ok) {
+      throw new Error(`Failed to fetch data: ${response.statusText}`);
+    }
     const data = await response.json();
     return data;
   } catch (error) {

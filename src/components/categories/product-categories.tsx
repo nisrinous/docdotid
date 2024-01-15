@@ -1,28 +1,30 @@
 import Link from "next/link";
 import { Card, CardContent, CardFooter } from "../ui/card";
 import { getProducts } from "@/lib/fetcher/products";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { ProductCategoriesResponse } from "@/types";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
-import { Button } from "../ui/button";
 import useSWR from "swr";
 
 const ProductCategories = () => {
   const { token } = useSelector((state: RootState) => state.user);
 
+  const [productsData, setProductsData] = useState<ProductCategoriesResponse[]>(
+    []
+  );
+
   const fetchData = async () => {
     try {
       const data = await getProducts(token);
-      return data;
+      setProductsData(data.data);
     } catch (error) {
       console.error("" + error);
-      throw error;
     }
   };
 
   const {
-    data: productsData,
+    data,
     error: isError,
     isValidating: isLoading,
   } = useSWR(["/categories", token], fetchData);
@@ -52,8 +54,8 @@ const ProductCategories = () => {
                 >
                   <CardContent className="p-1 flex flex-col items-center justify-between">
                     <img
-                      src={`productcategory${index + 1}.svg`}
-                      className="h-full rounded-full border-[1px]"
+                      src="https://res-console.cloudinary.com/minevf/media_explorer_thumbnails/a1a09951f71f23c5c437607fbd2a5e1f/detailed"
+                      className="w-12 lg:w-16"
                     ></img>
                   </CardContent>
                   <CardFooter className="items-center justify-center p-0">
