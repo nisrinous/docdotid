@@ -52,13 +52,39 @@ export async function addCategory(token: string, name: string) {
     if (response.status === 400) {
       const errorData = await response.json();
       toast.error(`${errorData.message}`);
+    } else {
+      const data = await response.json();
+      toast.success("Data added to databse sucessfully!");
+      return data;
     }
-
-    const data = await response.json();
-    toast.success("Data added to databse sucessfully!");
-    return data;
   } catch (error) {
     console.error("" + error);
-    // toast.error("Failed to add category");
+  }
+}
+
+export async function editCategory(token: string, name: string, id: any) {
+  try {
+    const response = await fetch(`${API_ENDPOINT}/categories`, {
+      method: "POST",
+      headers: {
+        authorization: `bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        id: id,
+        name: name,
+      }),
+    });
+
+    if (response.status === 400) {
+      const errorData = await response.json();
+      toast.error(`${errorData.message}`);
+    } else {
+      const data = await response.json();
+      toast.success("Data added to databse sucessfully!");
+      return data;
+    }
+  } catch (error) {
+    console.error("" + error);
   }
 }

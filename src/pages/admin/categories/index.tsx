@@ -49,7 +49,8 @@ import {
 import { useState } from "react";
 import { DeleteModal } from "@/components/delete-modal";
 import { addCategory } from "@/lib/fetcher/products";
-import useSWR from "swr";
+import useSWR, { mutate } from "swr";
+import { EditModal } from "@/components/edit-modal";
 
 export default function Categories() {
   const { token } = useSelector((state: RootState) => state.user);
@@ -102,6 +103,7 @@ export default function Categories() {
 
       setNewCategory("");
       setOpen(false);
+      mutate(["/categories", token]);
     } catch (error) {
       console.error("Error adding category:", error);
     }
@@ -156,10 +158,12 @@ export default function Categories() {
       enableHiding: false,
       cell: ({ row }) => {
         const id = row.getValue("id");
+        const currentCategory = row.getValue("name");
 
         return (
           <div className="flex gap-5">
-            <Button variant="link">Edit</Button>
+            {/* <Button variant="link">Edit</Button> */}
+            <EditModal token={token} name={currentCategory} id={id} />
             <DeleteModal token={token} id={id} />
           </div>
         );

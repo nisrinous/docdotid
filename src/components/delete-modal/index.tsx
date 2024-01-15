@@ -10,6 +10,7 @@ import {
 import { Button } from "../ui/button";
 import { deleteCategory } from "@/lib/fetcher/products";
 import { useState } from "react";
+import { mutate } from "swr";
 
 export function DeleteModal({ token, id }: { token: string; id: unknown }) {
   const [open, setOpen] = useState(false);
@@ -18,6 +19,7 @@ export function DeleteModal({ token, id }: { token: string; id: unknown }) {
     try {
       await deleteCategory(token, id);
       setOpen(false);
+      mutate(["/categories", token]);
     } catch (error) {
       console.error("" + error);
     }
