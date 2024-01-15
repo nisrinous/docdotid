@@ -30,7 +30,6 @@ import {
 import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react";
 import Sidebar from "@/components/aside-bar";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -111,28 +110,6 @@ export default function Categories() {
 
   const columns: ColumnDef<ProductCategoriesResponse, any>[] = [
     {
-      id: "select",
-      header: ({ table }) => (
-        <Checkbox
-          checked={
-            table.getIsAllPageRowsSelected() ||
-            (table.getIsSomePageRowsSelected() && "indeterminate")
-          }
-          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-          aria-label="Select all"
-        />
-      ),
-      cell: ({ row }) => (
-        <Checkbox
-          checked={row.getIsSelected()}
-          onCheckedChange={(value) => row.toggleSelected(!!value)}
-          aria-label="Select row"
-        />
-      ),
-      enableSorting: false,
-      enableHiding: false,
-    },
-    {
       accessorKey: "id",
       header: "ID",
       cell: ({ row }) => <div className="capitalize">{row.getValue("id")}</div>,
@@ -162,7 +139,6 @@ export default function Categories() {
 
         return (
           <div className="flex gap-5">
-            {/* <Button variant="link">Edit</Button> */}
             <EditModal token={token} name={currentCategory} id={id} />
             <DeleteModal token={token} id={id} />
           </div>
@@ -188,7 +164,6 @@ export default function Categories() {
       rowSelection,
     },
   });
-  console.log(table);
 
   return (
     <div className="flex">
@@ -305,13 +280,6 @@ export default function Categories() {
               ))}
             </TableHeader>
             <TableBody>
-              {isLoading && (
-                <TableRow>
-                  <TableCell colSpan={columns.length} className="text-center">
-                    Loading...
-                  </TableCell>
-                </TableRow>
-              )}
               {isError && (
                 <TableRow>
                   <TableCell colSpan={columns.length} className="text-center">
@@ -319,7 +287,7 @@ export default function Categories() {
                   </TableCell>
                 </TableRow>
               )}
-              {table?.getRowModel().rows?.length ? (
+              {!isLoading && !isError && table?.getRowModel().rows?.length ? (
                 table.getRowModel().rows.map((row) => (
                   <TableRow
                     key={row.id}
@@ -341,7 +309,7 @@ export default function Categories() {
                     colSpan={columns.length}
                     className="h-24 text-center"
                   >
-                    No results.
+                    {isLoading ? "Loading..." : "No results."}
                   </TableCell>
                 </TableRow>
               )}
