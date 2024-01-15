@@ -55,7 +55,7 @@ export default function MyCart() {
               <p className="leading-none text-base">Rp total</p>
             </div>
           </div>
-          <Link href="/checkout/paymentmethod">
+          <Link href="/user/checkout/paymentmethod">
             <Button className="w-full my-5 h-12 px-0 mx-0">
               Choose payment method
             </Button>
