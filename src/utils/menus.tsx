@@ -36,7 +36,7 @@ export const menus = [
   },
   {
     name: "Manage Pharmacy",
-    link: "/admin/pharmacies",
+    link: "/admin/pharmacy",
     icon: RiHospitalFill,
     margin: true,
   },
