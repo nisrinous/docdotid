@@ -49,12 +49,12 @@ const CardProduct = ({ product }: { product: ProductsResponse }) => {
         </CardContent>
       </Link>
       <CardFooter className="flex flex-col gap-2 items-center justify-center p-0">
-        <Link href="/telemedicines/cardiologist">
+        <Link href={`/product/${product.id}`}>
           <p className="px-2 text-center text-lg">{product.name}</p>
           <p className="text-zinc-600 leading-none text-base text-center mt-1">
             ${product.min_price} - ${product.max_price}
           </p>
-          <p className="px-2 text-center text-zinc-400 text-sm">
+          <p className="px-2 text-center text-zinc-400 text-sm mb-2">
             {product.unit_in_pack} /packkk
           </p>
         </Link>

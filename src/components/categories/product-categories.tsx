@@ -10,14 +10,14 @@ import useSWR from "swr";
 const ProductCategories = () => {
   const { token } = useSelector((state: RootState) => state.user);
 
-  const [productsData, setProductsData] = useState<ProductCategoriesResponse[]>(
+  const [categories, setNewCategories] = useState<ProductCategoriesResponse[]>(
     []
   );
 
   const fetchData = async () => {
     try {
       const data = await getProductCategories(token);
-      setProductsData(data.data);
+      setNewCategories(data.data);
     } catch (error) {
       console.error("" + error);
     }
@@ -47,7 +47,7 @@ const ProductCategories = () => {
         ) : (
           <div className="flex justify-center">
             <div className="flex flex-wrap justify-center">
-              {productsData?.map((item, index) => (
+              {categories?.map((item, index) => (
                 <Card
                   key={index}
                   className="p-2 border-none shadow-none flex flex-col justify-between "
