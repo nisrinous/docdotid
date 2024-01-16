@@ -2,8 +2,9 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface AuthState {
   token: string;
-  userRole: string;
-  userId: number;
+  user_id: number;
+  personal_id: number;
+  role_id: number;
   fixLat: number;
   fixLng: number;
 }
@@ -15,16 +16,20 @@ const authSlice = createSlice({
     setToken(state, action: PayloadAction<string>) {
       state.token = action.payload;
     },
-    setUserRole(state, action: PayloadAction<string>) {
-      state.userRole = action.payload;
-    },
     setUserId(state, action: PayloadAction<number>) {
-      state.userId = action.payload;
+      state.user_id = action.payload;
+    },
+    setPersonalId(state, action: PayloadAction<number>) {
+      state.personal_id = action.payload;
+    },
+    setRoleId(state, action: PayloadAction<number>) {
+      state.role_id = action.payload;
     },
     deleteUser: (state) => {
       state.token = "";
-      state.userRole = "";
-      state.userId = 0;
+      state.user_id = 0;
+      state.personal_id = 0;
+      state.role_id = 0;
     },
     setFixLat(state, action: PayloadAction<number>) {
       state.fixLat = action.payload;
@@ -35,6 +40,12 @@ const authSlice = createSlice({
   },
 });
 
-export const { setToken, setUserRole, setUserId, setFixLat, setFixLng } =
-  authSlice.actions;
+export const {
+  setToken,
+  setRoleId,
+  setPersonalId,
+  setUserId,
+  setFixLat,
+  setFixLng,
+} = authSlice.actions;
 export default authSlice.reducer;
