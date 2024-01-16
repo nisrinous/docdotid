@@ -30,7 +30,6 @@ import {
 import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react";
 import Sidebar from "@/components/aside-bar";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -48,7 +47,9 @@ import {
 } from "@/components/ui/table";
 import { useState } from "react";
 import { DeleteModal } from "@/components/delete-modal";
-import useSWR from "swr";
+import { addCategory } from "@/lib/fetcher/products";
+import useSWR, { mutate } from "swr";
+import { EditModal } from "@/components/edit-modal";
 
 export default function Categories() {
   const { token } = useSelector((state: RootState) => state.user);
@@ -71,9 +72,7 @@ export default function Categories() {
     fetchData
   );
 
-  console.log("ini products Data", productsData);
   const data: ProductCategoriesResponse[] = productsData;
-
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -81,33 +80,49 @@ export default function Categories() {
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
+  const [open, setOpen] = useState(false);
+  const [newCategory, setNewCategory] = useState("");
+  const [inputError, setInputError] = useState("");
+
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const inputValue = event.target.value;
+    setNewCategory(inputValue);
+
+    if (/[0-9!@#$%^&*(),.?":{}|<>]/.test(inputValue)) {
+      setInputError("Input should not contain numbers or special characters.");
+    } else {
+      setInputError("");
+    }
+  };
+  const handleAddCategory = async () => {
+    try {
+      const result = await addCategory(token, newCategory);
+
+      console.log("Category added:", result);
+
+      setNewCategory("");
+      setOpen(false);
+      mutate(["/categories", token]);
+    } catch (error) {
+      console.error("Error adding category:", error);
+    }
+  };
 
   const columns: ColumnDef<ProductCategoriesResponse, any>[] = [
     {
-      id: "select",
-      header: ({ table }) => (
-        <Checkbox
-          checked={
-            table.getIsAllPageRowsSelected() ||
-            (table.getIsSomePageRowsSelected() && "indeterminate")
-          }
-          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-          aria-label="Select all"
-        />
-      ),
-      cell: ({ row }) => (
-        <Checkbox
-          checked={row.getIsSelected()}
-          onCheckedChange={(value) => row.toggleSelected(!!value)}
-          aria-label="Select row"
-        />
-      ),
-      enableSorting: false,
-      enableHiding: false,
-    },
-    {
       accessorKey: "id",
-      header: "ID",
+      header: ({ column }) => {
+        return (
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+            className="px-0"
+          >
+            ID
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </Button>
+        );
+      },
       cell: ({ row }) => <div className="capitalize">{row.getValue("id")}</div>,
     },
     {
@@ -117,6 +132,7 @@ export default function Categories() {
           <Button
             variant="ghost"
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+            className="px-0"
           >
             Name
             <ArrowUpDown className="ml-2 h-4 w-4" />
@@ -131,10 +147,11 @@ export default function Categories() {
       enableHiding: false,
       cell: ({ row }) => {
         const id = row.getValue("id");
+        const currentCategory = row.getValue("name");
 
         return (
           <div className="flex gap-5">
-            <Button variant="link">Edit</Button>
+            <EditModal token={token} name={currentCategory} id={id} />
             <DeleteModal token={token} id={id} />
           </div>
         );
@@ -159,7 +176,6 @@ export default function Categories() {
       rowSelection,
     },
   });
-  console.log(table);
 
   return (
     <div className="flex">
@@ -178,7 +194,7 @@ export default function Categories() {
             className="max-w-sm"
           />
           <div className="flex gap-3">
-            <Dialog>
+            <Dialog open={open} onOpenChange={setOpen}>
               <DialogTrigger asChild>
                 <Button
                   variant="outline"
@@ -200,11 +216,30 @@ export default function Categories() {
                     <Label htmlFor="name" className="text-right">
                       Category Name
                     </Label>
-                    <Input id="name" defaultValue="" className="col-span-3" />
+
+                    <Input
+                      id="name"
+                      value={newCategory}
+                      onChange={handleInputChange}
+                      className={`col-span-3 focus rounded-md p-2 ${
+                        inputError ? "focus:bg-red-200" : ""
+                      }`}
+                    />
+                    {inputError && (
+                      <p className="col-span-4 text-red-500 text-s mt-1">
+                        {inputError}
+                      </p>
+                    )}
                   </div>
                 </div>
                 <DialogFooter>
-                  <Button type="submit">Save changes</Button>
+                  <Button
+                    type="submit"
+                    onClick={handleAddCategory}
+                    disabled={inputError !== ""}
+                  >
+                    Save changes
+                  </Button>
                 </DialogFooter>
               </DialogContent>
             </Dialog>
@@ -257,13 +292,6 @@ export default function Categories() {
               ))}
             </TableHeader>
             <TableBody>
-              {isLoading && (
-                <TableRow>
-                  <TableCell colSpan={columns.length} className="text-center">
-                    Loading...
-                  </TableCell>
-                </TableRow>
-              )}
               {isError && (
                 <TableRow>
                   <TableCell colSpan={columns.length} className="text-center">
@@ -271,7 +299,7 @@ export default function Categories() {
                   </TableCell>
                 </TableRow>
               )}
-              {table?.getRowModel().rows?.length ? (
+              {!isLoading && !isError && table?.getRowModel().rows?.length ? (
                 table.getRowModel().rows.map((row) => (
                   <TableRow
                     key={row.id}
@@ -293,7 +321,7 @@ export default function Categories() {
                     colSpan={columns.length}
                     className="h-24 text-center"
                   >
-                    No results.
+                    {isLoading ? "Loading..." : "No results."}
                   </TableCell>
                 </TableRow>
               )}
