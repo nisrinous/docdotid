@@ -111,7 +111,18 @@ export default function Categories() {
   const columns: ColumnDef<ProductCategoriesResponse, any>[] = [
     {
       accessorKey: "id",
-      header: "ID",
+      header: ({ column }) => {
+        return (
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+            className="px-0"
+          >
+            ID
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </Button>
+        );
+      },
       cell: ({ row }) => <div className="capitalize">{row.getValue("id")}</div>,
     },
     {
@@ -121,6 +132,7 @@ export default function Categories() {
           <Button
             variant="ghost"
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+            className="px-0"
           >
             Name
             <ArrowUpDown className="ml-2 h-4 w-4" />
