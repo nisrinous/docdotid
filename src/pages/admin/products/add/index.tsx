@@ -7,6 +7,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 
+interface DropdownOption {
+  Label: string;
+  value: string;
+}
+
 const AddProduct = () => {
   const [formData, setFormData] = useState({
     name: "",
@@ -25,30 +30,34 @@ const AddProduct = () => {
     width: 0,
   });
 
-  const [manufacturerOptions, setManufacturerOptions] = useState([]);
-  const [drugClassificationOptions, setDrugClassificationOptions] = useState(
-    []
-  );
-  const [drugFormOptions, setDrugFormOptions] = useState([]);
-  const [productCategoryOptions, setProductCategoryOptions] = useState([]);
+  const { data: manufacturerOptions, error: manufacturerError } = useSWR<
+    DropdownOption[]
+  >("www.dropdown.com", async (url: string) => {
+    const response = await axios.get(url);
+    return response.data;
+  });
 
-  const fetchDropdownOptions = async (url, setData) => {
-    try {
+  const { data: drugClassificationOptions, error: drugClassificationError } =
+    useSWR<DropdownOption[]>("www.dropdown1.com", async (url: string) => {
       const response = await axios.get(url);
-      setData(response.data);
-    } catch (error) {
-      console.error("Error fetching dropdown options:", error);
-    }
-  };
+      return response.data;
+    });
 
-  useEffect(() => {
-    fetchDropdownOptions("www.dropdown.com", setManufacturerOptions);
-    fetchDropdownOptions("www.dropdown1.com", setDrugClassificationOptions);
-    fetchDropdownOptions("www.dropdown2.com", setDrugFormOptions);
-    fetchDropdownOptions("www.dropdown3.com", setProductCategoryOptions);
-  }, []);
+  const { data: drugFormOptions, error: drugFormError } = useSWR<
+    DropdownOption[]
+  >("www.dropdown2.com", async (url: string) => {
+    const response = await axios.get(url);
+    return response.data;
+  });
 
-  const handleInputChange = (e) => {
+  const { data: productCategoryOptions, error: productCategoryError } = useSWR<
+    DropdownOption[]
+  >("www.dropdown3.com", async (url: string) => {
+    const response = await axios.get(url);
+    return response.data;
+  });
+
+  const handleInputChange = (e: { target: { name: any; value: any } }) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
@@ -107,7 +116,7 @@ const AddProduct = () => {
               <option value="" disabled>
                 Select Manufacturer
               </option>
-              {manufacturerOptions.map((option) => (
+              {manufacturerOptions?.map((option) => (
                 <option key={option.value} value={option.value}>
                   {option.Label}
                 </option>
@@ -139,7 +148,7 @@ const AddProduct = () => {
               <option value="" disabled>
                 Select Drug Classification
               </option>
-              {drugClassificationOptions.map((option) => (
+              {drugClassificationOptions?.map((option) => (
                 <option key={option.value} value={option.value}>
                   {option.Label}
                 </option>
@@ -159,7 +168,7 @@ const AddProduct = () => {
               <option value="" disabled>
                 Select Drug Form
               </option>
-              {drugFormOptions.map((option) => (
+              {drugFormOptions?.map((option) => (
                 <option key={option.value} value={option.value}>
                   {option.Label}
                 </option>
@@ -179,7 +188,7 @@ const AddProduct = () => {
               <option value="" disabled>
                 Select Product Category
               </option>
-              {productCategoryOptions.map((option) => (
+              {productCategoryOptions?.map((option) => (
                 <option key={option.value} value={option.value}>
                   {option.Label}
                 </option>
