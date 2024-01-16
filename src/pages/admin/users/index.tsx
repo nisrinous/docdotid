@@ -4,7 +4,7 @@ import * as React from "react";
 import { ProductCategoriesResponse } from "@/types";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
-import { getProductCategories } from "@/lib/fetcher/products";
+import { getProductCategories } from "@/lib/fetcher/product-category";
 import Sidebar from "@/components/aside-bar";
 import { menus } from "@/utils/menus";
 import {

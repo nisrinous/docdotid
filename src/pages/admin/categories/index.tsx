@@ -3,7 +3,7 @@ import * as React from "react";
 import { ProductCategoriesResponse } from "@/types";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
-import { getProductCategories } from "@/lib/fetcher/products";
+import { getProductCategories } from "@/lib/fetcher/product-category";
 import { Label } from "@/components/ui/label";
 import { menus } from "@/utils/menus";
 import {
@@ -41,7 +41,7 @@ import {
 } from "@/components/ui/table";
 import { useState } from "react";
 import { DeleteModal } from "@/components/delete-modal";
-import { addCategory } from "@/lib/fetcher/products";
+import { addCategory } from "@/lib/fetcher/product-category";
 import useSWR, { mutate } from "swr";
 import { EditModal } from "@/components/edit-modal";
 import SearchBar from "@/components/search-bar";

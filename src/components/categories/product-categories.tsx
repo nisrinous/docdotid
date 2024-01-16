@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Card, CardContent, CardFooter } from "../ui/card";
-import { getProductCategories } from "@/lib/fetcher/products";
+import { getProductCategories } from "@/lib/fetcher/product-category";
 import { useState } from "react";
 import { ProductCategoriesResponse } from "@/types";
 import { useSelector } from "react-redux";
