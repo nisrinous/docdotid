@@ -27,15 +27,9 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react";
+import { ArrowUpDown } from "lucide-react";
 import Sidebar from "@/components/aside-bar";
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import {
   Table,
@@ -50,6 +44,8 @@ import { DeleteModal } from "@/components/delete-modal";
 import { addCategory } from "@/lib/fetcher/product-category";
 import useSWR, { mutate } from "swr";
 import { EditModal } from "@/components/edit-modal";
+import SearchBar from "@/components/search-bar";
+import ColumnDropdown from "@/components/columns-dropdown";
 
 export default function Categories() {
   const { token } = useSelector((state: RootState) => state.user);
@@ -185,14 +181,7 @@ export default function Categories() {
           Manage Product Categories
         </h1>
         <div className="flex items-center justify-between py-4">
-          <Input
-            placeholder="Filter categories..."
-            value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
-            onChange={(event) =>
-              table.getColumn("name")?.setFilterValue(event.target.value)
-            }
-            className="max-w-sm"
-          />
+          <SearchBar table={table} />
           <div className="flex gap-3">
             <Dialog open={open} onOpenChange={setOpen}>
               <DialogTrigger asChild>
@@ -243,32 +232,7 @@ export default function Categories() {
                 </DialogFooter>
               </DialogContent>
             </Dialog>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="outline" className="ml-auto">
-                  Columns <ChevronDown className="ml-2 h-4 w-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                {table
-                  .getAllColumns()
-                  .filter((column) => column.getCanHide())
-                  .map((column) => {
-                    return (
-                      <DropdownMenuCheckboxItem
-                        key={column.id}
-                        className="capitalize"
-                        checked={column.getIsVisible()}
-                        onCheckedChange={(value) =>
-                          column.toggleVisibility(!!value)
-                        }
-                      >
-                        {column.id}
-                      </DropdownMenuCheckboxItem>
-                    );
-                  })}
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <ColumnDropdown table={table} />
           </div>
         </div>
         <div className="rounded-md border">
