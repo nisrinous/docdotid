@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { getProduct } from "@/lib/fetcher/products";
+import { getProduct } from "@/lib/fetcher/product";
 import { RootState } from "@/store/store";
 import { ProductResponse } from "@/types";
 import { useRouter } from "next/router";

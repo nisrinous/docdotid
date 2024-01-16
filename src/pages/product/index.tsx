@@ -1,6 +1,6 @@
 import CardProduct from "@/components/card-product";
 import ProductCategories from "@/components/categories/product-categories";
-import { getProducts } from "@/lib/fetcher/products";
+import { getProducts } from "@/lib/fetcher/product";
 import { RootState } from "@/store/store";
 import { ProductsResponse } from "@/types";
 

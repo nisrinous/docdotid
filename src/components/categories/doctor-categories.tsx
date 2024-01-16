@@ -1,30 +1,30 @@
 import Link from "next/link";
 import { Card, CardContent, CardFooter } from "../ui/card";
 import { ScrollArea, ScrollBar } from "../ui/scroll-area";
-import { useEffect, useState } from "react";
+// import { useEffect, useState } from "react";
 import { RootState } from "@/store/store";
 import { useSelector } from "react-redux";
-import { DoctorCategoriesResponse } from "@/types";
+// import { DoctorCategoriesResponse } from "@/types";
 
 const DoctorCategories = () => {
   const { token } = useSelector((state: RootState) => state.user);
 
-  const [doctorCategoriesData, setDoctorCategoriesData] = useState<
-    DoctorCategoriesResponse[]
-  >([]);
+  // const [doctorCategoriesData, setDoctorCategoriesData] = useState<
+  //   DoctorCategoriesResponse[]
+  // >([]);
 
-  const fetcher = async () => {
-    try {
-      const data = await getProductCategories(token);
-      setDoctorCategoriesData(data.data);
-    } catch (error) {
-      console.error("" + error);
-    }
-  };
+  // const fetcher = async () => {
+  //   try {
+  //     const data = await getProductCategories(token);
+  //     setDoctorCategoriesData(data.data);
+  //   } catch (error) {
+  //     console.error("" + error);
+  //   }
+  // };
 
-  useEffect(() => {
-    fetcher();
-  }, []);
+  // useEffect(() => {
+  //   fetcher();
+  // }, []);
 
   return (
     <>
