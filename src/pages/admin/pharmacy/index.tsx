@@ -1,212 +1,373 @@
-import useSWR from "swr";
-import axios from "axios";
-import { useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
-import dynamic from "next/dynamic";
-import { useSelector, useDispatch } from "react-redux";
+"use client";
+import * as React from "react";
+import { PharmacyResponse, ProductCategoriesResponse } from "@/types";
+import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
-import { setFixLat, setFixLng } from "@/store/slices/authSlice";
-import Cookies from "js-cookie";
-import Sidebar from "@/components/aside-bar";
+import { getProductCategories } from "@/lib/fetcher/product-category";
+import { Label } from "@/components/ui/label";
 import { menus } from "@/utils/menus";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import {
+  ColumnDef,
+  ColumnFiltersState,
+  SortingState,
+  VisibilityState,
+  flexRender,
+  getCoreRowModel,
+  getFilteredRowModel,
+  getPaginationRowModel,
+  getSortedRowModel,
+  useReactTable,
+} from "@tanstack/react-table";
+import { ArrowUpDown } from "lucide-react";
+import Sidebar from "@/components/aside-bar";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { useState } from "react";
+import { DeleteModal } from "@/components/delete-modal";
+import { addCategory } from "@/lib/fetcher/product-category";
+import useSWR, { mutate } from "swr";
+import { EditModal } from "@/components/edit-modal";
+import SearchBar from "@/components/search-bar";
+import ColumnDropdown from "@/components/columns-dropdown";
+import { getPharmacyList } from "@/lib/fetcher/pharmacy";
 
-const fetcher = (url: string) => axios.get(url).then((res) => res.data);
+export default function Pharmacies() {
+  const { token } = useSelector((state: RootState) => state.user);
+  const [pharmacyData, setPharmacyData] = useState<PharmacyResponse[]>([]);
 
-const GeocodeInformation: React.FC<{ combinedLocation: string }> = ({
-  combinedLocation,
-}) => {
-  const { data, error } = useSWR(
-    `https://api.opencagedata.com/geocode/v1/json?q=${combinedLocation}&key=10fc2f8c13c547f38158e817cb6457d6`,
-    fetcher
-  );
-  const dispatch = useDispatch();
-
-  if (error) return <div>Failed to load geocode information</div>;
-  if (!data) return <div>Loading geocode information...</div>;
-
-  const { lat, lng } = data.results[0].geometry;
-
-  dispatch(setFixLat(lat));
-  dispatch(setFixLng(lng));
-
-  return (
-    <div>
-      <p>Latitude: {lat}</p>
-      <p>Longitude: {lng}</p>
-      <LeafletMap lat={lat} lng={lng} />
-    </div>
-  );
-};
-
-const LeafletMap: React.FC<{ lat: number; lng: number }> = ({ lat, lng }) => {
-  const handleMarkerMove = () => {};
-
-  const LeafletMapComponent = dynamic(() => import("@/components/leaflet"), {
-    ssr: false,
-  });
-
-  return (
-    <LeafletMapComponent lat={lat} lng={lng} onMarkerMove={handleMarkerMove} />
-  );
-};
-
-const IndexPage: React.FC = () => {
-  const { data, error } = useSWR("/api/fetchProvinceCity", fetcher);
-  const fixLat = useSelector((state: RootState) => state.user.fixLat);
-  const fixLng = useSelector((state: RootState) => state.user.fixLng);
-  const [receiver, setReceiver] = useState<string>("");
-  const [phone, setPhone] = useState<string>("");
-  const [selectedProvince, setSelectedProvince] = useState<string | null>(null);
-  const [selectedCity, setSelectedCity] = useState<string | null>(null);
-  const [street, setStreet] = useState<string>("");
-  const [postalCode, setPostalCode] = useState<string>("");
-  const [description, setDescription] = useState<string>("");
-  const [combinedLocation, setCombinedLocation] = useState<string>("");
-
-  if (error) return <div>Failed to load</div>;
-  if (!data) return <div>Loading...</div>;
-
-  const uniqueProvinces = Array.from(
-    new Set<string>(data.map((item: any) => item.province))
-  );
-  const citiesInSelectedProvince = data.filter(
-    (item: any) => item.province === selectedProvince
-  );
-
-  const handleCombineLocation = () => {
-    const formattedLocation = `${selectedProvince ? selectedProvince : ""}${
-      selectedCity ? `, ${selectedCity}` : ""
-    }`.replace(/ /g, "+");
-
-    setCombinedLocation(formattedLocation);
-  };
-
-  const handleSave = async () => {
+  const fetchData = async () => {
     try {
-      let finalLat: string | undefined = Cookies.get("finalLat");
-      let finalLng: string | undefined = Cookies.get("finalLng");
-      Cookies.remove("finalLat");
-      Cookies.remove("finalLng");
-
-      if (!finalLat) finalLat = fixLat.toString();
-      if (!finalLng) finalLng = fixLng.toString();
-
-      const postData = {
-        name: receiver,
-        phone: phone,
-        description: description,
-        address: `${selectedProvince}, ${selectedCity}, ${street}`,
-        postal_code: postalCode,
-        latitude: finalLat,
-        longitude: finalLng,
-        city_code: selectedCity,
-      };
-
-      console.log(postData);
-      const response = await axios.post("https://test.com", postData);
+      const data = await getPharmacyList(token);
+      console.log("ini data", data);
+      setPharmacyData(data.data);
     } catch (error) {
-      console.error("Error saving data:", error);
+      console.error("" + error);
     }
   };
+
+  const { error: isError, isValidating: isLoading } = useSWR(
+    ["/pharmacies", token],
+    fetchData
+  );
+
+  const data: ProductCategoriesResponse[] = pharmacyData;
+  const [sorting, setSorting] = React.useState<SortingState>([]);
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
+    []
+  );
+  const [columnVisibility, setColumnVisibility] =
+    React.useState<VisibilityState>({});
+  const [rowSelection, setRowSelection] = React.useState({});
+  const [open, setOpen] = useState(false);
+  const [newCategory, setNewCategory] = useState("");
+  const [inputError, setInputError] = useState("");
+
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const inputValue = event.target.value;
+    setNewCategory(inputValue);
+
+    if (/[0-9!@#$%^&*(),.?":{}|<>]/.test(inputValue)) {
+      setInputError("Input should not contain numbers or special characters.");
+    } else {
+      setInputError("");
+    }
+  };
+  const handleAddCategory = async () => {
+    try {
+      const result = await addCategory(token, newCategory);
+
+      console.log("Category added:", result);
+
+      setNewCategory("");
+      setOpen(false);
+      mutate(["/categories", token]);
+    } catch (error) {
+      console.error("Error adding category:", error);
+    }
+  };
+
+  const columns: ColumnDef<ProductCategoriesResponse, any>[] = [
+    {
+      accessorKey: "id",
+      header: ({ column }) => {
+        return (
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+            className="px-0"
+          >
+            ID
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </Button>
+        );
+      },
+      cell: ({ row }) => <div className="capitalize">{row.getValue("id")}</div>,
+    },
+    {
+      accessorKey: "name",
+      header: ({ column }) => {
+        return (
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+            className="px-0"
+          >
+            Name
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </Button>
+        );
+      },
+      cell: ({ row }) => <div>{row.getValue("name")}</div>,
+    },
+    {
+      accessorKey: "address",
+      header: ({ column }) => {
+        return (
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+            className="px-0"
+          >
+            Address
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </Button>
+        );
+      },
+      cell: ({ row }) => <div>{row.getValue("address")}</div>,
+    },
+    {
+      accessorKey: "operational_day",
+      header: ({ column }) => {
+        return (
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+            className="px-0"
+          >
+            Operational Day
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </Button>
+        );
+      },
+      cell: ({ row }) => <div>{row.getValue("operational_day")}</div>,
+    },
+    {
+      accessorKey: "operational_hour",
+      header: ({ column }) => {
+        return (
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+            className="px-0"
+          >
+            Operational Hour
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </Button>
+        );
+      },
+      cell: ({ row }) => <div>{row.getValue("operational_hour")}</div>,
+    },
+
+    {
+      id: "actions",
+      header: "Actions",
+      enableHiding: false,
+      cell: ({ row }) => {
+        const id = row.getValue("id");
+        const currentCategory = row.getValue("name");
+
+        return (
+          <div className="flex gap-5">
+            <EditModal token={token} name={currentCategory} id={id} />
+            <EditModal token={token} name={currentCategory} id={id} />
+            <DeleteModal token={token} id={id} />
+          </div>
+        );
+      },
+    },
+  ];
+  const table = useReactTable({
+    data,
+    columns,
+    onSortingChange: setSorting,
+    onColumnFiltersChange: setColumnFilters,
+    getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    onColumnVisibilityChange: setColumnVisibility,
+    onRowSelectionChange: setRowSelection,
+    state: {
+      sorting,
+      columnFilters,
+      columnVisibility,
+      rowSelection,
+    },
+  });
 
   return (
     <div className="flex">
       <Sidebar menus={menus} />
-      <div>
-        <div>
-          <label>Receiver: </label>
-          <input
-            type="text"
-            value={receiver}
-            onChange={(e) => setReceiver(e.target.value)}
-          />
-        </div>
-        <div>
-          <label>Phone: </label>
-          <input
-            type="text"
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
-          />
-        </div>
-        <div>
-          <label>Select Province: </label>
-          <select
-            value={selectedProvince || ""}
-            onChange={(e) => {
-              setSelectedProvince(e.target.value);
-              setSelectedCity(null);
-            }}
-          >
-            <option value="">Select Province</option>
-            {uniqueProvinces.map((province) => (
-              <option key={province} value={province}>
-                {province}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div>
-          <div>
-            <label>Select City: </label>
-            <select
-              value={selectedCity || ""}
-              onChange={(e) => setSelectedCity(e.target.value)}
-              disabled={!selectedProvince}
-            >
-              <option value="">Select City</option>
-              {citiesInSelectedProvince.map((city: any) => (
-                <option
-                  key={city.city_id}
-                  value={`${city.type} ${city.city_name}`}
+      <div className="w-full mx-10 mt-5">
+        <h1 className="text-black text-3xl mt-2 font-bold">
+          Manage Pharmacies
+        </h1>
+        <div className="flex items-center justify-between py-4">
+          <SearchBar table={table} />
+          <div className="flex gap-3">
+            <Dialog open={open} onOpenChange={setOpen}>
+              <DialogTrigger asChild>
+                <Button
+                  variant="outline"
+                  className="bg-sky-300 hover:bg-sky-200"
                 >
-                  {`${city.type} ${city.city_name}`}
-                </option>
+                  Add New
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-[425px]">
+                <DialogHeader>
+                  <DialogTitle>Add New Product Category</DialogTitle>
+                  <DialogDescription>
+                    Input details for the new product category here. Click save
+                    when done.
+                  </DialogDescription>
+                </DialogHeader>
+                <div className="grid gap-4 py-4">
+                  <div className="grid grid-cols-4 items-center gap-4">
+                    <Label htmlFor="name" className="text-right">
+                      Category Name
+                    </Label>
+
+                    <Input
+                      id="name"
+                      value={newCategory}
+                      onChange={handleInputChange}
+                      className={`col-span-3 focus rounded-md p-2 ${
+                        inputError ? "focus:bg-red-200" : ""
+                      }`}
+                    />
+                    {inputError && (
+                      <p className="col-span-4 text-red-500 text-s mt-1">
+                        {inputError}
+                      </p>
+                    )}
+                  </div>
+                </div>
+                <DialogFooter>
+                  <Button
+                    type="submit"
+                    onClick={handleAddCategory}
+                    disabled={inputError !== ""}
+                  >
+                    Save changes
+                  </Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
+            <ColumnDropdown table={table} />
+          </div>
+        </div>
+        <div className="rounded-md border">
+          <Table>
+            <TableHeader>
+              {table.getHeaderGroups().map((headerGroup) => (
+                <TableRow key={headerGroup.id}>
+                  {headerGroup.headers.map((header) => {
+                    return (
+                      <TableHead key={header.id}>
+                        {header.isPlaceholder
+                          ? null
+                          : flexRender(
+                              header.column.columnDef.header,
+                              header.getContext()
+                            )}
+                      </TableHead>
+                    );
+                  })}
+                </TableRow>
               ))}
-            </select>
+            </TableHeader>
+            <TableBody>
+              {isError && (
+                <TableRow>
+                  <TableCell colSpan={columns.length} className="text-center">
+                    Error loading data. Please try again later.
+                  </TableCell>
+                </TableRow>
+              )}
+              {!isLoading && !isError && table?.getRowModel().rows?.length ? (
+                table.getRowModel().rows.map((row) => (
+                  <TableRow
+                    key={row.id}
+                    data-state={row.getIsSelected() && "selected"}
+                  >
+                    {row.getVisibleCells().map((cell) => (
+                      <TableCell key={cell.id}>
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext()
+                        )}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell
+                    colSpan={columns.length}
+                    className="h-24 text-center"
+                  >
+                    {isLoading ? "Loading..." : "No results."}
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </div>
+        <div className="flex items-center justify-end space-x-2 py-4">
+          <div className="flex-1 text-sm text-muted-foreground">
+            {table.getFilteredSelectedRowModel().rows.length} of{" "}
+            {table.getFilteredRowModel().rows.length} row(s) selected.
+          </div>
+          <div className="space-x-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => table.previousPage()}
+              disabled={!table.getCanPreviousPage()}
+              className="bg-sky-200"
+            >
+              Previous
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => table.nextPage()}
+              disabled={!table.getCanNextPage()}
+              className="bg-sky-200"
+            >
+              Next
+            </Button>
           </div>
         </div>
-        <div>
-          <label>Street: </label>
-          <input
-            type="text"
-            value={street}
-            onChange={(e) => setStreet(e.target.value)}
-          />
-        </div>
-        <div>
-          <label>Postal Code: </label>
-          <input
-            type="text"
-            value={postalCode}
-            onChange={(e) => setPostalCode(e.target.value)}
-          />
-        </div>
-        <div>
-          <label>Description: </label>
-          <input
-            type="text"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-          />
-        </div>
-        <div>
-          <Button onClick={handleCombineLocation}>
-            Get Latitude and Longitude
-          </Button>
-        </div>
-        {combinedLocation && (
-          <div>
-            <h2>Combined Location:</h2>
-            <p>{combinedLocation}</p>
-            <h2>Geocode Information:</h2>
-            <GeocodeInformation combinedLocation={combinedLocation} />
-            <Button onClick={handleSave}>Save</Button>
-          </div>
-        )}
       </div>
     </div>
   );
-};
-
-export default IndexPage;
+}

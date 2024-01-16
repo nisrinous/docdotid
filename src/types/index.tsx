@@ -41,3 +41,17 @@ export type ProductResponse = {
   created_at: string;
   updated_at: string;
 };
+
+export type PharmacyResponse = {
+  id: number;
+  name: string;
+  address: string;
+  postal_code: number;
+  latitude: number;
+  longitude: number;
+  city_code: number;
+  operational_hour: string;
+  operational_day: string;
+  is_active: boolean;
+  pharmacist_id: number;
+};
