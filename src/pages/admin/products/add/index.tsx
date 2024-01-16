@@ -62,12 +62,23 @@ const AddProduct = () => {
     setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
 
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    try {
+      const response = await axios.post("www.backend.com", formData);
+      console.log("Response:", response.data);
+    } catch (error) {
+      console.error("Error submitting form:", error);
+    }
+  };
+
   return (
     <div className="flex">
       <Sidebar menus={menus} />
       <div className="w-full mx-10 mt-5">
         <h1 className="text-black text-3xl mt-2 font-bold">Manage Products</h1>
-        <form>
+        <form onSubmit={handleSubmit}>
           <div>
             <Label htmlFor="name">Name:</Label>
             <Input
