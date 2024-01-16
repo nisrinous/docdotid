@@ -3,7 +3,7 @@ import * as React from "react";
 import { ProductCategoriesResponse } from "@/types";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
-import { getProducts } from "@/lib/fetcher/products";
+import { getProductCategories } from "@/lib/fetcher/products";
 import { Label } from "@/components/ui/label";
 import { menus } from "@/utils/menus";
 import {
@@ -60,7 +60,7 @@ export default function Categories() {
 
   const fetchData = async () => {
     try {
-      const data = await getProducts(token);
+      const data = await getProductCategories(token);
       console.log("ini data", data);
       setProductsData(data.data);
     } catch (error) {
