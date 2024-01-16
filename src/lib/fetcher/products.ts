@@ -1,4 +1,5 @@
 import { apiBaseUrl } from "@/config";
+import toast from "react-hot-toast";
 
 const API_ENDPOINT = apiBaseUrl;
 
@@ -31,41 +32,61 @@ export async function deleteCategory(token: string, id: any) {
       },
     });
     const data = await response.json();
+    toast.success("Delete Success!");
     return data;
   } catch (error) {
     console.error("" + error);
   }
 }
 
-export async function getProducts(token: string) {
+export async function addCategory(token: string, name: string) {
   try {
-    const response = await fetch(`${API_ENDPOINT}/products`, {
-      method: "GET",
+    const response = await fetch(`${API_ENDPOINT}/categories/`, {
+      method: "POST",
       headers: {
-        authorization: `Bearer ${token}`,
+        authorization: `bearer ${token}`,
         "Content-Type": "application/json",
       },
+      body: JSON.stringify({
+        name: name,
+      }),
     });
 
-    const data = await response.json();
-    return data;
+    if (response.status === 400) {
+      const errorData = await response.json();
+      toast.error(`${errorData.message}`);
+    } else {
+      const data = await response.json();
+      toast.success("Data added to databse sucessfully!");
+      return data;
+    }
   } catch (error) {
     console.error("" + error);
   }
 }
 
-export async function getProduct(token: string, productId: string) {
+export async function editCategory(token: string, name: string, id: any) {
   try {
-    const response = await fetch(`${API_ENDPOINT}/products/${productId}`, {
-      method: "GET",
+    const response = await fetch(`${API_ENDPOINT}/categories`, {
+      method: "PUT",
       headers: {
-        authorization: `Bearer ${token}`,
+        authorization: `bearer ${token}`,
         "Content-Type": "application/json",
       },
+      body: JSON.stringify({
+        id: id,
+        name: name,
+      }),
     });
 
-    const data = await response.json();
-    return data;
+    if (response.status === 400) {
+      const errorData = await response.json();
+      toast.error(`${errorData.message}`);
+    } else {
+      const data = await response.json();
+      toast.success("Data added to databse sucessfully!");
+      return data;
+    }
   } catch (error) {
     console.error("" + error);
   }
