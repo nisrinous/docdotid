@@ -9,7 +9,7 @@ import { GiMedicines } from "react-icons/gi";
 import { IoLogOut } from "react-icons/io5";
 
 export const menus = [
-  { name: "Dashboard", link: "/admin", icon: BiSolidDashboard },
+  { name: "Dashboard", link: "/", icon: BiSolidDashboard },
   {
     name: "Manage Users",
     link: "/admin/users",
