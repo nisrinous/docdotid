@@ -1,233 +1,68 @@
-import React, { useState } from "react";
-import useSWR, { mutate } from "swr";
-import axios from "axios";
 import { Button } from "@/components/ui/button";
-import { z } from "zod";
-import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { getUserDetail } from "@/lib/fetcher/user";
+import { setEmail } from "@/store/slices/authSlice";
+import { RootState } from "@/store/store";
+import { UserDetailResponse } from "@/types";
+import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import useSWR from "swr";
 
-const ProfileDataSchema = z.object({
-  photo: z.string(),
-  name: z
-    .string()
-    .min(5)
-    .refine((val) => !/\d/.test(val), {
-      message: "Name should not contain numbers",
-    }),
-  gender: z.enum(["male", "female"]),
-  age: z.number().int().positive(),
-  height: z.number().positive(),
-  weight: z.number().positive(),
-  email: z.string(),
-  password: z.string(),
-});
+export default function Profile() {
+  const { token, email } = useSelector((state: RootState) => state.user);
+  const dispatch = useDispatch();
 
-interface ProfileData {
-  photo: string;
-  name: string;
-  gender: "male" | "female";
-  age: number;
-  height: number;
-  weight: number;
-  email: string;
-  password: string;
-}
+  const [user, setUser] = useState<UserDetailResponse>();
 
-const fetcher = async (url: string) => {
-  const response = await axios.get(url);
-  return ProfileDataSchema.parse(response.data);
-};
-
-const ProfilePage = () => {
-  const { data, error } = useSWR<ProfileData>("/api/profile", fetcher);
-
-  const [updatedData, setUpdatedData] = useState({
-    name: data?.name || "",
-    gender: data?.gender || "male",
-    age: data?.age || 0,
-    height: data?.height || 0,
-    weight: data?.weight || 0,
-  });
-
-  const [validationErrors, setValidationErrors] = useState({
-    name: "",
-    age: "",
-    height: "",
-    weight: "",
-  });
-
-  const handleUpdateProfile = async () => {
+  const fetchData = async () => {
     try {
-      ProfileDataSchema.parse(updatedData);
-      await axios.patch("/api/profile", updatedData);
-      mutate("/api/profile");
+      const data = await getUserDetail(token);
+      setUser(data.data);
+      dispatch(setEmail(user?.email as string));
     } catch (error) {
-      if (error instanceof z.ZodError) {
-        const errors: { [key: string]: string } = {};
-        error.errors.forEach((err) => {
-          const path = err.path.join(".");
-          errors[path] = err.message;
-        });
-        setValidationErrors(errors);
-      } else {
-        console.error("Error updating profile:", error);
-      }
+      console.error("" + error);
     }
   };
 
-  if (error)
-    return (
-      <div className="flex justify-center">
-        <div className="flex flex-col justify-center m-5 sm:m-20 gap-2 sm:gap-5 w-[600px]">
-          <img src="text" alt="Profile Photo" />
-          <label>
-            Name:
-            <Input
-              type="text"
-              onChange={(e) =>
-                setUpdatedData({ ...updatedData, name: e.target.value })
-              }
-            />
-            <div className="text-red-500">{validationErrors.name}</div>
-          </label>
-          <label>
-            Gender:
-            <Select>
-              <SelectTrigger>
-                <SelectValue placeholder="Select gender" />
-              </SelectTrigger>
-              <SelectContent className="items-center justify-center">
-                <SelectItem value="Male" className="p-2">
-                  <p className="ml-5">Male</p>
-                </SelectItem>
-                <SelectItem value="Female" className="p-2">
-                  <p className="ml-5">Female</p>
-                </SelectItem>
-              </SelectContent>
-            </Select>
-          </label>
-          <label>
-            Age:
-            <Input
-              type="number"
-              onChange={(e) =>
-                setUpdatedData({
-                  ...updatedData,
-                  age: parseInt(e.target.value, 10),
-                })
-              }
-            />
-            <div className="text-red-500">{validationErrors.age}</div>
-          </label>
-          <label>
-            Height:
-            <Input
-              type="number"
-              onChange={(e) =>
-                setUpdatedData({
-                  ...updatedData,
-                  height: parseInt(e.target.value, 10),
-                })
-              }
-            />
-            <div className="text-red-500">{validationErrors.height}</div>
-          </label>
-          <label>
-            Weight:
-            <Input
-              type="number"
-              onChange={(e) =>
-                setUpdatedData({
-                  ...updatedData,
-                  weight: parseInt(e.target.value, 10),
-                })
-              }
-            />
-            <div className="text-red-500">{validationErrors.weight}</div>
-          </label>
-          <Button onClick={handleUpdateProfile}>Save</Button>
-        </div>
-      </div>
-    );
-  if (!data) return <div className="flex justify-center m-20">Loading...</div>;
+  const {
+    data,
+    error: isError,
+    isValidating: isLoading,
+  } = useSWR([`/users/detail`, token], fetchData);
 
   return (
-    <div className="flex justify-center">
-      <div className="flex flex-col justify-center m-20 gap-5">
-        <img src="text" alt="Profile Photo" />
-        <label>
-          Name:
-          <input
-            type="text"
-            onChange={(e) =>
-              setUpdatedData({ ...updatedData, name: e.target.value })
-            }
-          />
-          <div className="text-red-500">{validationErrors.name}</div>
-        </label>
-        <label>
-          Gender:
-          <select
-            onChange={(e) =>
-              setUpdatedData({
-                ...updatedData,
-                gender: e.target.value as "male" | "female",
-              })
-            }
-          >
-            <option value="male">Male</option>
-            <option value="female">Female</option>
-          </select>
-        </label>
-        <label>
-          Age:
-          <input
-            type="number"
-            onChange={(e) =>
-              setUpdatedData({
-                ...updatedData,
-                age: parseInt(e.target.value, 10),
-              })
-            }
-          />
-          <div className="text-red-500">{validationErrors.age}</div>
-        </label>
-        <label>
-          Height:
-          <input
-            type="number"
-            onChange={(e) =>
-              setUpdatedData({
-                ...updatedData,
-                height: parseInt(e.target.value, 10),
-              })
-            }
-          />
-          <div className="text-red-500">{validationErrors.height}</div>
-        </label>
-        <label>
-          Weight:
-          <input
-            type="number"
-            onChange={(e) =>
-              setUpdatedData({
-                ...updatedData,
-                weight: parseInt(e.target.value, 10),
-              })
-            }
-          />
-          <div className="text-red-500">{validationErrors.weight}</div>
-        </label>
-        <Button onClick={handleUpdateProfile}>Save</Button>
-      </div>
-    </div>
-  );
-};
+    <>
+      {isLoading ? (
+        <p className="text-zinc-400 mb-5 text-center">Loading...</p>
+      ) : isError ? (
+        <div className="flex justify-center">
+          <div className="flex flex-wrap justify-center">
+            <p className="text-zinc-400 mb-5">Error while fetching data</p>
+          </div>
+        </div>
+      ) : (
+        <div className="container flex flex-col w-sm justify-center items-center my-10 md:gap-10 px-20 lg:px-40">
+          <div className="mt-5">
+            <img
+              src="https://res-console.cloudinary.com/minevf/media_explorer_thumbnails/8f937d455af252efc3a2a6cdee68b198/detailed"
+              className="border-[1px] rounded-full p-2 w-32"
+            ></img>
+          </div>
+          <div className="my-3 md:my-0">
+            <Button variant="outline">Edit profile</Button>
+          </div>
 
-export default ProfilePage;
+          <div className="mt-5 md:mt-0">
+            <h3 className="font-semibold text-2xl md:text-3xl text-center md:text-left border-b-2 mt-1 mb-3 pb-3 ">
+              {user?.name}
+            </h3>
+
+            <p className="text-zinc-500 leading-none text-lg mt-1">{email}</p>
+            <p className="text-zinc-600 leading-none text-base">
+              {user?.phone}
+            </p>
+          </div>
+        </div>
+      )}
+    </>
+  );
+}

@@ -41,3 +41,13 @@ export type ProductResponse = {
   created_at: string;
   updated_at: string;
 };
+
+export type UserDetailResponse = {
+  id: number;
+  name: string;
+  phone: string;
+  email: string;
+  password: string;
+  role_id: number;
+  verified_at: string;
+};

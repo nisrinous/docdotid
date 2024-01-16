@@ -5,6 +5,7 @@ interface AuthState {
   user_id: number;
   personal_id: number;
   role_id: number;
+  email: string;
   fixLat: number;
   fixLng: number;
 }
@@ -24,6 +25,9 @@ const authSlice = createSlice({
     },
     setRoleId(state, action: PayloadAction<number>) {
       state.role_id = action.payload;
+    },
+    setEmail(state, action: PayloadAction<string>) {
+      state.email = action.payload;
     },
     deleteUser: (state) => {
       state.token = "";
@@ -45,6 +49,7 @@ export const {
   setRoleId,
   setPersonalId,
   setUserId,
+  setEmail,
   setFixLat,
   setFixLng,
 } = authSlice.actions;
