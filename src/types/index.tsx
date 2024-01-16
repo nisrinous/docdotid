@@ -1,8 +1,10 @@
 export type ProductsResponse = {
   id: number;
   name: string;
-  unitInPack: string;
+  unit_in_pack: string;
   sellingUnit: number;
+  max_price: number;
+  min_price: number;
   image: string;
 };
 

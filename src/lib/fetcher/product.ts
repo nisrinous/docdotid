@@ -7,7 +7,7 @@ export async function getProducts(token: string) {
     const response = await fetch(`${API_ENDPOINT}/products`, {
       method: "GET",
       headers: {
-        authorization: `Bearer ${token}`,
+        authorization: `bearer ${token}`,
         "Content-Type": "application/json",
       },
     });
@@ -24,7 +24,7 @@ export async function getProduct(token: string, productId: string) {
     const response = await fetch(`${API_ENDPOINT}/products/${productId}`, {
       method: "GET",
       headers: {
-        authorization: `Bearer ${token}`,
+        authorization: `bearer ${token}`,
         "Content-Type": "application/json",
       },
     });
