@@ -15,7 +15,7 @@ const DoctorCategories = () => {
 
   const fetcher = async () => {
     try {
-      const data = await getProducts(token);
+      const data = await getProductCategories(token);
       setDoctorCategoriesData(data.data);
     } catch (error) {
       console.error("" + error);

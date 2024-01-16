@@ -3,7 +3,7 @@ import toast from "react-hot-toast";
 
 const API_ENDPOINT = apiBaseUrl;
 
-export async function getProducts(token: string) {
+export async function getProductCategories(token: string) {
   try {
     const response = await fetch(`${API_ENDPOINT}/categories`, {
       method: "GET",

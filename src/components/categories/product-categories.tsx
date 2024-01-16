@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Card, CardContent, CardFooter } from "../ui/card";
-import { getProducts } from "@/lib/fetcher/products";
+import { getProductCategories } from "@/lib/fetcher/products";
 import { useState } from "react";
 import { ProductCategoriesResponse } from "@/types";
 import { useSelector } from "react-redux";
@@ -16,7 +16,7 @@ const ProductCategories = () => {
 
   const fetchData = async () => {
     try {
-      const data = await getProducts(token);
+      const data = await getProductCategories(token);
       setProductsData(data.data);
     } catch (error) {
       console.error("" + error);
