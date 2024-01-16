@@ -50,6 +50,7 @@ import { DeleteModal } from "@/components/delete-modal";
 import { addCategory } from "@/lib/fetcher/products";
 import useSWR, { mutate } from "swr";
 import { EditModal } from "@/components/edit-modal";
+import SearchBar from "@/components/search-bar";
 
 export default function Categories() {
   const { token } = useSelector((state: RootState) => state.user);
@@ -185,14 +186,7 @@ export default function Categories() {
           Manage Product Categories
         </h1>
         <div className="flex items-center justify-between py-4">
-          <Input
-            placeholder="Filter categories..."
-            value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
-            onChange={(event) =>
-              table.getColumn("name")?.setFilterValue(event.target.value)
-            }
-            className="max-w-sm"
-          />
+          <SearchBar table={table} />
           <div className="flex gap-3">
             <Dialog open={open} onOpenChange={setOpen}>
               <DialogTrigger asChild>
