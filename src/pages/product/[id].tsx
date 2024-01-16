@@ -27,7 +27,7 @@ export default function ProductDetails() {
     data,
     error: isError,
     isValidating: isLoading,
-  } = useSWR(["/categories", token], fetchData);
+  } = useSWR([`/products/${id}`, token], fetchData);
 
   return (
     <>
@@ -43,7 +43,7 @@ export default function ProductDetails() {
         <div className="container my-10 grid grid-cols-1 md:grid-cols-3 md:grid-rows-1 md:gap-10 px-20 lg:px-40">
           <div className="col-span-1 md:col-span-1">
             <img
-              src="https://onecms-res.cloudinary.com/image/upload/s--uXpdFlVW--/c_crop,h_428,w_762,x_0,y_18/c_fill,g_auto,h_468,w_830/fl_relative,g_south_east,l_one-cms:core:watermark:afp_watermark,w_0.1/f_auto,q_auto/v1/one-cms/core/f3db88d3f76cf546544eca7199920c659d767953.jpg?itok=Ex2eUOsi"
+              src="https://res-console.cloudinary.com/minevf/media_explorer_thumbnails/36edf7e6afe8045a8b67274e8226b9b7/detailed"
               className="border-[1px] p-5"
             ></img>
           </div>
@@ -54,10 +54,10 @@ export default function ProductDetails() {
             </h3>
             <div className="flex flex-col gap-1 justify-center items-center md:justify-start md:items-start">
               <h5 className="font-medium text-xl md:text-2xl text-center md:text-left text-orange-500">
-                $ {product?.selling_unit}
+                ${product?.min_price} - ${product?.max_price}
               </h5>
               <p className="text-zinc-600 leading-none text-base">
-                XX pcs/pack
+                {product?.unit_in_pack} /pack
               </p>
               <Button className="w-32 my-2">Add to cart</Button>
             </div>

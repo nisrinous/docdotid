@@ -1,8 +1,10 @@
 export type ProductsResponse = {
   id: number;
   name: string;
-  unitInPack: string;
+  unit_in_pack: string;
   sellingUnit: number;
+  max_price: number;
+  min_price: number;
   image: string;
 };
 
@@ -23,6 +25,8 @@ export type ProductResponse = {
   product_category_id: number;
   unit_in_pack: number;
   selling_unit: number;
+  max_price: number;
+  min_price: number;
   weight: number;
   height: number;
   length: number;
