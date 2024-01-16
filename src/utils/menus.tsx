@@ -41,6 +41,12 @@ export const menus = [
     margin: true,
   },
   {
+    name: "Manage Product Inventory",
+    link: "/admin/inventory",
+    icon: RiHospitalFill,
+    margin: true,
+  },
+  {
     name: "Log Out",
     link: "/admin/pharmacies",
     icon: IoLogOut,

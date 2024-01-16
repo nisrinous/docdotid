@@ -25,6 +25,8 @@ const Sidebar: FC<SidebarProps> = ({ menus }) => {
   const currentPath = router.pathname;
   const { role_id, token } = useSelector((state: RootState) => state.user);
 
+  console.log(role_id);
+
   const [open, setOpen] = useState(true);
   const [role, setRole] = useState("");
   const [userName, setUserName] = useState("");
@@ -36,6 +38,15 @@ const Sidebar: FC<SidebarProps> = ({ menus }) => {
   const handleRole = (role_id: number) => {
     return role_id === 1 ? "Admin" : "Admin Pharmacy";
   };
+
+  const filteredMenus = menus.filter((menu) => {
+    if (role_id === 1) {
+      return true;
+    } else if (role_id === 2 && menu.link.includes("/pharmacyadm")) {
+      return true;
+    }
+    return false;
+  });
 
   useEffect(() => {
     const fetchData = async () => {
@@ -100,7 +111,7 @@ const Sidebar: FC<SidebarProps> = ({ menus }) => {
             </div>
           </div>
         )}
-        {menus.map((menu, i) => (
+        {filteredMenus.map((menu, i) => (
           <Link
             href={menu.link}
             onClick={menu.onClick}
