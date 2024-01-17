@@ -55,7 +55,7 @@ const CardProduct = ({ product }: { product: ProductsResponse }) => {
             ${product.min_price} - ${product.max_price}
           </p>
           <p className="px-2 text-center text-zinc-400 text-sm mb-2">
-            {product.unit_in_pack} /packkk
+            {product.unit_in_pack} /pack
           </p>
         </Link>
         {!addedToCart && (

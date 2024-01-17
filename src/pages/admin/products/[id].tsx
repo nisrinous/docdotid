@@ -10,6 +10,9 @@ import { Button } from "@/components/ui/button";
 import { apiBaseUrl } from "@/config";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
+import router from "next/router";
+import { ProductResponse } from "@/types";
+import { getProduct } from "@/lib/fetcher/product";
 
 interface DropdownOption {
   id: number;
@@ -17,7 +20,20 @@ interface DropdownOption {
 }
 
 const AddProduct = () => {
+  const { id } = router.query;
   const { token } = useSelector((state: RootState) => state.user);
+  const [product, setProduct] = useState<ProductResponse | null>(null);
+
+  const fetchData = async () => {
+    try {
+      const data = await getProduct(token, id as string);
+      setProduct(data.data);
+    } catch (error) {
+      console.error("" + error);
+    }
+  };
+
+  useSWR([`/products/${id}`, token], fetchData);
 
   const [manufacturerDropdown, setManufacturerDropdown] = useState<
     DropdownOption[] | null
@@ -81,6 +97,7 @@ const AddProduct = () => {
   }, [productCategoryOptions]);
 
   const [formData, setFormData] = useState({
+    id: (id as string) || "",
     name: "",
     generic_name: "",
     content: "",
@@ -97,6 +114,29 @@ const AddProduct = () => {
     width: 0,
     image: "",
   });
+
+  useEffect(() => {
+    if (product) {
+      setFormData({
+        id: (product.id as unknown as string) || (id as string) || "",
+        name: product.name || "",
+        generic_name: product.generic_name || "",
+        content: product.content || "",
+        manufacturer_id: product.manufacturer_id || 0,
+        description: product.description || "",
+        drug_classification_id: product.drug_classification_id || 0,
+        drug_form_id: product.drug_form_id || 0,
+        product_category_id: product.product_category_id || 0,
+        unit_in_pack: String(product.unit_in_pack) || "",
+        selling_unit: product.selling_unit || 0,
+        weight: product.weight || 0,
+        height: product.height || 0,
+        length: product.length || 0,
+        width: product.width || 0,
+        image: product.image || "",
+      });
+    }
+  }, [product, id]);
 
   const [img, setImg] = useState<string>("");
   const [isUploading, setIsUploading] = useState<boolean>(false);
@@ -161,13 +201,30 @@ const AddProduct = () => {
     if (typeof formData.product_category_id === "string") {
       formData.product_category_id = parseInt(formData.product_category_id, 10);
     }
+    if (typeof formData.selling_unit === "string") {
+      formData.selling_unit = parseInt(formData.selling_unit, 10);
+    }
+    if (typeof formData.weight === "string") {
+      formData.weight = parseInt(formData.weight, 10);
+    }
+    if (typeof formData.height === "string") {
+      formData.height = parseInt(formData.height, 10);
+    }
+    if (typeof formData.length === "string") {
+      formData.length = parseInt(formData.length, 10);
+    }
+    if (typeof formData.width === "string") {
+      formData.width = parseInt(formData.width, 10);
+    }
 
-    formData.image = img;
+    if (img !== "") {
+      formData.image = img;
+    }
 
     console.log(formData);
 
     try {
-      const response = await axios.post(`${apiBaseUrl}/products`, formData, {
+      const response = await axios.put(`${apiBaseUrl}/products`, formData, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
@@ -186,6 +243,12 @@ const AddProduct = () => {
         <h1 className="text-black text-3xl mt-2 font-bold">Manage Products</h1>
         <form onSubmit={handleSubmit}>
           <div>
+            <img
+              src={product?.image}
+              width={500}
+              height={500}
+              alt="Picture of the author"
+            />
             <Label htmlFor="picture">Picture:</Label>
             <Input
               id="picture"
@@ -203,7 +266,7 @@ const AddProduct = () => {
               type="text"
               id="name"
               name="name"
-              value={formData.name}
+              value={formData?.name}
               onChange={handleInputChange}
               required
             />
@@ -215,7 +278,7 @@ const AddProduct = () => {
               type="text"
               id="generic_name"
               name="generic_name"
-              value={formData.generic_name}
+              value={formData?.generic_name}
               onChange={handleInputChange}
               required
             />
@@ -227,7 +290,7 @@ const AddProduct = () => {
               type="text"
               id="content"
               name="content"
-              value={formData.content}
+              value={formData?.content}
               onChange={handleInputChange}
               required
             />
@@ -238,7 +301,7 @@ const AddProduct = () => {
             <select
               id="manufacturer"
               name="manufacturer_id"
-              value={formData.manufacturer_id}
+              value={formData?.manufacturer_id || ""}
               onChange={handleInputChange}
               required
             >
@@ -257,7 +320,7 @@ const AddProduct = () => {
               type="text"
               id="description"
               name="description"
-              value={formData.description}
+              value={formData?.description}
               onChange={handleInputChange}
               required
             />
@@ -268,7 +331,7 @@ const AddProduct = () => {
             <select
               id="drug_classification"
               name="drug_classification_id"
-              value={formData.drug_classification_id}
+              value={formData?.drug_classification_id}
               onChange={handleInputChange}
               required
             >
@@ -286,7 +349,7 @@ const AddProduct = () => {
             <select
               id="drug_form"
               name="drug_form_id"
-              value={formData.drug_form_id}
+              value={formData?.drug_form_id}
               onChange={handleInputChange}
               required
             >
@@ -304,7 +367,7 @@ const AddProduct = () => {
             <select
               id="product_category"
               name="product_category_id"
-              value={formData.product_category_id}
+              value={formData?.product_category_id}
               onChange={handleInputChange}
               required
             >
@@ -323,7 +386,7 @@ const AddProduct = () => {
               type="text"
               id="unit_in_pack"
               name="unit_in_pack"
-              value={formData.unit_in_pack}
+              value={formData?.unit_in_pack}
               onChange={handleInputChange}
               required
             />
@@ -335,7 +398,7 @@ const AddProduct = () => {
               type="number"
               id="selling_unit"
               name="selling_unit"
-              value={formData.selling_unit}
+              value={formData?.selling_unit}
               onChange={handleInputChange}
               min={0}
               defaultValue={0}
@@ -348,7 +411,7 @@ const AddProduct = () => {
               type="number"
               id="weight"
               name="weight"
-              value={formData.weight}
+              value={formData?.weight}
               onChange={handleInputChange}
               min={0}
               defaultValue={0}
@@ -361,7 +424,7 @@ const AddProduct = () => {
               type="number"
               id="height"
               name="height"
-              value={formData.height}
+              value={formData?.height}
               onChange={handleInputChange}
               min={0}
               defaultValue={0}
@@ -374,7 +437,7 @@ const AddProduct = () => {
               type="number"
               id="length"
               name="length"
-              value={formData.length}
+              value={formData?.length}
               onChange={handleInputChange}
               min={0}
               defaultValue={0}
@@ -387,7 +450,7 @@ const AddProduct = () => {
               type="number"
               id="width"
               name="width"
-              value={formData.width}
+              value={formData?.width}
               onChange={handleInputChange}
               min={0}
               defaultValue={0}
