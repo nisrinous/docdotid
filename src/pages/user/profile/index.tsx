@@ -42,24 +42,27 @@ export default function Profile() {
         </div>
       ) : (
         <>
-          <div className="container flex flex-col w-sm justify-center items-start mt-10 w-full md:max-w-md">
-            <div className="mt-5 flex flex-row gap-5 justify-between items-center">
+          <div className="container flex flex-col w-sm justify-center items-center mt-10 w-full md:max-w-md">
+            <div className="mt-5 flex flex-col gap-5 justify-between items-center">
               <img
                 src="https://res-console.cloudinary.com/minevf/media_explorer_thumbnails/8f937d455af252efc3a2a6cdee68b198/detailed"
                 className="border-[1px] rounded-full p-2 w-32"
-              ></img>{" "}
-              <div className="mt-5 md:mt-0 flex flex-col">
-                <h3 className="font-semibold text-2xl mprofiled:text-3xl text-left mt-1">
-                  {user?.name || null}
+              ></img>
+              <Button
+                variant="link"
+                className=" justify-start items-start mt-0"
+              >
+                Change photo
+              </Button>
+              <div className="mt-5 md:mt-0 flex flex-col justify-center items-center">
+                <h3 className="font-semibold text-2xl md:text-3xl text-left mt-1">
+                  {user?.name || "Full Name"}
                 </h3>
                 <p className="text-zinc-400 leading-none text-lg mt-1">
-                  {email}
+                  {email || "example@mail.com"}
                 </p>
               </div>
             </div>
-            <Button variant="link" className=" justify-start items-start">
-              Change photo
-            </Button>
           </div>
           <EditProfile data={user} />
         </>
