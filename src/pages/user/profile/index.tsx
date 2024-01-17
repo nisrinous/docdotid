@@ -61,7 +61,7 @@ export default function Profile() {
               Change photo
             </Button>
           </div>
-          <EditProfile />
+          <EditProfile data={user} />
         </>
       )}
     </>

@@ -34,23 +34,23 @@ const Inputs = z.object({
       message: "Full name should not contain numbers",
     }),
   phone: z.string(),
-  gender: z.enum(["male", "female"]),
+  gender: z.enum(["male", "female", "Name not specified"]),
   height: z.number().positive(),
   weight: z.number().positive(),
 });
 
-const EditNewsForm = ({ data }: { data: UserDetailResponse }) => {
+const EditNewsForm = ({ data }: { data?: UserDetailResponse }) => {
   const router = useRouter();
   const { id } = router.query;
 
   const form = useForm({
     resolver: zodResolver(Inputs),
     defaultValues: {
-      name: data.name,
-      phone: data.phone,
-      gender: data.gender,
-      height: data.height,
-      weight: data.weight,
+      name: data?.name || "",
+      phone: data?.phone || "",
+      gender: data?.gender || "",
+      height: data?.height || 0,
+      weight: data?.weight || 0,
     },
   });
 
@@ -145,9 +145,7 @@ const EditNewsForm = ({ data }: { data: UserDetailResponse }) => {
                       </SelectValue>
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="male" className="text-inherit">
-                        Male
-                      </SelectItem>
+                      <SelectItem value="male">Male</SelectItem>
                       <SelectItem value="female">Female</SelectItem>
                     </SelectContent>
                   </Select>
