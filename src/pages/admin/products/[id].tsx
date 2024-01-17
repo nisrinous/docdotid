@@ -217,7 +217,9 @@ const AddProduct = () => {
       formData.width = parseInt(formData.width, 10);
     }
 
-    formData.image = img;
+    if (img !== "") {
+      formData.image = img;
+    }
 
     console.log(formData);
 
