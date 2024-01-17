@@ -4,7 +4,7 @@ import { Label } from "@/components/ui/label";
 
 const HeroDoctor = () => {
   return (
-    <div className="container lg:px-20">
+    <div className="container mt-5">
       <Card className="hidden my-10 md:flex flex-row justify-evenly items-center ">
         <div className="text-center md:text-left">
           <h2 className="scroll-m-20 text-xl font-extrabold tracking-tight md:text-2xl mt-1">
