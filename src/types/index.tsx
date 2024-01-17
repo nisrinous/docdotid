@@ -43,11 +43,11 @@ export type ProductResponse = {
 };
 
 export type UserDetailResponse = {
-  id: number;
   name: string;
   phone: string;
   email: string;
-  password: string;
-  role_id: number;
-  verified_at: string;
+  gender: string;
+  weight: number;
+  height: number;
+  image: string;
 };
