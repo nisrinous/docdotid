@@ -41,3 +41,13 @@ export type ProductResponse = {
   created_at: string;
   updated_at: string;
 };
+
+export type UserDetailResponse = {
+  name: string;
+  phone: string;
+  email: string;
+  gender: string;
+  weight: number;
+  height: number;
+  image: string;
+};

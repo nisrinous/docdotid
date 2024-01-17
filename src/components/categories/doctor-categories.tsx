@@ -49,7 +49,7 @@ const DoctorCategories = () => {
                   ></img>
                 </CardContent>
                 <CardFooter className="items-center justify-center p-0">
-                  <Link href="/telemedicines/cardiologist">
+                  <Link href="/telemedicine/cardiologist">
                     <p className="px-2 text-center">Cardiologist</p>
                     <p className="text-zinc-400 leading-none text-xs text-center mt-2">
                       For heart and blood pressure problems

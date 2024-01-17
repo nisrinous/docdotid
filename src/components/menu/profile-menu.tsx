@@ -9,11 +9,14 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { FaRegUserCircle } from "react-icons/fa";
 
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setToken } from "@/store/slices/authSlice";
 import { Button } from "../ui/button";
+import { RootState } from "@/store/store";
 
 const ProfileMenu = () => {
+  const { email } = useSelector((state: RootState) => state.user);
+
   const dispatch = useDispatch();
 
   const handleLogout = () => {
@@ -28,7 +31,12 @@ const ProfileMenu = () => {
             <FaRegUserCircle size={20} />
           </DropdownMenuTrigger>
           <DropdownMenuContent className="mr-7">
-            <DropdownMenuItem className="w-36">
+            <DropdownMenuItem className="w-full">
+              <p className="text-zinc-500 leading-none text-sm mt-1">{email}</p>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+
+            <DropdownMenuItem>
               <Link href="/user/profile">Profile</Link>
             </DropdownMenuItem>
             <DropdownMenuItem>
