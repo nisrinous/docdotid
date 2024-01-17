@@ -36,7 +36,7 @@ export default function Products() {
       <ProductCategories />
       <div className="container my-10 flex flex-col justify-center pb-5">
         <h3 className="scroll-m-20 text-2xl md:text-3xl tracking-tight text-left mt-5">
-          All Categories
+          Browse Our Products
         </h3>
         {isLoading ? (
           <p className="text-zinc-400 mb-5">Loading...</p>
