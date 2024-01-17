@@ -42,7 +42,6 @@ export type ProductResponse = {
   updated_at: string;
 };
 
-<<<<<<< HEAD
 export type PharmacyResponse = {
   id: number;
   name: string;
@@ -55,7 +54,7 @@ export type PharmacyResponse = {
   operational_day: string;
   is_active: boolean;
   pharmacist_id: number;
-=======
+};
 export type UserDetailResponse = {
   name: string;
   phone: string;
@@ -64,5 +63,4 @@ export type UserDetailResponse = {
   weight: number;
   height: number;
   image: string;
->>>>>>> fb4dd511e269cef5e3d8a4f20be0a9d38e10af45
 };
