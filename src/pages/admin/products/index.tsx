@@ -15,6 +15,8 @@ import { RootState } from "@/store/store";
 import { deleteProduct, getProducts } from "@/lib/fetcher/product";
 import { ProductsResponse } from "@/types";
 import useSWR from "swr";
+import { apiBaseUrl } from "@/config";
+import router from "next/router";
 
 const Product = () => {
   const { token } = useSelector((state: RootState) => state.user);
@@ -39,6 +41,10 @@ const Product = () => {
   };
 
   useSWR(["/products"], fetchData);
+
+  const handleEdit = (productId: number) => {
+    router.push(`${apiBaseUrl}/products/${productId}`);
+  };
 
   return (
     <div className="flex">
@@ -67,7 +73,7 @@ const Product = () => {
                 <TableCell>{item.max_price}</TableCell>
                 <TableCell>{item.min_price}</TableCell>
                 <TableCell>
-                  <Button>Edit</Button>
+                  <Button onClick={() => handleEdit(item.id)}>Edit</Button>
                   <Button onClick={() => handleDelete(item.id)}>Delete</Button>
                 </TableCell>
               </TableRow>
