@@ -1,9 +1,8 @@
 "use client";
 import * as React from "react";
-import { ProductCategoriesResponse } from "@/types";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
-import { Label } from "@/components/ui/label";
+import { FaWhatsapp } from "react-icons/fa6";
 import { menus } from "@/utils/menus";
 import {
   Dialog,
@@ -62,8 +61,10 @@ export default function Categories() {
           ...rest,
           pharmacy_id: pharmacy.id,
           pharmacy_name: pharmacy.name,
+          pharmacy_phone: pharmacy.phone,
         })
       );
+      console.log(formattedData);
       setOrdersData(formattedData);
     } catch (error) {
       console.error("" + error);
@@ -84,31 +85,47 @@ export default function Categories() {
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
-  const [open, setOpen] = useState(false);
-  const [newCategory, setNewCategory] = useState("");
-  const [inputError, setInputError] = useState("");
 
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const inputValue = event.target.value;
-    setNewCategory(inputValue);
+  const handleContactWhatsapp = (phoneNumber: any) => {
+    const whatsappUrl = `https://wa.me/${phoneNumber}`;
+    window.open(whatsappUrl, "_blank");
+  };
 
-    if (/[0-9!@#$%^&*(),.?":{}|<>]/.test(inputValue)) {
-      setInputError("Input should not contain numbers or special characters.");
-    } else {
-      setInputError("");
+  const getStatusString = (status: number) => {
+    switch (status) {
+      case 0:
+        return "Waiting for payment";
+      case 1:
+        return "Waiting for payment confirmation";
+      case 2:
+        return "Processed";
+      case 3:
+        return "Sent";
+      case 4:
+        return "Order confirmed";
+      case -1:
+        return "Cancelled";
+      default:
+        return "Unknown Status";
     }
   };
-  const handleAddCategory = async () => {
-    try {
-      const result = await addCategory(token, newCategory);
 
-      console.log("Category added:", result);
-
-      setNewCategory("");
-      setOpen(false);
-      mutate(["/categories", token]);
-    } catch (error) {
-      console.error("Error adding category:", error);
+  const getStatusColor = (status: number) => {
+    switch (status) {
+      case 0:
+        return "bg-yellow-500"; // Waiting for payment
+      case 1:
+        return "bg-orange-500"; // Waiting for payment confirmation
+      case 2:
+        return "bg-green-500"; // Processed
+      case 3:
+        return "bg-blue-500"; // Sent
+      case 4:
+        return "bg-teal-500"; // Order confirmed
+      case -1:
+        return "bg-red-500"; // Canceled
+      default:
+        return "bg-gray-500"; // Unknown Status
     }
   };
 
@@ -143,7 +160,15 @@ export default function Categories() {
           </Button>
         );
       },
-      cell: ({ row }) => <div>{row.getValue("status")}</div>,
+      cell: ({ row }) => (
+        <div
+          className={`rounded-lg py-1 px-2 max-w-fit ${getStatusColor(
+            row.getValue("status")
+          )}`}
+        >
+          {getStatusString(row.getValue("status"))}
+        </div>
+      ),
     },
     {
       accessorKey: "total_price",
@@ -178,17 +203,36 @@ export default function Categories() {
       cell: ({ row }) => <div>{row.getValue("pharmacy_name")}</div>,
     },
     {
+      accessorKey: "pharmacy_phone",
+      header: ({ column }) => {
+        return (
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+            className="px-0"
+          >
+            Pharmacy Phone
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </Button>
+        );
+      },
+      cell: ({ row }) => <div>{row.getValue("pharmacy_phone")}</div>,
+    },
+    {
       id: "actions",
       header: "Actions",
       enableHiding: false,
       cell: ({ row }) => {
-        const id = row.getValue("id");
-        const currentCategory = row.getValue("id");
-
+        const pharmacy_number = row.getValue("pharmacy_phone");
+        console.log(pharmacy_number);
         return (
           <div className="flex gap-5">
-            <EditModalCategory token={token} name={currentCategory} id={id} />
-            <DeleteModal token={token} id={id} />
+            <Button
+              className="bg-green-600 hover:bg-green-500"
+              onClick={() => handleContactWhatsapp(pharmacy_number)}
+            >
+              <FaWhatsapp size={25} /> {"  "} Chat on WhatsApp
+            </Button>
           </div>
         );
       },
@@ -221,55 +265,6 @@ export default function Categories() {
         <div className="flex items-center justify-between py-4">
           <SearchBar table={table} />
           <div className="flex gap-3">
-            <Dialog open={open} onOpenChange={setOpen}>
-              <DialogTrigger asChild>
-                <Button
-                  variant="outline"
-                  className="bg-sky-300 hover:bg-sky-200"
-                >
-                  Add New
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="sm:max-w-[425px]">
-                <DialogHeader>
-                  <DialogTitle>Add New Product Category</DialogTitle>
-                  <DialogDescription>
-                    Input details for the new product category here. Click save
-                    when done.
-                  </DialogDescription>
-                </DialogHeader>
-                <div className="grid gap-4 py-4">
-                  <div className="grid grid-cols-4 items-center gap-4">
-                    <Label htmlFor="name" className="text-right">
-                      Category Name
-                    </Label>
-
-                    <Input
-                      id="name"
-                      value={newCategory}
-                      onChange={handleInputChange}
-                      className={`col-span-3 focus rounded-md p-2 ${
-                        inputError ? "focus:bg-red-200" : ""
-                      }`}
-                    />
-                    {inputError && (
-                      <p className="col-span-4 text-red-500 text-s mt-1">
-                        {inputError}
-                      </p>
-                    )}
-                  </div>
-                </div>
-                <DialogFooter>
-                  <Button
-                    type="submit"
-                    onClick={handleAddCategory}
-                    disabled={inputError !== ""}
-                  >
-                    Save changes
-                  </Button>
-                </DialogFooter>
-              </DialogContent>
-            </Dialog>
             <ColumnDropdown table={table} />
           </div>
         </div>
