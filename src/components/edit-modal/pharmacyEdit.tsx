@@ -14,13 +14,15 @@ import { editCategory } from "@/lib/fetcher/product-category";
 import { useState } from "react";
 import { mutate } from "swr";
 
-export function EditModalCategory({
+export function EditModalPharmacy({
   token,
   name,
+  address,
   id,
 }: {
   token: string;
   name: any;
+  address: any;
   id: unknown;
 }) {
   const [open, setOpen] = useState(false);
@@ -57,22 +59,42 @@ export function EditModalCategory({
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Add New Product Category</DialogTitle>
+          <DialogTitle>Edit Pharmacy</DialogTitle>
           <DialogDescription>
-            Input details for the new product category here. Click save when
-            done.
+            Input details for the edited pharmacy here. Click save when done.
           </DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="name" className="text-right">
-              Category Name
+              Pharmacy Name
             </Label>
 
             <Input
               id="name"
               // value={newCategory}
               defaultValue={name}
+              onChange={handleInputChange}
+              className={`col-span-3 focus rounded-md p-2 ${
+                inputError ? "focus:bg-red-200" : ""
+              }`}
+            />
+            {inputError && (
+              <p className="col-span-4 text-red-500 text-s mt-1">
+                {inputError}
+              </p>
+            )}
+          </div>
+
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor="address" className="text-right">
+              Pharmacy Name
+            </Label>
+
+            <Input
+              id="address"
+              // value={newCategory}
+              defaultValue={address}
               onChange={handleInputChange}
               className={`col-span-3 focus rounded-md p-2 ${
                 inputError ? "focus:bg-red-200" : ""
@@ -98,3 +120,13 @@ export function EditModalCategory({
     </Dialog>
   );
 }
+
+// address: string;
+// postal_code: number;
+// latitude: number;
+// longitude: number;
+// city_code: number;
+// operational_hour: string;
+// operational_day: string;
+// is_active: boolean;
+// pharmacist_id: number;

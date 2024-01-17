@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { getProductCategories } from "@/lib/fetcher/product-category";
 import { Label } from "@/components/ui/label";
+import { useRouter } from "next/router";
 import { menus } from "@/utils/menus";
 import {
   Dialog,
@@ -43,7 +44,7 @@ import { useState } from "react";
 import { DeleteModal } from "@/components/delete-modal";
 import { addCategory } from "@/lib/fetcher/product-category";
 import useSWR, { mutate } from "swr";
-import { EditModal } from "@/components/edit-modal";
+import { EditModalPharmacy } from "@/components/edit-modal/pharmacyEdit";
 import SearchBar from "@/components/search-bar";
 import ColumnDropdown from "@/components/columns-dropdown";
 import { getPharmacyList } from "@/lib/fetcher/pharmacy";
@@ -66,7 +67,7 @@ export default function Pharmacies() {
     ["/pharmacies", token],
     fetchData
   );
-
+  const router = useRouter();
   const data: ProductCategoriesResponse[] = pharmacyData;
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -89,6 +90,11 @@ export default function Pharmacies() {
       setInputError("");
     }
   };
+
+  const navigateToAdd = () => {
+    router.push("/admin/pharmacy/add");
+  };
+
   const handleAddCategory = async () => {
     try {
       const result = await addCategory(token, newCategory);
@@ -192,11 +198,22 @@ export default function Pharmacies() {
       cell: ({ row }) => {
         const id = row.getValue("id");
         const currentCategory = row.getValue("name");
+        const currentAddress = row.getValue("address");
 
         return (
           <div className="flex gap-5">
-            <EditModal token={token} name={currentCategory} id={id} />
-            <EditModal token={token} name={currentCategory} id={id} />
+            <EditModalPharmacy
+              token={token}
+              address={currentAddress}
+              name={currentCategory}
+              id={id}
+            />
+            <EditModalPharmacy
+              token={token}
+              address={currentAddress}
+              name={currentCategory}
+              id={id}
+            />
             <DeleteModal token={token} id={id} />
           </div>
         );
@@ -232,55 +249,14 @@ export default function Pharmacies() {
         <div className="flex items-center justify-between py-4">
           <SearchBar table={table} />
           <div className="flex gap-3">
-            <Dialog open={open} onOpenChange={setOpen}>
-              <DialogTrigger asChild>
-                <Button
-                  variant="outline"
-                  className="bg-sky-300 hover:bg-sky-200"
-                >
-                  Add New
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="sm:max-w-[425px]">
-                <DialogHeader>
-                  <DialogTitle>Add New Product Category</DialogTitle>
-                  <DialogDescription>
-                    Input details for the new product category here. Click save
-                    when done.
-                  </DialogDescription>
-                </DialogHeader>
-                <div className="grid gap-4 py-4">
-                  <div className="grid grid-cols-4 items-center gap-4">
-                    <Label htmlFor="name" className="text-right">
-                      Category Name
-                    </Label>
+            <Button
+              variant="outline"
+              className="bg-sky-300 hover:bg-sky-200"
+              onClick={navigateToAdd}
+            >
+              Add New
+            </Button>
 
-                    <Input
-                      id="name"
-                      value={newCategory}
-                      onChange={handleInputChange}
-                      className={`col-span-3 focus rounded-md p-2 ${
-                        inputError ? "focus:bg-red-200" : ""
-                      }`}
-                    />
-                    {inputError && (
-                      <p className="col-span-4 text-red-500 text-s mt-1">
-                        {inputError}
-                      </p>
-                    )}
-                  </div>
-                </div>
-                <DialogFooter>
-                  <Button
-                    type="submit"
-                    onClick={handleAddCategory}
-                    disabled={inputError !== ""}
-                  >
-                    Save changes
-                  </Button>
-                </DialogFooter>
-              </DialogContent>
-            </Dialog>
             <ColumnDropdown table={table} />
           </div>
         </div>
