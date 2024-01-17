@@ -3,6 +3,10 @@ import { HiMenuAlt3 } from "react-icons/hi";
 import Link from "next/link";
 import LogoSideBar from "../logo/logo-sidebar";
 import { useRouter } from "next/router";
+import { LuUserCircle2 } from "react-icons/lu";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
+import { getUserDetail } from "@/lib/fetcher/profile";
 
 interface MenuItem {
   name: string;
@@ -19,13 +23,45 @@ interface SidebarProps {
 const Sidebar: FC<SidebarProps> = ({ menus }) => {
   const router = useRouter();
   const currentPath = router.pathname;
+  const { role_id, token } = useSelector((state: RootState) => state.user);
+
+  console.log(role_id);
+
   const [open, setOpen] = useState(true);
+  const [role, setRole] = useState("");
+  const [userName, setUserName] = useState("");
 
   const handleToggle = () => {
     setOpen(!open);
   };
 
+  const handleRole = (role_id: number) => {
+    return role_id === 1 ? "Admin" : "Admin Pharmacy";
+  };
+
+  const filteredMenus = menus.filter((menu) => {
+    if (role_id === 1) {
+      return true;
+    } else if (role_id === 2 && menu.link.includes("/pharmacyadm")) {
+      return true;
+    }
+    return false;
+  });
+
   useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await getUserDetail(token);
+        setUserName(data.name);
+      } catch (error) {
+        console.error("Error fetching user details:", error);
+      }
+    };
+
+    fetchData();
+
+    setRole(handleRole(role_id));
+
     const screenWidth = window.innerWidth;
     if (screenWidth <= 768) {
       setOpen(false);
@@ -41,7 +77,7 @@ const Sidebar: FC<SidebarProps> = ({ menus }) => {
     return () => {
       window.removeEventListener("resize", handleResize);
     };
-  }, []);
+  }, [token, role_id]);
 
   return (
     <div
@@ -62,9 +98,20 @@ const Sidebar: FC<SidebarProps> = ({ menus }) => {
         {open && (
           <div className="mb-5">
             <LogoSideBar />
+            <div className="flex flex-row w-full gap-2">
+              <div>
+                <h1 className="text-2xl mt-5 font-bold">{`Welcome, ${
+                  userName || "User"
+                }`}</h1>
+                <h3 className="rounded-lg bg-[#064789] px-2 py-1 flex gap-2 my-auto font-bold w-fit">
+                  {" "}
+                  <LuUserCircle2 size={25} /> {role}
+                </h3>
+              </div>
+            </div>
           </div>
         )}
-        {menus.map((menu, i) => (
+        {filteredMenus.map((menu, i) => (
           <Link
             href={menu.link}
             onClick={menu.onClick}
