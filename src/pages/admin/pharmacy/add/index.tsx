@@ -117,7 +117,7 @@ export default function AddPharmacy() {
                       </FormItem>
                     )}
                   />
-                  <FormField
+                  {/* <FormField
                     control={form.control}
                     name="username"
                     render={({ field }) => (
@@ -143,7 +143,7 @@ export default function AddPharmacy() {
                                 <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                               </Button>
                             </FormControl> */}
-                          </PopoverTrigger>
+                  {/* </PopoverTrigger>
                           <PopoverContent className="w-[200px] p-0">
                             <Command>
                               <CommandInput placeholder="Search language..." />
@@ -179,7 +179,7 @@ export default function AddPharmacy() {
                         <FormMessage />
                       </FormItem>
                     )}
-                  />
+                  /> */}
                   <FormField
                     control={form.control}
                     name="username"

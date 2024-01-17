@@ -64,3 +64,15 @@ export type UserDetailResponse = {
   height: number;
   image: string;
 };
+
+export type OrdersResponse = {
+  id: number;
+  pharmacy: {
+    id: number;
+    name: string;
+    phone: string;
+  };
+  order_price: number;
+  total_price: number;
+  status: number;
+};
