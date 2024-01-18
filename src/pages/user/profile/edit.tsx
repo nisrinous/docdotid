@@ -43,8 +43,6 @@ const EditProfile = ({ data }: { data?: UserDetailResponse }) => {
     resolver: zodResolver(Inputs),
     defaultValues: {
       ...data,
-      height: data?.height || 0,
-      weight: data?.weight || 0,
     },
   });
 
@@ -124,7 +122,7 @@ const EditProfile = ({ data }: { data?: UserDetailResponse }) => {
                 </FormItem>
               )}
             />
-            {/* <FormField
+            <FormField
               control={form.control}
               name="gender"
               render={({ field }) => (
@@ -186,7 +184,7 @@ const EditProfile = ({ data }: { data?: UserDetailResponse }) => {
                   <FormMessage />
                 </FormItem>
               )}
-            /> */}
+            />
             <Button type="submit" className="my-5">
               Update Profile
               <span className="sr-only">Submit</span>

@@ -56,10 +56,10 @@ export default function Profile() {
               </Button>
               <div className="mt-5 md:mt-0 flex flex-col justify-center items-center">
                 <h3 className="font-semibold text-2xl md:text-3xl text-left mt-1">
-                  {user?.name || "Full Name"}
+                  {user?.name || null}
                 </h3>
                 <p className="text-zinc-400 leading-none text-lg mt-1">
-                  {email || "example@mail.com"}
+                  {user?.email || null}
                 </p>
               </div>
             </div>
