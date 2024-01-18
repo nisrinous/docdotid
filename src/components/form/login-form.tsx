@@ -72,6 +72,8 @@ const LoginForm = () => {
       }
     } catch (error) {
       toast.error("" + error);
+    } finally {
+      setIsSending(false);
     }
   }
 
