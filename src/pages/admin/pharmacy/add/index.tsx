@@ -1,271 +1,222 @@
-"use client";
-import * as React from "react";
-import { useSelector } from "react-redux";
-import { cn } from "@/lib/utils";
-import { RootState } from "@/store/store";
-import { menus } from "@/utils/menus";
-import Sidebar from "@/components/aside-bar";
-import { Check, ChevronsUpDown } from "lucide-react";
-import { useState } from "react";
-import { addCategory } from "@/lib/fetcher/product-category";
-import useSWR, { mutate } from "swr";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import * as z from "zod";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-} from "@/components/ui/command";
+import useSWR from "swr";
+import axios from "axios";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import dynamic from "next/dynamic";
+import { useSelector, useDispatch } from "react-redux";
+import { RootState } from "@/store/store";
+import { setFixLat, setFixLng } from "@/store/slices/authSlice";
+import Cookies from "js-cookie";
+import Sidebar from "@/components/aside-bar";
+import { menus } from "@/utils/menus";
 import { Input } from "@/components/ui/input";
-import toast from "react-hot-toast";
-const FormSchema = z.object({
-  username: z.string().min(2, {
-    message: "Username must be at least 2 characters.",
-  }),
-});
 
-export default function AddPharmacy() {
-  const form = useForm<z.infer<typeof FormSchema>>({
-    resolver: zodResolver(FormSchema),
-    defaultValues: {
-      username: "",
-    },
+const fetcher = (url: string) => axios.get(url).then((res) => res.data);
+
+const GeocodeInformation: React.FC<{ combinedLocation: string }> = ({
+  combinedLocation,
+}) => {
+  const { data, error } = useSWR(
+    `https://api.opencagedata.com/geocode/v1/json?q=${combinedLocation}&key=10fc2f8c13c547f38158e817cb6457d6`,
+    fetcher
+  );
+  const dispatch = useDispatch();
+
+  if (error) return <div>Failed to load geocode information</div>;
+  if (!data) return <div>Loading geocode information...</div>;
+
+  const { lat, lng } = data.results[0].geometry;
+
+  dispatch(setFixLat(lat));
+  dispatch(setFixLng(lng));
+
+  return (
+    <div>
+      <LeafletMap lat={lat} lng={lng} />
+    </div>
+  );
+};
+
+const LeafletMap: React.FC<{ lat: number; lng: number }> = ({ lat, lng }) => {
+  const handleMarkerMove = () => {};
+
+  const LeafletMapComponent = dynamic(() => import("@/components/leaflet"), {
+    ssr: false,
   });
 
-  function onSubmit(data: z.infer<typeof FormSchema>) {
-    toast.success("yay");
-  }
+  return (
+    <LeafletMapComponent lat={lat} lng={lng} onMarkerMove={handleMarkerMove} />
+  );
+};
 
-  const { token } = useSelector((state: RootState) => state.user);
+const IndexPage: React.FC = () => {
+  const { data, error } = useSWR("/api/fetchProvinceCity", fetcher);
+  const fixLat = useSelector((state: RootState) => state.user.fixLat);
+  const fixLng = useSelector((state: RootState) => state.user.fixLng);
+  const [receiver, setReceiver] = useState<string>("");
+  const [phone, setPhone] = useState<string>("");
+  const [selectedProvince, setSelectedProvince] = useState<string | null>(null);
+  const [selectedCity, setSelectedCity] = useState<string | null>(null);
+  const [street, setStreet] = useState<string>("");
+  const [postalCode, setPostalCode] = useState<string>("");
+  const [description, setDescription] = useState<string>("");
+  const [combinedLocation, setCombinedLocation] = useState<string>("");
 
-  const [newCategory, setNewCategory] = useState("");
-  const [inputError, setInputError] = useState("");
+  if (error) return <div>Failed to load</div>;
+  if (!data) return <div>Loading...</div>;
 
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const inputValue = event.target.value;
-    setNewCategory(inputValue);
+  const uniqueProvinces = Array.from(
+    new Set<string>(data.map((item: any) => item.province))
+  );
+  const citiesInSelectedProvince = data.filter(
+    (item: any) => item.province === selectedProvince
+  );
 
-    if (/[0-9!@#$%^&*(),.?":{}|<>]/.test(inputValue)) {
-      setInputError("Input should not contain numbers or special characters.");
-    } else {
-      setInputError("");
-    }
+  const handleCombineLocation = () => {
+    const formattedLocation = `${selectedProvince ? selectedProvince : ""}${
+      selectedCity ? `, ${selectedCity}` : ""
+    }`.replace(/ /g, "+");
+
+    setCombinedLocation(formattedLocation);
   };
-  const handleAddCategory = async () => {
+
+  const handleSave = async () => {
     try {
-      const result = await addCategory(token, newCategory);
+      let finalLat: string | undefined = Cookies.get("finalLat");
+      let finalLng: string | undefined = Cookies.get("finalLng");
+      Cookies.remove("finalLat");
+      Cookies.remove("finalLng");
 
-      console.log("Category added:", result);
+      if (!finalLat) finalLat = fixLat.toString();
+      if (!finalLng) finalLng = fixLng.toString();
 
-      setNewCategory("");
-      //   seetOpen(false);
-      mutate(["/categories", token]);
+      const postData = {
+        name: receiver,
+        phone: phone,
+        description: description,
+        address: `${selectedProvince}, ${selectedCity}, ${street}`,
+        postal_code: postalCode,
+        latitude: finalLat,
+        longitude: finalLng,
+        province_code: selectedProvince,
+        city_code: selectedCity,
+        operational_hour: "",
+        operational_day: "",
+      };
+
+      console.log(postData);
+      const response = await axios.post("https://test.com", postData);
     } catch (error) {
-      console.error("Error adding category:", error);
+      console.error("Error saving data:", error);
     }
   };
 
   return (
     <div className="flex">
       <Sidebar menus={menus} />
-      <div className="w-full mx-10 mt-5">
-        <h1 className="text-black text-3xl mt-2 font-bold">Add New Pharmacy</h1>
-        <div className="flex">
-          <div className="mt-10">
-            <Form {...form}>
-              <form
-                onSubmit={form.handleSubmit(onSubmit)}
-                className="w-full m-0 flex"
+      <div className="m-3 sm:m-10">
+        <h1 className="text-black text-3xl font-bold mb-3 sm:mb-[20px]">
+          Add Pharmacy
+        </h1>
+        <div className="flex flex-col sm:flex-row">
+          <div>
+            <div className="mb-2">
+              <label>Pharmacy Name: </label>
+              <Input
+                type="text"
+                value={receiver}
+                onChange={(e) => setReceiver(e.target.value)}
+              />
+            </div>
+            <div className="mb-2">
+              <label>Pharmacy Phone: </label>
+              <Input
+                type="text"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+              />
+            </div>
+            <div className="mb-2">
+              <label>Select Province: </label>
+              <select
+                value={selectedProvince || ""}
+                onChange={(e) => {
+                  setSelectedProvince(e.target.value);
+                  setSelectedCity(null);
+                }}
               >
-                <div className="flex-col flex gap-5">
-                  <FormField
-                    control={form.control}
-                    name="username"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Name</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Pharmacy Bunga" {...field} />
-                        </FormControl>
-
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="username"
-                    render={({ field }) => (
-                      <FormItem className="flex flex-col">
-                        <FormLabel>Language</FormLabel>
-                        <Popover>
-                          <PopoverTrigger asChild>
-                            {/* <FormControl>
-                              <Button
-                                variant="outline"
-                                role="combobox"
-                                className={cn(
-                                  "w-[200px] justify-between",
-                                  !field.value && "text-muted-foreground"
-                                )}
-                              >
-                                {field.value
-                                  ? languages.find(
-                                      (language) =>
-                                        language.value === field.value
-                                    )?.label
-                                  : "Select language"}
-                                <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                              </Button>
-                            </FormControl> */}
-                          </PopoverTrigger>
-                          <PopoverContent className="w-[200px] p-0">
-                            <Command>
-                              <CommandInput placeholder="Search language..." />
-                              <CommandEmpty>No language found.</CommandEmpty>
-                              <CommandGroup>
-                                {languages.map((language) => (
-                                  <CommandItem
-                                    value={language.label}
-                                    key={language.value}
-                                    onSelect={() => {
-                                      form.setValue("username", language.value);
-                                    }}
-                                  >
-                                    <Check
-                                      className={cn(
-                                        "mr-2 h-4 w-4",
-                                        language.value === field.value
-                                          ? "opacity-100"
-                                          : "opacity-0"
-                                      )}
-                                    />
-                                    {language.label}
-                                  </CommandItem>
-                                ))}
-                              </CommandGroup>
-                            </Command>
-                          </PopoverContent>
-                        </Popover>
-                        <FormDescription>
-                          This is the language that will be used in the
-                          dashboard.
-                        </FormDescription>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="username"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>City</FormLabel>
-                        <Select
-                          onValueChange={field.onChange}
-                          defaultValue={field.value}
-                        >
-                          <FormControl>
-                            <SelectTrigger>
-                              <SelectValue placeholder="Select a city to display" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            <SelectItem value="m@example.com">
-                              m@example.com
-                            </SelectItem>
-                            <SelectItem value="m@google.com">
-                              m@google.com
-                            </SelectItem>
-                            <SelectItem value="m@support.com">
-                              m@support.com
-                            </SelectItem>
-                          </SelectContent>
-                        </Select>
-
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-
-                <div className="flex flex-col gap-5 justify-start">
-                  <FormField
-                    control={form.control}
-                    name="username"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Street</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Pharmacy Bunga" {...field} />
-                        </FormControl>
-
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="username"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Postal Code</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Pharmacy Bunga" {...field} />
-                        </FormControl>
-
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="username"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Notes</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Pharmacy Bunga" {...field} />
-                        </FormControl>
-
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <Button type="submit">Submit</Button>
-                </div>
-              </form>
-            </Form>
+                <option value="">Select Province</option>
+                {uniqueProvinces.map((province) => (
+                  <option key={province} value={province}>
+                    {province}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <div className="mb-2">
+                <label>Select City: </label>
+                <select
+                  value={selectedCity || ""}
+                  onChange={(e) => setSelectedCity(e.target.value)}
+                  disabled={!selectedProvince}
+                >
+                  <option value="">Select City</option>
+                  {citiesInSelectedProvince.map((city: any) => (
+                    <option
+                      key={city.city_id}
+                      value={`${city.type} ${city.city_name}`}
+                    >
+                      {`${city.type} ${city.city_name}`}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+            <div className="mb-2">
+              <label>Street: </label>
+              <Input
+                type="text"
+                value={street}
+                onChange={(e) => setStreet(e.target.value)}
+              />
+            </div>
+            <div className="mb-2">
+              <label>Postal Code: </label>
+              <Input
+                type="text"
+                value={postalCode}
+                onChange={(e) => setPostalCode(e.target.value)}
+              />
+            </div>
+            <div className="mb-2">
+              <label>Note: </label>
+              <Input
+                type="text"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+              />
+            </div>
+            <div>
+              <Button onClick={handleCombineLocation} className="mb-2">
+                Adjust map position
+              </Button>
+            </div>
+          </div>
+          <div className="sm:w-[600px] sm:ml-[50px]">
+            {combinedLocation && (
+              <div>
+                <GeocodeInformation combinedLocation={combinedLocation} />
+                <Button onClick={handleSave} className="mt-5">
+                  Save Pharmacy
+                </Button>
+              </div>
+            )}
           </div>
         </div>
       </div>
     </div>
   );
-}
+};
+
+export default IndexPage;

@@ -161,10 +161,23 @@ const AddProduct = () => {
     if (typeof formData.product_category_id === "string") {
       formData.product_category_id = parseInt(formData.product_category_id, 10);
     }
+    if (typeof formData.selling_unit === "string") {
+      formData.selling_unit = parseInt(formData.selling_unit, 10);
+    }
+    if (typeof formData.weight === "string") {
+      formData.weight = parseInt(formData.weight, 10);
+    }
+    if (typeof formData.height === "string") {
+      formData.height = parseInt(formData.height, 10);
+    }
+    if (typeof formData.length === "string") {
+      formData.length = parseInt(formData.length, 10);
+    }
+    if (typeof formData.width === "string") {
+      formData.width = parseInt(formData.width, 10);
+    }
 
     formData.image = img;
-
-    console.log(formData);
 
     try {
       const response = await axios.post(`${apiBaseUrl}/products`, formData, {
@@ -182,220 +195,240 @@ const AddProduct = () => {
   return (
     <div className="flex">
       <Sidebar menus={menus} />
-      <div className="w-full mx-10 mt-5">
-        <h1 className="text-black text-3xl mt-2 font-bold">Manage Products</h1>
-        <form onSubmit={handleSubmit}>
-          <div>
-            <Label htmlFor="picture">Picture:</Label>
-            <Input
-              id="picture"
-              type="file"
-              onChange={handleImageChange}
-              accept="image/*"
-            />
-            {isUploading && <p>Uploading image...</p>}
-            {img !== "" && <img src={img} alt="Product" />}
-          </div>
+      <div className="container flex justify-center sm:mt-5 p-3">
+        <div className="">
+          <h1 className="text-black text-3xl mt-2 font-bold mb-5 sm:mb-[50px]">
+            Edit Products
+          </h1>
+          <form onSubmit={handleSubmit}>
+            <div className="flex flex-col sm:flex-row gap-0 sm:gap-10 w-full">
+              <div className="sm:w-[500px]">
+                <div className="mb-2 flex flex-col items-center">
+                  {img !== "" && (
+                    <img
+                      src={img}
+                      alt="Product"
+                      width={200}
+                      height={200}
+                      className="mb-3"
+                    />
+                  )}
+                  <Input
+                    id="picture"
+                    type="file"
+                    onChange={handleImageChange}
+                    accept="image/*"
+                  />
 
-          <div>
-            <Label htmlFor="name">Name:</Label>
-            <Input
-              type="text"
-              id="name"
-              name="name"
-              value={formData.name}
-              onChange={handleInputChange}
-              required
-            />
-          </div>
+                  {isUploading && <p>Uploading image...</p>}
+                </div>
 
-          <div>
-            <Label htmlFor="generic_name">Generic Name:</Label>
-            <Input
-              type="text"
-              id="generic_name"
-              name="generic_name"
-              value={formData.generic_name}
-              onChange={handleInputChange}
-              required
-            />
-          </div>
+                <div className="mb-2">
+                  <Label htmlFor="name">Name:</Label>
+                  <Input
+                    type="text"
+                    id="name"
+                    name="name"
+                    value={formData?.name}
+                    onChange={handleInputChange}
+                    required
+                  />
+                </div>
 
-          <div>
-            <Label htmlFor="content">Content:</Label>
-            <Input
-              type="text"
-              id="content"
-              name="content"
-              value={formData.content}
-              onChange={handleInputChange}
-              required
-            />
-          </div>
+                <div className="mb-2">
+                  <Label htmlFor="generic_name">Generic Name:</Label>
+                  <Input
+                    type="text"
+                    id="generic_name"
+                    name="generic_name"
+                    value={formData?.generic_name}
+                    onChange={handleInputChange}
+                    required
+                  />
+                </div>
 
-          <div>
-            <Label htmlFor="manufacturer">Manufacturer:</Label>
-            <select
-              id="manufacturer"
-              name="manufacturer_id"
-              value={formData.manufacturer_id}
-              onChange={handleInputChange}
-              required
-            >
-              <option value="0">Select Manufacturer</option>
-              {manufacturerDropdown?.map((option) => (
-                <option key={option.id} value={option.id}>
-                  {option.name}
-                </option>
-              ))}
-            </select>
-          </div>
+                <div className="mb-2">
+                  <Label htmlFor="content">Content:</Label>
+                  <Input
+                    type="text"
+                    id="content"
+                    name="content"
+                    value={formData?.content}
+                    onChange={handleInputChange}
+                    required
+                  />
+                </div>
 
-          <div>
-            <Label htmlFor="description">Description:</Label>
-            <Input
-              type="text"
-              id="description"
-              name="description"
-              value={formData.description}
-              onChange={handleInputChange}
-              required
-            />
-          </div>
+                <div className="mb-2">
+                  <Label htmlFor="manufacturer">Manufacturer:</Label>
+                  <select
+                    id="manufacturer"
+                    name="manufacturer_id"
+                    value={formData?.manufacturer_id || ""}
+                    onChange={handleInputChange}
+                    required
+                  >
+                    <option value="0">Select Manufacturer</option>
+                    {manufacturerDropdown?.map((option) => (
+                      <option key={option.id} value={option.id}>
+                        {option.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
 
-          <div>
-            <Label htmlFor="drug_classification">Drug Classification:</Label>
-            <select
-              id="drug_classification"
-              name="drug_classification_id"
-              value={formData.drug_classification_id}
-              onChange={handleInputChange}
-              required
-            >
-              <option value="0">Select Drug Classification</option>
-              {drugClassificationDropdown?.map((option) => (
-                <option key={option.id} value={option.id}>
-                  {option.name}
-                </option>
-              ))}
-            </select>
-          </div>
+                <div className="mb-2">
+                  <Label htmlFor="description">Description:</Label>
+                  <Input
+                    type="text"
+                    id="description"
+                    name="description"
+                    value={formData?.description}
+                    onChange={handleInputChange}
+                    required
+                  />
+                </div>
+              </div>
+              <div className="sm:w-[500px]">
+                <div className="mb-2">
+                  <Label htmlFor="drug_classification">
+                    Drug Classification:
+                  </Label>
+                  <select
+                    id="drug_classification"
+                    name="drug_classification_id"
+                    value={formData?.drug_classification_id}
+                    onChange={handleInputChange}
+                    required
+                  >
+                    <option value="0">Select Drug Classification</option>
+                    {drugClassificationDropdown?.map((option) => (
+                      <option key={option.id} value={option.id}>
+                        {option.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
 
-          <div>
-            <Label htmlFor="drug_form">Drug Form:</Label>
-            <select
-              id="drug_form"
-              name="drug_form_id"
-              value={formData.drug_form_id}
-              onChange={handleInputChange}
-              required
-            >
-              <option value="0">Select Drug Form</option>
-              {drugFormDropdown?.map((option) => (
-                <option key={option.id} value={option.id}>
-                  {option.name}
-                </option>
-              ))}
-            </select>
-          </div>
+                <div className="mb-2">
+                  <Label htmlFor="drug_form">Drug Form:</Label>
+                  <select
+                    id="drug_form"
+                    name="drug_form_id"
+                    value={formData?.drug_form_id}
+                    onChange={handleInputChange}
+                    required
+                  >
+                    <option value="0">Select Drug Form</option>
+                    {drugFormDropdown?.map((option) => (
+                      <option key={option.id} value={option.id}>
+                        {option.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
 
-          <div>
-            <Label htmlFor="product_category">Product Category:</Label>
-            <select
-              id="product_category"
-              name="product_category_id"
-              value={formData.product_category_id}
-              onChange={handleInputChange}
-              required
-            >
-              <option value="0">Select Product Category</option>
-              {productCategoryDropdown?.map((option) => (
-                <option key={option.id} value={option.id}>
-                  {option.name}
-                </option>
-              ))}
-            </select>
-          </div>
+                <div className="mb-2">
+                  <Label htmlFor="product_category">Product Category:</Label>
+                  <select
+                    id="product_category"
+                    name="product_category_id"
+                    value={formData?.product_category_id}
+                    onChange={handleInputChange}
+                    required
+                  >
+                    <option value="0">Select Product Category</option>
+                    {productCategoryDropdown?.map((option) => (
+                      <option key={option.id} value={option.id}>
+                        {option.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className="mb-2">
+                  <Label htmlFor="unit_in_pack">Unit in Pack:</Label>
+                  <Input
+                    type="text"
+                    id="unit_in_pack"
+                    name="unit_in_pack"
+                    value={formData?.unit_in_pack}
+                    onChange={handleInputChange}
+                    required
+                  />
+                </div>
 
-          <div>
-            <Label htmlFor="unit_in_pack">Unit in Pack:</Label>
-            <Input
-              type="text"
-              id="unit_in_pack"
-              name="unit_in_pack"
-              value={formData.unit_in_pack}
-              onChange={handleInputChange}
-              required
-            />
-          </div>
+                <div className="mb-2">
+                  <Label htmlFor="selling_unit">Price:</Label>
+                  <Input
+                    type="number"
+                    id="selling_unit"
+                    name="selling_unit"
+                    value={formData?.selling_unit}
+                    onChange={handleInputChange}
+                    min={0}
+                    defaultValue={0}
+                  />
+                </div>
 
-          <div>
-            <Label htmlFor="selling_unit">Price:</Label>
-            <Input
-              type="number"
-              id="selling_unit"
-              name="selling_unit"
-              value={formData.selling_unit}
-              onChange={handleInputChange}
-              min={0}
-              defaultValue={0}
-            />
-          </div>
+                <div className="mb-2">
+                  <Label htmlFor="weight">Weight:</Label>
+                  <Input
+                    type="number"
+                    id="weight"
+                    name="weight"
+                    value={formData?.weight}
+                    onChange={handleInputChange}
+                    min={0}
+                    defaultValue={0}
+                  />
+                </div>
 
-          <div>
-            <Label htmlFor="weight">Weight:</Label>
-            <Input
-              type="number"
-              id="weight"
-              name="weight"
-              value={formData.weight}
-              onChange={handleInputChange}
-              min={0}
-              defaultValue={0}
-            />
-          </div>
+                <div className="mb-2">
+                  <Label htmlFor="height">Height:</Label>
+                  <Input
+                    type="number"
+                    id="height"
+                    name="height"
+                    value={formData?.height}
+                    onChange={handleInputChange}
+                    min={0}
+                    defaultValue={0}
+                  />
+                </div>
 
-          <div>
-            <Label htmlFor="height">Height:</Label>
-            <Input
-              type="number"
-              id="height"
-              name="height"
-              value={formData.height}
-              onChange={handleInputChange}
-              min={0}
-              defaultValue={0}
-            />
-          </div>
+                <div className="mb-2">
+                  <Label htmlFor="length">Length:</Label>
+                  <Input
+                    type="number"
+                    id="length"
+                    name="length"
+                    value={formData?.length}
+                    onChange={handleInputChange}
+                    min={0}
+                    defaultValue={0}
+                  />
+                </div>
 
-          <div>
-            <Label htmlFor="length">Length:</Label>
-            <Input
-              type="number"
-              id="length"
-              name="length"
-              value={formData.length}
-              onChange={handleInputChange}
-              min={0}
-              defaultValue={0}
-            />
-          </div>
+                <div className="mb-5 sm:mb-5">
+                  <Label htmlFor="width">Width:</Label>
+                  <Input
+                    type="number"
+                    id="width"
+                    name="width"
+                    value={formData?.width}
+                    onChange={handleInputChange}
+                    min={0}
+                    defaultValue={0}
+                  />
+                </div>
 
-          <div>
-            <Label htmlFor="width">Width:</Label>
-            <Input
-              type="number"
-              id="width"
-              name="width"
-              value={formData.width}
-              onChange={handleInputChange}
-              min={0}
-              defaultValue={0}
-            />
-          </div>
-
-          <Button type="submit">Submit</Button>
-        </form>
+                <Button type="submit" className="mb-10">
+                  Submit
+                </Button>
+              </div>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   );
