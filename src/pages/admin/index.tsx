@@ -16,7 +16,7 @@ import {
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import useSWR from "swr";
-import { Combobox } from "@/components/combo-box";
+// import { Combobox } from "@/components/combo-box";
 import { Combobox2 } from "@/components/combo-box/product";
 
 export default function Home(): JSX.Element {
@@ -26,11 +26,11 @@ export default function Home(): JSX.Element {
 
   const fetchData = async () => {
     try {
-      const data = await getOrdersMonthly(
-        token,
-        selectedCategory,
-        selectedProduct
-      );
+      // const data = await getOrdersMonthly(
+      //   token,
+      //   selectedCategory,
+      //   selectedProduct
+      // );
 
       console.log("ini data", data);
       setOrdersData(data.data.ProductCategorySales);

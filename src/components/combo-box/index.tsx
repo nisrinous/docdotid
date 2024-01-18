@@ -98,7 +98,7 @@ const Combobox: React.FC<ComboboxProps> = ({ onSelectCategory }) => {
                     currentValue === value ? null : framework;
                   setValue(currentValue === value ? "" : currentValue);
                   setOpen(false);
-                  handleSelect(selectedCategory);
+                  // handleSelect(selectedCategory);
                 }}
               >
                 <Check
