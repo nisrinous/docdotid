@@ -40,7 +40,7 @@ const Sidebar: FC<SidebarProps> = ({ menus }) => {
   };
 
   const filteredMenus = menus.filter((menu) => {
-    if (role_id === 1) {
+    if (role_id === 1 && menu.link.includes("/admin")) {
       return true;
     } else if (role_id === 2 && menu.link.includes("/pharmacyadm")) {
       return true;
