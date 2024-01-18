@@ -76,3 +76,15 @@ export type OrdersResponse = {
   total_price: number;
   status: number;
 };
+
+export type DoctorResponse = {
+  id: number;
+  user_name: string;
+  is_active: boolean;
+  fee: number;
+  specialist_id: number;
+  specialist_name: string;
+  specialist_description: string;
+  image: string;
+  years_of_exp: number;
+};
