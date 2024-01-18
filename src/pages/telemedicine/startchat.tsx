@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 
-export default function DoctorDetails() {
+export default function StartChat() {
   return (
     <>
       <div className="container my-10 flex flex-col justify-center items-center lg:px-20">
