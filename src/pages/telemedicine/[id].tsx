@@ -3,7 +3,6 @@ import { Button } from "@/components/ui/button";
 import { getDoctor } from "@/lib/fetcher/doctor";
 import { RootState } from "@/store/store";
 import { DoctorResponse } from "@/types";
-import { Link } from "next/link";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { useSelector } from "react-redux";
@@ -17,7 +16,7 @@ export default function DoctorDetails() {
 
   const fetchData = async () => {
     try {
-      const data = await getDoctor(token, id);
+      const data = await getDoctor(token, id as string);
       setDoctorData(data.data);
     } catch (error) {
       console.error("" + error);

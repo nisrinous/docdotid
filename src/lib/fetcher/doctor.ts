@@ -21,7 +21,7 @@ export async function getDoctors(token: string) {
   }
 }
 
-export async function getDoctor(token: string, doctorId: number) {
+export async function getDoctor(token: string, doctorId: string) {
   try {
     let url = `${API_ENDPOINT}/doctors/${doctorId}`;
 
