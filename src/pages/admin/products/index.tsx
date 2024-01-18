@@ -18,9 +18,40 @@ import useSWR from "swr";
 import { apiBaseUrl } from "@/config";
 import router from "next/router";
 
+interface DeleteConfirmationModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onConfirm: () => void;
+}
+
+const DeleteConfirmationModal: React.FC<DeleteConfirmationModalProps> = ({
+  isOpen,
+  onClose,
+  onConfirm,
+}) => {
+  return (
+    <div className={`modal ${isOpen ? "block" : "hidden"}`}>
+      <div className="modal-overlay fixed w-full h-full bg-gray-900 opacity-50 top-0 left-0"></div>
+      <div className="modal-container fixed bg-white rounded shadow-lg top-center p-4 top-[300px] left-[60px] sm:top-80 sm:left-[800px]">
+        <p>Are you sure you want to delete this product?</p>
+        <div className="flex justify-end mt-4">
+          <Button onClick={onClose} className="mr-2">
+            Cancel
+          </Button>
+          <Button onClick={onConfirm}>Confirm Delete</Button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const Product = () => {
   const { token } = useSelector((state: RootState) => state.user);
   const [productsData, setProductsData] = useState<ProductsResponse[]>([]);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [productIdToDelete, setProductIdToDelete] = useState<number | null>(
+    null
+  );
 
   const fetchData = async () => {
     try {
@@ -31,15 +62,28 @@ const Product = () => {
     }
   };
 
-  const handleDelete = async (productId: number) => {
-    try {
-      await deleteProduct(token, productId.toString());
-      fetchData();
-    } catch (error) {
-      console.error("" + error);
+  const handleDelete = (productId: number) => {
+    setProductIdToDelete(productId);
+    setShowDeleteModal(true);
+  };
+
+  const confirmDelete = async () => {
+    if (productIdToDelete !== null) {
+      try {
+        await deleteProduct(token, productIdToDelete.toString());
+        setShowDeleteModal(false);
+        setProductIdToDelete(null);
+        fetchData();
+      } catch (error) {
+        console.error("" + error);
+      }
     }
   };
 
+  const closeDeleteModal = () => {
+    setShowDeleteModal(false);
+    setProductIdToDelete(null);
+  };
   useSWR(["/products"], fetchData);
 
   const handleEdit = (productId: number) => {
@@ -73,13 +117,20 @@ const Product = () => {
                 <TableCell>{item.max_price}</TableCell>
                 <TableCell>{item.min_price}</TableCell>
                 <TableCell>
-                  <Button onClick={() => handleEdit(item.id)}>Edit</Button>
+                  <Button onClick={() => handleEdit(item.id)} className="mr-3">
+                    Edit
+                  </Button>
                   <Button onClick={() => handleDelete(item.id)}>Delete</Button>
                 </TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
+        <DeleteConfirmationModal
+          isOpen={showDeleteModal}
+          onClose={closeDeleteModal}
+          onConfirm={confirmDelete}
+        />
       </div>
     </div>
   );
