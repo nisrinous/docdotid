@@ -7,6 +7,8 @@ import { LuUserCircle2 } from "react-icons/lu";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { getUserDetail } from "@/lib/fetcher/profile";
+import deleteCookies from "../delete-cookies";
+import { IoLogOut } from "react-icons/io5";
 
 interface MenuItem {
   name: string;
@@ -137,6 +139,9 @@ const Sidebar: FC<SidebarProps> = ({ menus }) => {
             </h2>
           </Link>
         ))}
+        <button onClick={deleteCookies} className="flex flex-row gap-4 ml-1">
+          <IoLogOut size={25} /> Log Out
+        </button>
       </div>
     </div>
   );
