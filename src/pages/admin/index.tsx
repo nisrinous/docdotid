@@ -1,5 +1,17 @@
 import Sidebar from "@/components/aside-bar";
 import { menus } from "@/utils/menus";
+import React, { PureComponent } from "react";
+import {
+  BarChart,
+  Bar,
+  Rectangle,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+} from "recharts";
 
 export default function Home(): JSX.Element {
   return (
