@@ -5,15 +5,6 @@ import { RootState } from "@/store/store";
 import { FaWhatsapp } from "react-icons/fa6";
 import { menus } from "@/utils/menus";
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import {
   ColumnDef,
   ColumnFiltersState,
   SortingState,
@@ -38,14 +29,10 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useState } from "react";
-import { DeleteModal } from "@/components/delete-modal";
-import { addCategory } from "@/lib/fetcher/product-category";
-import useSWR, { mutate } from "swr";
-import { EditModalCategory } from "@/components/edit-modal";
+import useSWR from "swr";
 import SearchBar from "@/components/search-bar";
 import ColumnDropdown from "@/components/columns-dropdown";
 import { getOrders } from "@/lib/fetcher/orders";
-import { format } from "path";
 import { OrdersResponse } from "@/types";
 
 export default function Categories() {
