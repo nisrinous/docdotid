@@ -14,7 +14,7 @@ const Hero = () => {
           </p>
         </div>
         <div className="px-10 flex flex-row justify-center items-center gap-20 md:justify-start md:items-start md:gap-10">
-          <Link href="/telemedicines">
+          <Link href="/telemedicine">
             <div className="flex flex-col justify-center items-center">
               <img src="Phonendoscope.svg" className="h-20"></img>
               <p className="leading-7 [&:not(:first-child)]:mt-6">

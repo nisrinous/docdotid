@@ -18,7 +18,12 @@ import { Button } from "@/components/ui/button";
 import { PasswordInput } from "../input/password";
 
 import { useDispatch } from "react-redux";
-import { setToken, setUserId, setUserRole } from "@/store/slices/authSlice";
+import {
+  setToken,
+  setUserId,
+  setPersonalId,
+  setRoleId,
+} from "@/store/slices/authSlice";
 import jwt from "jsonwebtoken";
 import toast from "react-hot-toast";
 
@@ -49,13 +54,16 @@ const LoginForm = () => {
           decodedToken &&
           typeof decodedToken === "object" &&
           "user_id" in decodedToken &&
-          "role" in decodedToken
+          "personal_id" in decodedToken &&
+          "role_id" in decodedToken
         ) {
           const userId = decodedToken.user_id;
-          const userRole = decodedToken.role;
+          const personalId = decodedToken.personal_id;
+          const roleId = decodedToken.role_id;
           dispatch(setUserId(userId));
-          dispatch(setUserRole(userRole));
-          console.log(decodedToken);
+          dispatch(setPersonalId(personalId));
+          dispatch(setRoleId(roleId));
+          console.log(roleId);
         } else {
           throw new Error("Invalid token format or missing user_id/role");
         }

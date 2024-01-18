@@ -6,15 +6,17 @@ import { ProductCategoriesResponse } from "@/types";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import useSWR from "swr";
+import { Button } from "../ui/button";
+import { useRouter } from "next/router";
 
 const ProductCategories = () => {
   const { token } = useSelector((state: RootState) => state.user);
-
+  const router = useRouter();
   const [categories, setNewCategories] = useState<ProductCategoriesResponse[]>(
     []
   );
 
-  const fetchData = async () => {
+  const fetchCategories = async () => {
     try {
       const data = await getProductCategories(token);
       setNewCategories(data.data);
@@ -22,12 +24,15 @@ const ProductCategories = () => {
       console.error("" + error);
     }
   };
+  const filterByCategory = (categoryId: number) => {
+    router.replace(`/product?category_id=${categoryId}&token=${token}`);
+  };
 
   const {
     data,
     error: isError,
     isValidating: isLoading,
-  } = useSWR(["/categories", token], fetchData);
+  } = useSWR(["/categories", token], fetchCategories);
 
   return (
     <>
@@ -59,11 +64,15 @@ const ProductCategories = () => {
                     ></img>
                   </CardContent>
                   <CardFooter className="items-center justify-center p-0">
-                    <Link href="/product" className="hover:underline">
+                    <Button
+                      variant="link"
+                      onClick={() => filterByCategory(item.id)}
+                      className="hover:underline"
+                    >
                       <p className="p-2 text-center leading-none text-sm md:text-base md:leading-none">
                         {item.name}
                       </p>
-                    </Link>
+                    </Button>
                   </CardFooter>
                 </Card>
               ))}

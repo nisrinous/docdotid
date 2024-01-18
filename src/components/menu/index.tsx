@@ -30,7 +30,7 @@ const Menu = ({ token }: { token?: string }) => {
               <Link href="/product">Our Products</Link>
             </DropdownMenuItem>
             <DropdownMenuItem>
-              <Link href="/telemedicines">Telemedicine</Link>
+              <Link href="/telemedicine">Telemedicine</Link>
             </DropdownMenuItem>
             {!token && (
               <>
@@ -65,7 +65,7 @@ const Menu = ({ token }: { token?: string }) => {
             </li>
             <li
               className={`text-sm font-normal ${
-                isActive("/telemedicines")
+                isActive("/telemedicine")
                   ? "text-sky-700"
                   : "hover:text-[#5CACE5]"
               }`}

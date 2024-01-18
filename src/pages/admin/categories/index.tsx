@@ -43,7 +43,7 @@ import { useState } from "react";
 import { DeleteModal } from "@/components/delete-modal";
 import { addCategory } from "@/lib/fetcher/product-category";
 import useSWR, { mutate } from "swr";
-import { EditModal } from "@/components/edit-modal";
+import { EditModalCategory } from "@/components/edit-modal";
 import SearchBar from "@/components/search-bar";
 import ColumnDropdown from "@/components/columns-dropdown";
 
@@ -147,7 +147,7 @@ export default function Categories() {
 
         return (
           <div className="flex gap-5">
-            <EditModal token={token} name={currentCategory} id={id} />
+            <EditModalCategory token={token} name={currentCategory} id={id} />
             <DeleteModal token={token} id={id} />
           </div>
         );
