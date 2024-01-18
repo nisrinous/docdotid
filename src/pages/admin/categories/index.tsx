@@ -84,7 +84,9 @@ export default function Categories() {
     const inputValue = event.target.value;
     setNewCategory(inputValue);
 
-    if (/[0-9!@#$%^&*(),.?":{}|<>]/.test(inputValue)) {
+    if (!inputValue.trim()) {
+      setInputError("Input should not be empty.");
+    } else if (/[0-9!@#$%^&*(),.?":{}|<>]/.test(inputValue)) {
       setInputError("Input should not contain numbers or special characters.");
     } else {
       setInputError("");
@@ -92,6 +94,10 @@ export default function Categories() {
   };
   const handleAddCategory = async () => {
     try {
+      if (!newCategory.trim()) {
+        setInputError("Input should not be empty.");
+        return;
+      }
       const result = await addCategory(token, newCategory);
 
       console.log("Category added:", result);
