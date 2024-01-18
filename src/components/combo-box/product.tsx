@@ -21,7 +21,7 @@ import { Key, useState } from "react";
 import useSWR from "swr";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
-import { getCategoryList } from "@/lib/fetcher/orders";
+import { getProductList } from "@/lib/fetcher/orders";
 
 interface cbType {
   value: any;
@@ -29,23 +29,13 @@ interface cbType {
   id: number;
   name: string;
 }
-
-interface ComboboxProps {
-  onSelectCategory: (selectedCategory: cbType | null) => void;
-}
-const Combobox: React.FC<ComboboxProps> = ({ onSelectCategory }) => {
-  const [selectedCategory, setSelectedCategory] = useState<cbType | null>(null);
-
-  const handleSelect = (framework: cbType) => {
-    setSelectedCategory(framework);
-    onSelectCategory(framework);
-  };
+export function Combobox2() {
   const { token } = useSelector((state: RootState) => state.user);
   const [categoriesList, setCategoriesList] = useState<cbType[]>([]);
 
   const fetchData = async () => {
     try {
-      const data = await getCategoryList(token);
+      const data = await getProductList(token);
       const formattedData = data.data.map(({ id, name }: cbType) => ({
         value: id,
         label: name,
@@ -57,7 +47,7 @@ const Combobox: React.FC<ComboboxProps> = ({ onSelectCategory }) => {
   };
 
   const { error: isError, isValidating: isLoading } = useSWR(
-    ["/reports/sales/product_categories", token],
+    ["/reports/sales/products", token],
     fetchData
   );
 
@@ -78,13 +68,13 @@ const Combobox: React.FC<ComboboxProps> = ({ onSelectCategory }) => {
         >
           {value
             ? frameworks.find((framework) => framework.value === value)?.label
-            : "Select category..."}
+            : "Select product..."}
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[200px] p-0">
         <Command>
-          <CommandInput placeholder="Search category..." />
+          <CommandInput placeholder="Search product..." />
 
           <CommandEmpty>No results found.</CommandEmpty>
 
@@ -94,11 +84,8 @@ const Combobox: React.FC<ComboboxProps> = ({ onSelectCategory }) => {
                 key={framework.value}
                 value={framework.value}
                 onSelect={(currentValue) => {
-                  const selectedCategory =
-                    currentValue === value ? null : framework;
                   setValue(currentValue === value ? "" : currentValue);
                   setOpen(false);
-                  handleSelect(selectedCategory);
                 }}
               >
                 <Check
@@ -115,4 +102,4 @@ const Combobox: React.FC<ComboboxProps> = ({ onSelectCategory }) => {
       </PopoverContent>
     </Popover>
   );
-};
+}
