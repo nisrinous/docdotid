@@ -20,3 +20,25 @@ export async function getOrders(token: string) {
     console.error("" + error);
   }
 }
+
+export async function getOrdersMonthly(token: string) {
+  try {
+    const response = await fetch(
+      `${API_ENDPOINT}/orders/sales_reports?productID=1&productCategoryID=1`,
+      {
+        method: "GET",
+        headers: {
+          authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    if (!response.ok) {
+      throw new Error(`Failed to fetch data: ${response.statusText}`);
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("" + error);
+  }
+}
