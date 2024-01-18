@@ -3,7 +3,7 @@ import DoctorCategories from "@/components/categories/doctor-categories";
 import ProductCategories from "@/components/categories/product-categories";
 import Hero from "@/components/hero";
 
-export default function Dashboard() {
+export default function DashboardUser() {
   return (
     <>
       <Hero />
