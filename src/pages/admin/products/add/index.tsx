@@ -161,6 +161,21 @@ const AddProduct = () => {
     if (typeof formData.product_category_id === "string") {
       formData.product_category_id = parseInt(formData.product_category_id, 10);
     }
+    if (typeof formData.selling_unit === "string") {
+      formData.selling_unit = parseInt(formData.selling_unit, 10);
+    }
+    if (typeof formData.weight === "string") {
+      formData.weight = parseInt(formData.weight, 10);
+    }
+    if (typeof formData.height === "string") {
+      formData.height = parseInt(formData.height, 10);
+    }
+    if (typeof formData.length === "string") {
+      formData.length = parseInt(formData.length, 10);
+    }
+    if (typeof formData.width === "string") {
+      formData.width = parseInt(formData.width, 10);
+    }
 
     formData.image = img;
 
@@ -203,7 +218,7 @@ const AddProduct = () => {
               type="text"
               id="name"
               name="name"
-              value={formData.name}
+              value={formData?.name}
               onChange={handleInputChange}
               required
             />
@@ -215,7 +230,7 @@ const AddProduct = () => {
               type="text"
               id="generic_name"
               name="generic_name"
-              value={formData.generic_name}
+              value={formData?.generic_name}
               onChange={handleInputChange}
               required
             />
@@ -227,7 +242,7 @@ const AddProduct = () => {
               type="text"
               id="content"
               name="content"
-              value={formData.content}
+              value={formData?.content}
               onChange={handleInputChange}
               required
             />
@@ -238,7 +253,7 @@ const AddProduct = () => {
             <select
               id="manufacturer"
               name="manufacturer_id"
-              value={formData.manufacturer_id}
+              value={formData?.manufacturer_id || ""}
               onChange={handleInputChange}
               required
             >
@@ -257,7 +272,7 @@ const AddProduct = () => {
               type="text"
               id="description"
               name="description"
-              value={formData.description}
+              value={formData?.description}
               onChange={handleInputChange}
               required
             />
@@ -268,7 +283,7 @@ const AddProduct = () => {
             <select
               id="drug_classification"
               name="drug_classification_id"
-              value={formData.drug_classification_id}
+              value={formData?.drug_classification_id}
               onChange={handleInputChange}
               required
             >
@@ -286,7 +301,7 @@ const AddProduct = () => {
             <select
               id="drug_form"
               name="drug_form_id"
-              value={formData.drug_form_id}
+              value={formData?.drug_form_id}
               onChange={handleInputChange}
               required
             >
@@ -304,7 +319,7 @@ const AddProduct = () => {
             <select
               id="product_category"
               name="product_category_id"
-              value={formData.product_category_id}
+              value={formData?.product_category_id}
               onChange={handleInputChange}
               required
             >
@@ -323,7 +338,7 @@ const AddProduct = () => {
               type="text"
               id="unit_in_pack"
               name="unit_in_pack"
-              value={formData.unit_in_pack}
+              value={formData?.unit_in_pack}
               onChange={handleInputChange}
               required
             />
@@ -335,7 +350,7 @@ const AddProduct = () => {
               type="number"
               id="selling_unit"
               name="selling_unit"
-              value={formData.selling_unit}
+              value={formData?.selling_unit}
               onChange={handleInputChange}
               min={0}
               defaultValue={0}
@@ -348,7 +363,7 @@ const AddProduct = () => {
               type="number"
               id="weight"
               name="weight"
-              value={formData.weight}
+              value={formData?.weight}
               onChange={handleInputChange}
               min={0}
               defaultValue={0}
@@ -361,7 +376,7 @@ const AddProduct = () => {
               type="number"
               id="height"
               name="height"
-              value={formData.height}
+              value={formData?.height}
               onChange={handleInputChange}
               min={0}
               defaultValue={0}
@@ -374,7 +389,7 @@ const AddProduct = () => {
               type="number"
               id="length"
               name="length"
-              value={formData.length}
+              value={formData?.length}
               onChange={handleInputChange}
               min={0}
               defaultValue={0}
@@ -387,7 +402,7 @@ const AddProduct = () => {
               type="number"
               id="width"
               name="width"
-              value={formData.width}
+              value={formData?.width}
               onChange={handleInputChange}
               min={0}
               defaultValue={0}

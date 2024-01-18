@@ -43,7 +43,7 @@ const Product = () => {
   useSWR(["/products"], fetchData);
 
   const handleEdit = (productId: number) => {
-    router.push(`${apiBaseUrl}/products/${productId}`);
+    router.push(`/admin/products/${productId}`);
   };
 
   return (
