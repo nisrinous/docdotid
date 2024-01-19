@@ -35,7 +35,7 @@ import ColumnDropdown from "@/components/columns-dropdown";
 import { getOrders } from "@/lib/fetcher/orders";
 import { OrdersResponse } from "@/types";
 
-export default function Categories() {
+export default function Orders() {
   const { token } = useSelector((state: RootState) => state.user);
   const [ordersData, setOrdersData] = useState<OrdersResponse[]>([]);
 
@@ -250,7 +250,7 @@ export default function Categories() {
       <div className="w-full mx-10 mt-5">
         <h1 className="text-black text-3xl mt-2 font-bold">Manage Orders</h1>
         <div className="flex items-center justify-between py-4">
-          <SearchBar table={table} />
+          <SearchBar table={table} placeholder="orders" searchby="name" />
           <div className="flex gap-3">
             <ColumnDropdown table={table} />
           </div>
