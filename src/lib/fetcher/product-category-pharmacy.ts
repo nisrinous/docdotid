@@ -21,3 +21,34 @@ export async function getProductsPharmacy(token: string) {
     console.error("" + error);
   }
 }
+
+export async function addCategoryPharmacy(
+  token: string,
+  name: string,
+  pharmacy_id?: number
+) {
+  try {
+    const response = await fetch(`${API_ENDPOINT}/pharmacies/categories/`, {
+      method: "POST",
+      headers: {
+        authorization: `bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name: name,
+        pharmacy_id: pharmacy_id,
+      }),
+    });
+
+    if (response.status === 400) {
+      const errorData = await response.json();
+      toast.error(`${errorData.message}`);
+    } else {
+      const data = await response.json();
+      toast.success("Data added to databse sucessfully!");
+      return data;
+    }
+  } catch (error) {
+    console.error("" + error);
+  }
+}

@@ -3,13 +3,14 @@ import { Input } from "../ui/input";
 
 interface SearchBarProps {
   table: any;
+  placeholder: string;
 }
 
-const SearchBar: React.FC<SearchBarProps> = ({ table }) => {
+const SearchBar: React.FC<SearchBarProps> = ({ table, placeholder }) => {
   return (
     <>
       <Input
-        placeholder="Filter categories..."
+        placeholder={`Filter ${placeholder}`}
         value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
         onChange={(event) =>
           table.getColumn("name")?.setFilterValue(event.target.value)
