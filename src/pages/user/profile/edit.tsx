@@ -24,7 +24,6 @@ import { UserDetailResponse } from "@/types";
 import { putUserDetail } from "@/lib/fetcher/user";
 import { RootState } from "@/store/store";
 import { useSelector } from "react-redux";
-import { isEqual } from "lodash";
 import { editProfileUserSchema } from "@/lib/validation/user";
 import { useState } from "react";
 
@@ -52,12 +51,8 @@ const EditProfile = ({ data }: { data: UserDetailResponse }) => {
       const cleanedFormData = Object.fromEntries(
         Object.entries(formData).filter(([_, value]) => value !== null)
       );
-
-      if (isEqual(cleanedFormData, data)) {
-        throw new Error("No changes made to the profile.");
-      }
-
       await putUserDetail(token, cleanedFormData);
+      setFormChanged(false);
     } catch (error) {
       console.error("" + error);
     }
