@@ -187,7 +187,7 @@ export default function Categories() {
           Manage Product Categories
         </h1>
         <div className="flex items-center justify-between py-4">
-          <SearchBar table={table} />
+          <SearchBar table={table} placeholder="categories" />
           <div className="flex gap-3">
             <Dialog open={open} onOpenChange={setOpen}>
               <DialogTrigger asChild>

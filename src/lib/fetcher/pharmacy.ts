@@ -19,6 +19,22 @@ export async function getPharmacyList(token: string) {
   }
 }
 
+export async function getPharmacyOwnedList(token: string) {
+  try {
+    const response = await fetch(`${API_ENDPOINT}/pharmacies/owned`, {
+      method: "GET",
+      headers: {
+        authorization: `bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("" + error);
+  }
+}
+
 export async function addPharmacy(
   token: string,
   id: number,
