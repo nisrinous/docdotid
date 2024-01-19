@@ -28,6 +28,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { CategoryListResponse, ProductListResponse } from "@/types";
+import OrdersReportsTable from "@/components/table/orders-reports-table";
 
 export default function Home(): JSX.Element {
   const { token } = useSelector((state: RootState) => state.user);
@@ -45,6 +46,7 @@ export default function Home(): JSX.Element {
 
   const handleSelectChangeProduct = (value: any) => {
     setSelectedProduct(value);
+    mutate(["/orders/sales_reports", token]);
   };
 
   const fetchProductList = async () => {
@@ -177,8 +179,8 @@ export default function Home(): JSX.Element {
 
                 <Bar
                   dataKey="order_price"
-                  fill="#82ca9d"
-                  activeBar={<Rectangle fill="gold" stroke="purple" />}
+                  fill="#679436"
+                  activeBar={<Rectangle fill="#86A762" />}
                 />
               </BarChart>
             </ResponsiveContainer>
@@ -224,8 +226,8 @@ export default function Home(): JSX.Element {
 
                 <Bar
                   dataKey="order_price"
-                  fill="#82ca9d"
-                  activeBar={<Rectangle fill="gold" stroke="purple" />}
+                  fill="#064789"
+                  activeBar={<Rectangle fill="#53799F" />}
                 />
               </BarChart>
             </ResponsiveContainer>
@@ -235,7 +237,9 @@ export default function Home(): JSX.Element {
         <div className="mt-8">
           <h2 className="text-xl font-bold">Earnings by Pharmacy</h2>
 
-          <table></table>
+          <div className="overflow-y-auto h-80">
+            <OrdersReportsTable />
+          </div>
         </div>
       </div>
     </div>

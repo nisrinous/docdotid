@@ -4,7 +4,7 @@ const API_ENDPOINT = apiBaseUrl;
 
 export async function getOrders(token: string) {
   try {
-    const response = await fetch(`${API_ENDPOINT}/orders/reports`, {
+    const response = await fetch(`${API_ENDPOINT}/reports`, {
       method: "GET",
       headers: {
         authorization: `Bearer ${token}`,
