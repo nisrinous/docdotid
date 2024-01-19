@@ -1,10 +1,20 @@
 "use client";
 import * as React from "react";
-import { ProductCategoriesResponse } from "@/types";
+import {
+  PharmaciesOwnedListResponse,
+  ProductCategoriesResponse,
+} from "@/types";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { getProductCategories } from "@/lib/fetcher/product-category";
 import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { menus } from "@/utils/menus";
 import {
   Dialog,
@@ -47,18 +57,25 @@ import { EditModalCategory } from "@/components/edit-modal";
 import SearchBar from "@/components/search-bar";
 import ColumnDropdown from "@/components/columns-dropdown";
 import { getProductsPharmacy } from "@/lib/fetcher/product-category-pharmacy";
+import { getPharmacyOwnedList } from "@/lib/fetcher/pharmacy";
 
 export default function Categories() {
   const { token } = useSelector((state: RootState) => state.user);
   const [productsData, setProductsData] = useState<ProductCategoriesResponse[]>(
     []
   );
+  const [pharmaciesOwnedList, setPharmaciesOwnedList] = useState<
+    PharmaciesOwnedListResponse[]
+  >([]);
 
   const fetchData = async () => {
     try {
       const data = await getProductsPharmacy(token);
+      const pharmacyList = await getPharmacyOwnedList(token);
       console.log("ini data", data);
+      console.log("data2", pharmacyList);
       setProductsData(data.data);
+      setPharmaciesOwnedList(pharmacyList.data);
     } catch (error) {
       console.error("" + error);
     }
@@ -202,6 +219,24 @@ export default function Categories() {
                   </DialogDescription>
                 </DialogHeader>
                 <div className="grid gap-4 py-4">
+                  <div className="grid grid-cols-4 items-center gap-4">
+                    <Label htmlFor="name" className="text-right">
+                      Pharmacy
+                    </Label>
+                    <Select>
+                      <SelectTrigger className="w-[180px]">
+                        <SelectValue placeholder="Theme" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {Array.isArray(pharmaciesOwnedList) &&
+                          pharmaciesOwnedList.map((pharmacy) => (
+                            <SelectItem key={pharmacy.id} value={pharmacy.id}>
+                              {pharmacy.name}
+                            </SelectItem>
+                          ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
                   <div className="grid grid-cols-4 items-center gap-4">
                     <Label htmlFor="name" className="text-right">
                       Category Name
