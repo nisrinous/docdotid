@@ -95,7 +95,9 @@ const Product = () => {
     <div className="flex">
       <Sidebar menus={menus} />
       <div className="w-full mx-10 mt-5">
-        <h1 className="text-black text-3xl mt-2 font-bold">Manage Products</h1>
+        <h1 className="text-black text-3xl mt-2 font-bold mb-5">
+          Manage Products
+        </h1>
         <Table>
           <TableHeader>
             <TableRow>
