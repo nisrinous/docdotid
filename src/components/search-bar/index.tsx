@@ -4,16 +4,23 @@ import { Input } from "../ui/input";
 interface SearchBarProps {
   table: any;
   placeholder: string;
+  searchby: string;
 }
 
-const SearchBar: React.FC<SearchBarProps> = ({ table, placeholder }) => {
+const SearchBar: React.FC<SearchBarProps> = ({
+  table,
+  placeholder,
+  searchby,
+}) => {
   return (
     <>
       <Input
         placeholder={`Filter ${placeholder}`}
-        value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
+        value={
+          (table.getColumn(`${searchby}`)?.getFilterValue() as string) ?? ""
+        }
         onChange={(event) =>
-          table.getColumn("name")?.setFilterValue(event.target.value)
+          table.getColumn(`${searchby}`)?.setFilterValue(event.target.value)
         }
         className="max-w-sm"
       />

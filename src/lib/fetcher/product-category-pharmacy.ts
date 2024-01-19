@@ -52,3 +52,36 @@ export async function addCategoryPharmacy(
     console.error("" + error);
   }
 }
+
+export async function editPharmacyCategory(
+  token: string,
+  name: string,
+  id: any,
+  pharmacy_id?: number
+) {
+  try {
+    const response = await fetch(`${API_ENDPOINT}/pharmacies/categories`, {
+      method: "PUT",
+      headers: {
+        authorization: `bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        id: id,
+        name: name,
+        pharmacy_id: pharmacy_id,
+      }),
+    });
+
+    if (response.status === 400) {
+      const errorData = await response.json();
+      toast.error(`${errorData.message}`);
+    } else {
+      const data = await response.json();
+      toast.success("Data added to databse sucessfully!");
+      return data;
+    }
+  } catch (error) {
+    console.error("" + error);
+  }
+}

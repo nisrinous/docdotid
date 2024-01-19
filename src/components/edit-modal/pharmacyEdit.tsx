@@ -13,17 +13,18 @@ import { Button } from "../ui/button";
 import { editCategory } from "@/lib/fetcher/product-category";
 import { useState } from "react";
 import { mutate } from "swr";
+import { editPharmacyCategory } from "@/lib/fetcher/product-category-pharmacy";
 
 export function EditModalPharmacy({
   token,
   name,
-  address,
   id,
+  pharmacy_id,
 }: {
   token: string;
   name: any;
-  address: any;
   id: unknown;
+  pharmacy_id: any;
 }) {
   const [open, setOpen] = useState(false);
   const [newCategory, setNewCategory] = useState("");
@@ -42,9 +43,9 @@ export function EditModalPharmacy({
   };
   const handleEdit = async () => {
     try {
-      await editCategory(token, newCategory, id);
+      await editPharmacyCategory(token, newCategory, id, pharmacy_id);
       setOpen(false);
-      mutate(["/categories", token]);
+      mutate(["/pharmacies/category", token]);
     } catch (error) {
       console.error("" + error);
     }
@@ -74,27 +75,6 @@ export function EditModalPharmacy({
               id="name"
               // value={newCategory}
               defaultValue={name}
-              onChange={handleInputChange}
-              className={`col-span-3 focus rounded-md p-2 ${
-                inputError ? "focus:bg-red-200" : ""
-              }`}
-            />
-            {inputError && (
-              <p className="col-span-4 text-red-500 text-s mt-1">
-                {inputError}
-              </p>
-            )}
-          </div>
-
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="address" className="text-right">
-              Pharmacy Name
-            </Label>
-
-            <Input
-              id="address"
-              // value={newCategory}
-              defaultValue={address}
               onChange={handleInputChange}
               className={`col-span-3 focus rounded-md p-2 ${
                 inputError ? "focus:bg-red-200" : ""
