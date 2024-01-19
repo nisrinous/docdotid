@@ -10,7 +10,7 @@ import {
 import { FaRegUserCircle } from "react-icons/fa";
 
 import { useDispatch, useSelector } from "react-redux";
-import { setToken } from "@/store/slices/authSlice";
+import { deleteUser } from "@/store/slices/authSlice";
 import { Button } from "../ui/button";
 import { RootState } from "@/store/store";
 
@@ -20,7 +20,7 @@ const ProfileMenu = () => {
   const dispatch = useDispatch();
 
   const handleLogout = () => {
-    dispatch(setToken(""));
+    dispatch(deleteUser());
   };
 
   return (

@@ -1,10 +1,20 @@
 "use client";
 import * as React from "react";
-import { ProductCategoriesResponse } from "@/types";
+import {
+  PharmaciesOwnedListResponse,
+  ProductCategoriesResponse,
+} from "@/types";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { getProductCategories } from "@/lib/fetcher/product-category";
 import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { menus } from "@/utils/menus";
 import {
   Dialog,
@@ -46,18 +56,31 @@ import useSWR, { mutate } from "swr";
 import { EditModalCategory } from "@/components/edit-modal";
 import SearchBar from "@/components/search-bar";
 import ColumnDropdown from "@/components/columns-dropdown";
+import {
+  addCategoryPharmacy,
+  getProductsPharmacy,
+} from "@/lib/fetcher/product-category-pharmacy";
+import { getPharmacyOwnedList } from "@/lib/fetcher/pharmacy";
+import { EditModalPharmacy } from "@/components/edit-modal/pharmacyEdit";
+import { DeleteModalPharmacy } from "@/components/delete-modal/pharmacyDelete";
 
 export default function Categories() {
   const { token } = useSelector((state: RootState) => state.user);
   const [productsData, setProductsData] = useState<ProductCategoriesResponse[]>(
     []
   );
+  const [pharmaciesOwnedList, setPharmaciesOwnedList] = useState<
+    PharmaciesOwnedListResponse[]
+  >([]);
 
   const fetchData = async () => {
     try {
-      const data = await getProductCategories(token);
+      const data = await getProductsPharmacy(token);
+      const pharmacyList = await getPharmacyOwnedList(token);
       console.log("ini data", data);
+      console.log("data2", pharmacyList);
       setProductsData(data.data);
+      setPharmaciesOwnedList(pharmacyList.data);
     } catch (error) {
       console.error("" + error);
     }
@@ -79,6 +102,10 @@ export default function Categories() {
   const [open, setOpen] = useState(false);
   const [newCategory, setNewCategory] = useState("");
   const [inputError, setInputError] = useState("");
+  const [selectedPharmacy, setSelectedPharmacy] = useState<
+    number | undefined
+  >();
+  const [error, setError] = useState("");
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const inputValue = event.target.value;
@@ -90,15 +117,31 @@ export default function Categories() {
       setInputError("");
     }
   };
+
+  const handleSelectChange = (value: any) => {
+    setSelectedPharmacy(value);
+    setError(value ? "" : "Please select a pharmacy.");
+  };
+
   const handleAddCategory = async () => {
     try {
-      const result = await addCategory(token, newCategory);
+      if (!selectedPharmacy && !newCategory) {
+        setError("Please select a pharmacy.");
+        setError("Please input a category.");
+        return;
+      }
+      console.log("ini pharmacyj", selectedPharmacy);
+      const result = await addCategoryPharmacy(
+        token,
+        newCategory,
+        selectedPharmacy
+      );
 
       console.log("Category added:", result);
 
       setNewCategory("");
       setOpen(false);
-      mutate(["/categories", token]);
+      mutate(["/pharmacies/categories", token]);
     } catch (error) {
       console.error("Error adding category:", error);
     }
@@ -138,17 +181,45 @@ export default function Categories() {
       cell: ({ row }) => <div>{row.getValue("name")}</div>,
     },
     {
+      accessorKey: "pharmacy_id",
+      header: ({ column }) => {
+        return (
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+            className="px-0"
+          >
+            Pharmacy
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </Button>
+        );
+      },
+      cell: ({ row }) => {
+        const pharmacyId = row.getValue("pharmacy_id");
+        const pharmacy: any = pharmaciesOwnedList.find(
+          (pharmacy) => pharmacy.id === pharmacyId
+        );
+        return <div>{pharmacy ? pharmacy.name : pharmacyId}</div>;
+      },
+    },
+    {
       id: "actions",
       header: "Actions",
       enableHiding: false,
       cell: ({ row }) => {
         const id = row.getValue("id");
+        const pharmacy_id = row.getValue("pharmacy_id");
         const currentCategory = row.getValue("name");
 
         return (
           <div className="flex gap-5">
-            <EditModalCategory token={token} name={currentCategory} id={id} />
-            <DeleteModal token={token} id={id} />
+            <EditModalPharmacy
+              token={token}
+              name={currentCategory}
+              id={id}
+              pharmacy_id={pharmacy_id}
+            />
+            <DeleteModalPharmacy token={token} id={id} />
           </div>
         );
       },
@@ -181,7 +252,11 @@ export default function Categories() {
           Manage Product Categories
         </h1>
         <div className="flex items-center justify-between py-4">
-          <SearchBar table={table} />
+          <SearchBar
+            table={table}
+            placeholder="pharmacies"
+            searchby="pharmacy_id"
+          />
           <div className="flex gap-3">
             <Dialog open={open} onOpenChange={setOpen}>
               <DialogTrigger asChild>
@@ -201,6 +276,25 @@ export default function Categories() {
                   </DialogDescription>
                 </DialogHeader>
                 <div className="grid gap-4 py-4">
+                  <div className="flex items-center px-4 gap-4">
+                    <Label htmlFor="name" className="text-right">
+                      Pharmacy
+                    </Label>
+                    <Select onValueChange={handleSelectChange}>
+                      <SelectTrigger className="w-[180px]">
+                        <SelectValue placeholder="Select a Pharmacy" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {Array.isArray(pharmaciesOwnedList) &&
+                          pharmaciesOwnedList.map((pharmacy) => (
+                            <SelectItem key={pharmacy.id} value={pharmacy.id}>
+                              {pharmacy.name}
+                            </SelectItem>
+                          ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  {error && <p style={{ color: "red" }}>{error}</p>}
                   <div className="grid grid-cols-4 items-center gap-4">
                     <Label htmlFor="name" className="text-right">
                       Category Name
