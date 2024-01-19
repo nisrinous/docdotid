@@ -80,3 +80,19 @@ export async function addPharmacy(
     console.error("" + error);
   }
 }
+
+export async function getPharmacyListOwned(token: string) {
+  try {
+    const response = await fetch(`${API_ENDPOINT}/pharmacies/owned`, {
+      method: "GET",
+      headers: {
+        authorization: `bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("" + error);
+  }
+}

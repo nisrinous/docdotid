@@ -13,11 +13,12 @@ import { Button } from "@/components/ui/button";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { deleteProduct, getProducts } from "@/lib/fetcher/product";
-import { ProductsResponse } from "@/types";
+import { PharmacyResponse } from "@/types";
 import useSWR from "swr";
 import { apiBaseUrl } from "@/config";
 import router from "next/router";
 import deleteCookies from "@/components/delete-cookies";
+import { getPharmacyListOwned } from "@/lib/fetcher/pharmacy";
 
 interface DeleteConfirmationModalProps {
   isOpen: boolean;
@@ -48,7 +49,7 @@ const DeleteConfirmationModal: React.FC<DeleteConfirmationModalProps> = ({
 
 const Product = () => {
   const { token } = useSelector((state: RootState) => state.user);
-  const [productsData, setProductsData] = useState<ProductsResponse[]>([]);
+  const [productsData, setProductsData] = useState<PharmacyResponse[]>([]);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [productIdToDelete, setProductIdToDelete] = useState<number | null>(
     null
@@ -56,7 +57,7 @@ const Product = () => {
 
   const fetchData = async () => {
     try {
-      const data = await getProducts(token);
+      const data = await getPharmacyListOwned(token);
       setProductsData(data.data);
     } catch (error) {
       console.error("" + error);
@@ -96,17 +97,17 @@ const Product = () => {
       <Sidebar menus={menus} />
       <div className="w-full mx-10 mt-5">
         <h1 className="text-black text-3xl mt-2 font-bold mb-5">
-          Manage Products
+          Manage Pharmacy
         </h1>
         <Table>
           <TableHeader>
             <TableRow>
               <TableHead>ID</TableHead>
-              <TableHead>Category</TableHead>
-              <TableHead>Name</TableHead>
-              <TableHead>Manufacturer</TableHead>
-              <TableHead>Max Price</TableHead>
-              <TableHead>Min Price</TableHead>
+              <TableHead>Pharmacy Name</TableHead>
+              <TableHead>Address</TableHead>
+              <TableHead>Operational Hour</TableHead>
+              <TableHead>Operational Day</TableHead>
+              <TableHead>Active</TableHead>
               <TableHead>Action</TableHead>
             </TableRow>
           </TableHeader>
@@ -114,11 +115,13 @@ const Product = () => {
             {productsData.map((item) => (
               <TableRow key={item.id}>
                 <TableCell>{item.id}</TableCell>
-                <TableCell>{item.category_name}</TableCell>
                 <TableCell>{item.name}</TableCell>
-                <TableCell>{item.manufacturer_name}</TableCell>
-                <TableCell>{item.max_price}</TableCell>
-                <TableCell>{item.min_price}</TableCell>
+                <TableCell>{item.address}</TableCell>
+                <TableCell>{item.operational_hour}</TableCell>
+                <TableCell>{item.operational_day}</TableCell>
+                <TableCell>
+                  {item.is_active ? "Active" : "Not Active"}
+                </TableCell>
                 <TableCell>
                   <Button onClick={() => handleEdit(item.id)} className="mr-3">
                     Edit

@@ -195,7 +195,7 @@ const AddProduct = () => {
   return (
     <div className="flex">
       <Sidebar menus={menus} />
-      <div className="container flex justify-center sm:mt-5 p-3">
+      <div className="container flex justify-start sm:mt-5 p-3">
         <div className="">
           <h1 className="text-black text-3xl mt-2 font-bold mb-5 sm:mb-[50px]">
             Edit Products
