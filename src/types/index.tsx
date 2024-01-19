@@ -1,3 +1,5 @@
+import { type FileWithPath } from "react-dropzone";
+
 export type ProductsResponse = {
   id: number;
   name: string;
@@ -105,4 +107,8 @@ export type CategoryListResponse = {
 export type ProductListResponse = {
   id: number;
   name: string;
+};
+
+export type FileWithPreview = FileWithPath & {
+  preview: string;
 };
