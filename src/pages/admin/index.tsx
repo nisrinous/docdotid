@@ -1,5 +1,9 @@
 import Sidebar from "@/components/aside-bar";
-import { getCategoryList, getOrdersMonthly } from "@/lib/fetcher/orders";
+import {
+  getCategoryList,
+  getOrdersMonthly,
+  getProductList,
+} from "@/lib/fetcher/orders";
 import { menus } from "@/utils/menus";
 import React, { PureComponent, useState } from "react";
 import {
@@ -15,20 +19,59 @@ import {
 } from "recharts";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
-import useSWR from "swr";
-import { Combobox } from "@/components/combo-box";
-import { Combobox2 } from "@/components/combo-box/product";
+import useSWR, { mutate } from "swr";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { CategoryListResponse, ProductListResponse } from "@/types";
 
 export default function Home(): JSX.Element {
   const { token } = useSelector((state: RootState) => state.user);
   const [ordersData, setOrdersData] = useState<[]>([]);
   const [ordersData2, setOrdersData2] = useState<[]>([]);
+  const [categoryList, setCategoryList] = useState<CategoryListResponse[]>([]);
+  const [productList, setProductList] = useState<ProductListResponse[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<number>(1);
+  const [selectedProduct, setSelectedProduct] = useState<number>(1);
+
+  const handleSelectChangeCategory = (value: any) => {
+    setSelectedCategory(value);
+    mutate(["/orders/sales_reports", token]);
+  };
+
+  const handleSelectChangeProduct = (value: any) => {
+    setSelectedProduct(value);
+  };
+
+  const fetchProductList = async () => {
+    try {
+      const productList = await getProductList(token);
+      setProductList(productList.data);
+    } catch (error) {
+      console.error("" + error);
+    }
+  };
+  const fetchCategoryList = async () => {
+    try {
+      const categoryList = await getCategoryList(token);
+      setCategoryList(categoryList.data);
+    } catch (error) {
+      console.error("" + error);
+    }
+  };
 
   const fetchData = async () => {
     try {
-      const data = await getOrdersMonthly(token);
-
-      console.log("ini data", data);
+      const data = await getOrdersMonthly(
+        token,
+        selectedProduct,
+        selectedCategory
+      );
+      console.log("inidata", data);
       setOrdersData(data.data.ProductCategorySales);
       setOrdersData2(data.data.ProductSales);
     } catch (error) {
@@ -39,6 +82,16 @@ export default function Home(): JSX.Element {
   const { error: isError, isValidating: isLoading } = useSWR(
     ["/orders/sales_reports", token],
     fetchData
+  );
+
+  const { error: productsisError, isValidating: productsisLoading } = useSWR(
+    ["/reports/sales/products", token],
+    fetchProductList
+  );
+
+  const { error: categoryisError, isValidating: categoryisLoading } = useSWR(
+    ["/reports/sales/category", token],
+    fetchCategoryList
   );
 
   const getStatusMonth = (month: number) => {
@@ -87,7 +140,22 @@ export default function Home(): JSX.Element {
               <h1 className="px-5 font-semibold text-lg">
                 Monthly sales report by product category
               </h1>
-              {/* <Combobox onSelectCategory={handleSelectCategory} /> */}
+
+              <div>
+                <Select onValueChange={handleSelectChangeCategory}>
+                  <SelectTrigger className="w-[180px]">
+                    <SelectValue placeholder="Select a Category" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {Array.isArray(categoryList) &&
+                      categoryList.map((category) => (
+                        <SelectItem key={category.id} value={category.id}>
+                          {category.name}
+                        </SelectItem>
+                      ))}
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
             <ResponsiveContainer width="100%" height="100%">
               <BarChart
@@ -120,7 +188,21 @@ export default function Home(): JSX.Element {
               <h1 className="px-5 font-semibold text-lg">
                 Monthly sales report by product
               </h1>
-              <Combobox2 />
+              <div>
+                <Select onValueChange={handleSelectChangeProduct}>
+                  <SelectTrigger className="w-[180px]">
+                    <SelectValue placeholder="Select a Product" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {Array.isArray(productList) &&
+                      productList.map((product) => (
+                        <SelectItem key={product.id} value={product.id}>
+                          {product.name}
+                        </SelectItem>
+                      ))}
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
             <ResponsiveContainer width="100%" height="100%">
               <BarChart
@@ -151,7 +233,7 @@ export default function Home(): JSX.Element {
         </div>
 
         <div className="mt-8">
-          <h2 className="text-xl">Earnings by Pharmacy</h2>
+          <h2 className="text-xl font-bold">Earnings by Pharmacy</h2>
 
           <table></table>
         </div>

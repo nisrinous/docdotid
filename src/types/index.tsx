@@ -97,3 +97,12 @@ export type PharmaciesOwnedListResponse = {
   operational_day: string;
   is_active: boolean;
 };
+
+export type CategoryListResponse = {
+  id: number;
+  name: string;
+};
+export type ProductListResponse = {
+  id: number;
+  name: string;
+};
