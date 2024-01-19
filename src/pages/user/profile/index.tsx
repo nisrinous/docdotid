@@ -7,9 +7,10 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import useSWR from "swr";
 import EditProfile from "./edit";
+import { FaRegUserCircle } from "react-icons/fa";
 
 export default function Profile() {
-  const { token, email } = useSelector((state: RootState) => state.user);
+  const { token } = useSelector((state: RootState) => state.user);
   const dispatch = useDispatch();
 
   const [user, setUser] = useState<UserDetailResponse>();
@@ -44,10 +45,14 @@ export default function Profile() {
         <>
           <div className="container flex flex-col w-sm justify-center items-center mt-10 w-full md:max-w-md">
             <div className="mt-5 flex flex-col gap-5 justify-between items-center">
-              <img
-                src="https://res-console.cloudinary.com/minevf/media_explorer_thumbnails/8f937d455af252efc3a2a6cdee68b198/detailed"
-                className="border-[1px] rounded-full p-2 w-32"
-              ></img>
+              {user?.image ? (
+                <img
+                  src={user.image}
+                  className="border-[1px] rounded-full p-2 w-32"
+                ></img>
+              ) : (
+                <FaRegUserCircle size={80} />
+              )}
               <Button
                 variant="link"
                 className=" justify-start items-start mt-0"
@@ -64,7 +69,7 @@ export default function Profile() {
               </div>
             </div>
           </div>
-          <EditProfile data={user} />
+          <EditProfile data={user as UserDetailResponse} />
         </>
       )}
     </>
