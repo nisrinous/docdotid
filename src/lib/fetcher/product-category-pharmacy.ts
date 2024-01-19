@@ -3,9 +3,9 @@ import toast from "react-hot-toast";
 
 const API_ENDPOINT = apiBaseUrl;
 
-export async function getProductsPharmacy(token: string, id: number) {
+export async function getProductsPharmacy(token: string) {
   try {
-    const response = await fetch(`${API_ENDPOINT}/pharmacies/1/categories`, {
+    const response = await fetch(`${API_ENDPOINT}/pharmacies/categories`, {
       method: "GET",
       headers: {
         authorization: `Bearer ${token}`,

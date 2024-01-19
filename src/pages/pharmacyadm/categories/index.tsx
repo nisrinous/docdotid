@@ -46,6 +46,7 @@ import useSWR, { mutate } from "swr";
 import { EditModalCategory } from "@/components/edit-modal";
 import SearchBar from "@/components/search-bar";
 import ColumnDropdown from "@/components/columns-dropdown";
+import { getProductsPharmacy } from "@/lib/fetcher/product-category-pharmacy";
 
 export default function Categories() {
   const { token } = useSelector((state: RootState) => state.user);
@@ -55,7 +56,7 @@ export default function Categories() {
 
   const fetchData = async () => {
     try {
-      const data = await getProductCategories(token);
+      const data = await getProductsPharmacy(token);
       console.log("ini data", data);
       setProductsData(data.data);
     } catch (error) {

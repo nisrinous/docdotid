@@ -26,11 +26,7 @@ export default function Home(): JSX.Element {
 
   const fetchData = async () => {
     try {
-      const data = await getOrdersMonthly(
-        token,
-        selectedCategory,
-        selectedProduct
-      );
+      const data = await getOrdersMonthly(token);
 
       console.log("ini data", data);
       setOrdersData(data.data.ProductCategorySales);
