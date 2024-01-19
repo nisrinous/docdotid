@@ -61,6 +61,8 @@ import {
   getProductsPharmacy,
 } from "@/lib/fetcher/product-category-pharmacy";
 import { getPharmacyOwnedList } from "@/lib/fetcher/pharmacy";
+import { EditModalPharmacy } from "@/components/edit-modal/pharmacyEdit";
+import { DeleteModalPharmacy } from "@/components/delete-modal/pharmacyDelete";
 
 export default function Categories() {
   const { token } = useSelector((state: RootState) => state.user);
@@ -206,12 +208,18 @@ export default function Categories() {
       enableHiding: false,
       cell: ({ row }) => {
         const id = row.getValue("id");
+        const pharmacy_id = row.getValue("pharmacy_id");
         const currentCategory = row.getValue("name");
 
         return (
           <div className="flex gap-5">
-            <EditModalCategory token={token} name={currentCategory} id={id} />
-            <DeleteModal token={token} id={id} />
+            <EditModalPharmacy
+              token={token}
+              name={currentCategory}
+              id={id}
+              pharmacy_id={pharmacy_id}
+            />
+            <DeleteModalPharmacy token={token} id={id} />
           </div>
         );
       },
@@ -244,7 +252,11 @@ export default function Categories() {
           Manage Product Categories
         </h1>
         <div className="flex items-center justify-between py-4">
-          <SearchBar table={table} placeholder="pharmacies" />
+          <SearchBar
+            table={table}
+            placeholder="pharmacies"
+            searchby="pharmacy_id"
+          />
           <div className="flex gap-3">
             <Dialog open={open} onOpenChange={setOpen}>
               <DialogTrigger asChild>
