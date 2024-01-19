@@ -9,14 +9,16 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-export default function Register() {
+export default function Register({ type }: { type?: string }) {
   return (
     <>
       <div className="h-screen flex flex-row gap-5 justify-center items-center">
         <div className="mx-auto lg:w-1/4 w-sm mb-10 md:mb-0">
           <Card>
             <CardHeader className="space-y-1 text-center">
-              <CardTitle className="text-4xl">Register</CardTitle>
+              <CardTitle className="text-4xl">
+                Register {type ? "as Docttor" : null}
+              </CardTitle>
             </CardHeader>
             <CardContent className="grid gap-4">
               <RegisterForm />
@@ -31,7 +33,7 @@ export default function Register() {
                   href="/auth/login"
                   className="text-primary underline-offset-4 transition-colors hover:underline"
                 >
-                  Log in
+                  Log in {type ? "as Docttor" : null}
                 </Link>
               </div>
             </CardFooter>
