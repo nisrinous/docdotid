@@ -88,3 +88,21 @@ export type DoctorResponse = {
   image: string;
   years_of_exp: number;
 };
+
+export type PharmaciesOwnedListResponse = {
+  id: string;
+  name: string;
+  address: string;
+  operational_hour: string;
+  operational_day: string;
+  is_active: boolean;
+};
+
+export type CategoryListResponse = {
+  id: number;
+  name: string;
+};
+export type ProductListResponse = {
+  id: number;
+  name: string;
+};

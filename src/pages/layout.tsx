@@ -12,6 +12,7 @@ export default function Layout({ children }: Layout) {
 
   if (router.pathname.includes("/auth")) return children;
   if (router.pathname.includes("/admin")) return children;
+  if (router.pathname.includes("/pharmacyadm")) return children;
 
   return (
     <>
