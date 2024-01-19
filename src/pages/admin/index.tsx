@@ -1,5 +1,5 @@
 import Sidebar from "@/components/aside-bar";
-import { getOrdersMonthly } from "@/lib/fetcher/orders";
+import { getCategoryList, getOrdersMonthly } from "@/lib/fetcher/orders";
 import { menus } from "@/utils/menus";
 import React, { PureComponent, useState } from "react";
 import {
@@ -16,6 +16,8 @@ import {
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import useSWR from "swr";
+import { Combobox } from "@/components/combo-box";
+import { Combobox2 } from "@/components/combo-box/product";
 
 export default function Home(): JSX.Element {
   const { token } = useSelector((state: RootState) => state.user);
@@ -24,7 +26,11 @@ export default function Home(): JSX.Element {
 
   const fetchData = async () => {
     try {
-      const data = await getOrdersMonthly(token);
+      const data = await getOrdersMonthly(
+        token,
+        selectedCategory,
+        selectedProduct
+      );
 
       console.log("ini data", data);
       setOrdersData(data.data.ProductCategorySales);
@@ -73,61 +79,20 @@ export default function Home(): JSX.Element {
 
   const data = ordersData;
   const data2 = ordersData2;
-  // const data = [
-  //   {
-  //     name: "Page A",
-  //     uv: 4000,
-  //     pv: 2400,
-  //     amt: 2400,
-  //   },
-  //   {
-  //     name: "Page B",
-  //     uv: 3000,
-  //     pv: 1398,
-  //     amt: 2210,
-  //   },
-  //   {
-  //     name: "Page C",
-  //     uv: 2000,
-  //     pv: 9800,
-  //     amt: 2290,
-  //   },
-  //   {
-  //     name: "Page D",
-  //     uv: 2780,
-  //     pv: 3908,
-  //     amt: 2000,
-  //   },
-  //   {
-  //     name: "Page E",
-  //     uv: 1890,
-  //     pv: 4800,
-  //     amt: 2181,
-  //   },
-  //   {
-  //     name: "Page F",
-  //     uv: 2390,
-  //     pv: 3800,
-  //     amt: 2500,
-  //   },
-  //   {
-  //     name: "Page G",
-  //     uv: 3490,
-  //     pv: 4300,
-  //     amt: 2100,
-  //   },
-  // ];
 
   return (
     <div className="flex">
       <Sidebar menus={menus} />
       <div className="w-full mx-10 mt-5">
-        <h1 className="text-black text-3xl font-bold my-2 mb-8">DASHBOARD</h1>
+        <h1 className="text-black text-3xl font-bold my-2 mb-3">DASHBOARD</h1>
         <div className="w-full flex gap-10">
-          <div className="w-1/2 bg-blue-200 rounded-lg h-96 py-5">
-            <h1 className="px-5 font-semibold text-lg">
-              Monthly sales report by product category
-            </h1>
+          <div className="w-1/2 bg-blue-200 rounded-lg h-96 py-8">
+            <div className="flex justify-between px-5">
+              <h1 className="px-5 font-semibold text-lg">
+                Monthly sales report by product category
+              </h1>
+              {/* <Combobox onSelectCategory={handleSelectCategory} /> */}
+            </div>
             <ResponsiveContainer width="100%" height="100%">
               <BarChart
                 width={500}
@@ -141,7 +106,7 @@ export default function Home(): JSX.Element {
                 }}
               >
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
+                <XAxis dataKey="month" tickFormatter={getStatusMonth} />
                 <YAxis dataKey="order_price" />
                 <Tooltip />
                 <Legend />
@@ -154,10 +119,13 @@ export default function Home(): JSX.Element {
               </BarChart>
             </ResponsiveContainer>
           </div>
-          <div className="w-1/2 bg-red-200 rounded-lg h-96 py-5">
-            <h1 className="px-5 font-semibold text-lg">
-              Monthly sales report by product
-            </h1>
+          <div className="w-1/2 bg-red-200 rounded-lg h-96 py-8">
+            <div className="flex justify-between px-5">
+              <h1 className="px-5 font-semibold text-lg">
+                Monthly sales report by product
+              </h1>
+              <Combobox2 />
+            </div>
             <ResponsiveContainer width="100%" height="100%">
               <BarChart
                 width={500}
