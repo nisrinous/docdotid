@@ -62,6 +62,7 @@ import {
 } from "@/lib/fetcher/product-category-pharmacy";
 import { getPharmacyOwnedList } from "@/lib/fetcher/pharmacy";
 import { EditModalPharmacy } from "@/components/edit-modal/pharmacyEdit";
+import { DeleteModalPharmacy } from "@/components/delete-modal/pharmacyDelete";
 
 export default function Categories() {
   const { token } = useSelector((state: RootState) => state.user);
@@ -218,7 +219,7 @@ export default function Categories() {
               id={id}
               pharmacy_id={pharmacy_id}
             />
-            {/* <DeleteModal token={token} id={id} /> */}
+            <DeleteModalPharmacy token={token} id={id} />
           </div>
         );
       },

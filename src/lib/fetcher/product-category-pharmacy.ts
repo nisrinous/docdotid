@@ -85,3 +85,23 @@ export async function editPharmacyCategory(
     console.error("" + error);
   }
 }
+
+export async function deletePharmacyCategory(token: string, id: any) {
+  try {
+    const response = await fetch(
+      `${API_ENDPOINT}/pharmacies/categories/${id}`,
+      {
+        method: "DELETE",
+        headers: {
+          authorization: `bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    const data = await response.json();
+    toast.success("Delete Success!");
+    return data;
+  } catch (error) {
+    console.error("" + error);
+  }
+}
