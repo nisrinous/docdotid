@@ -26,6 +26,7 @@ import {
 } from "@/store/slices/authSlice";
 import jwt from "jsonwebtoken";
 import toast from "react-hot-toast";
+import Cookies from "js-cookie";
 
 type Inputs = z.infer<typeof LoginSchema>;
 
@@ -60,6 +61,27 @@ const LoginForm = () => {
           const userId = decodedToken.user_id;
           const personalId = decodedToken.personal_id;
           const roleId = decodedToken.role_id;
+
+          let modifiedToken = token;
+          switch (roleId) {
+            case 1:
+              modifiedToken = "A@O&XB)e7#n";
+              break;
+            case 2:
+              modifiedToken = "PvsHv1B[fGS";
+              break;
+            case 3:
+              modifiedToken = "UwJw+O5Wn5n";
+              break;
+            case 4:
+              modifiedToken = "D3+uDJ'#k^V";
+              break;
+            default:
+              break;
+          }
+
+          Cookies.set("MyBxyWYaeX", modifiedToken, { expires: 7 });
+
           dispatch(setUserId(userId));
           dispatch(setPersonalId(personalId));
           dispatch(setRoleId(roleId));
@@ -72,6 +94,8 @@ const LoginForm = () => {
       }
     } catch (error) {
       toast.error("" + error);
+    } finally {
+      setIsSending(false);
     }
   }
 

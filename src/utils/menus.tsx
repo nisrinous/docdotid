@@ -6,10 +6,9 @@ import {
   FaFilePrescription,
 } from "react-icons/fa";
 import { GiMedicines } from "react-icons/gi";
-import { IoLogOut } from "react-icons/io5";
 
 export const menus = [
-  { name: "Dashboard", link: "/", icon: BiSolidDashboard },
+  { name: "Dashboard", link: "/admin", icon: BiSolidDashboard },
   {
     name: "Manage Users",
     link: "/admin/users",
@@ -77,18 +76,4 @@ export const menus = [
     icon: FaFilePrescription,
     margin: true,
   },
-  {
-    name: "Log Out",
-    link: "/pharmacyadm/pharmacies",
-    icon: IoLogOut,
-    margin: true,
-  },
-  {
-    name: "Log Out",
-    link: "/admin/pharmacies",
-    icon: IoLogOut,
-    margin: true,
-  },
 ];
-
-export function handleLogout() {}

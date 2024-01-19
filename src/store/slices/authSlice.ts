@@ -34,6 +34,7 @@ const authSlice = createSlice({
       state.user_id = 0;
       state.personal_id = 0;
       state.role_id = 0;
+      state.email = "";
     },
     setFixLat(state, action: PayloadAction<number>) {
       state.fixLat = action.payload;
@@ -50,6 +51,7 @@ export const {
   setPersonalId,
   setUserId,
   setEmail,
+  deleteUser,
   setFixLat,
   setFixLng,
 } = authSlice.actions;

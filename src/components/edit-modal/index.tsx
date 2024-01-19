@@ -29,10 +29,11 @@ export function EditModalCategory({
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const inputValue = event.target.value;
-
     setNewCategory(inputValue);
 
-    if (/[0-9!@#$%^&*(),.?":{}|<>]/.test(inputValue)) {
+    if (!inputValue.trim()) {
+      setInputError("Input should not be empty.");
+    } else if (/[0-9!@#$%^&*(),.?":{}|<>]/.test(inputValue)) {
       setInputError("Input should not contain numbers or special characters.");
     } else {
       setInputError("");
@@ -40,6 +41,10 @@ export function EditModalCategory({
   };
   const handleEdit = async () => {
     try {
+      if (!newCategory.trim()) {
+        setInputError("Input should not be empty.");
+        return;
+      }
       await editCategory(token, newCategory, id);
       setOpen(false);
       mutate(["/categories", token]);

@@ -17,6 +17,7 @@ import { ProductsResponse } from "@/types";
 import useSWR from "swr";
 import { apiBaseUrl } from "@/config";
 import router from "next/router";
+import deleteCookies from "@/components/delete-cookies";
 
 interface DeleteConfirmationModalProps {
   isOpen: boolean;
