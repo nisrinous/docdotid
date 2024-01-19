@@ -60,8 +60,8 @@ export type UserDetailResponse = {
   phone: string;
   email: string;
   gender: string;
-  weight: number;
-  height: number;
+  weight: string;
+  height: string;
   image: string;
 };
 
