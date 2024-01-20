@@ -82,13 +82,14 @@ export type OrdersResponse = {
 export type DoctorResponse = {
   id: number;
   user_name: string;
+  email: string;
   is_active: boolean;
   fee: number;
   specialist_id: number;
   specialist_name: string;
   specialist_description: string;
   image: string;
-  years_of_exp: number;
+  years_of_exp: string;
 };
 
 export type PharmaciesOwnedListResponse = {

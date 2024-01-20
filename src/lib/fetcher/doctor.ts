@@ -39,3 +39,19 @@ export async function getDoctor(token: string, doctorId: string) {
     console.error("" + error);
   }
 }
+
+export async function getDoctorDetail(token: string) {
+  try {
+    const response = await fetch(`${API_ENDPOINT}/doctors/detail`, {
+      method: "GET",
+      headers: {
+        authorization: `bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("" + error);
+  }
+}
