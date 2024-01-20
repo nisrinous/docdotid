@@ -15,10 +15,11 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { registerEmailDoctor } from "@/lib/fetcher/auth-doctor";
 
 type Inputs = z.infer<typeof emailRegisterSchema>;
 
-const RegisterForm = () => {
+const RegisterForm = ({ type }: { type?: string }) => {
   const [isSending, setIsSending] = React.useState(false);
 
   const form = useForm<Inputs>({
@@ -31,7 +32,9 @@ const RegisterForm = () => {
   async function onSubmit(formData: Inputs) {
     try {
       setIsSending(true);
-      await registerEmail(formData.email);
+      type === "doctor"
+        ? await registerEmailDoctor(formData.email)
+        : await registerEmail(formData.email);
     } catch (error) {
       console.error("Error registering user:", error);
     }

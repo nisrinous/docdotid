@@ -3,7 +3,6 @@ import RegisterForm from "@/components/form/register-form";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
@@ -17,11 +16,11 @@ export default function Register({ type }: { type?: string }) {
           <Card>
             <CardHeader className="space-y-1 text-center">
               <CardTitle className="text-4xl">
-                Register {type ? "as Docttor" : null}
+                Register {type ? "as Doctor" : null}
               </CardTitle>
             </CardHeader>
             <CardContent className="grid gap-4">
-              <RegisterForm />
+              {type ? <RegisterForm type="doctor" /> : <RegisterForm />}
             </CardContent>
             <CardFooter className="flex flex-wrap items-center justify-center gap-2">
               <div className="text-sm text-muted-foreground">
