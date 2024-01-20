@@ -125,7 +125,7 @@ export default function Categories() {
           </Button>
         );
       },
-      cell: ({ row }) => <div className="capitalize">{row.getValue("id")}</div>,
+      cell: ({ row }) => <div className="capitalize">{row.index + 1}</div>,
     },
     {
       accessorKey: "name",
