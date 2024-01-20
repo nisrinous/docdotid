@@ -198,7 +198,7 @@ const AddProduct = () => {
       <div className="container flex justify-start sm:mt-5 p-3">
         <div className="">
           <h1 className="text-black text-3xl mt-2 font-bold mb-5 sm:mb-[50px]">
-            Edit Products
+            Add Products
           </h1>
           <form onSubmit={handleSubmit}>
             <div className="flex flex-col sm:flex-row gap-0 sm:gap-10 w-full">
@@ -213,6 +213,7 @@ const AddProduct = () => {
                       className="mb-3"
                     />
                   )}
+
                   <Input
                     id="picture"
                     type="file"
