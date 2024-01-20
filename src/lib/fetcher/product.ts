@@ -34,6 +34,25 @@ export async function getProduct(token: string, productId: string) {
         "Content-Type": "application/json",
       },
     });
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("" + error);
+  }
+}
+
+export async function getProductsByPharmacy(token: string, pharmacyId: any) {
+  try {
+    const response = await fetch(
+      `${API_ENDPOINT}/pharmacies/${pharmacyId}/products`,
+      {
+        method: "GET",
+        headers: {
+          authorization: `bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
 
     const data = await response.json();
     return data;

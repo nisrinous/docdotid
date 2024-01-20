@@ -96,3 +96,19 @@ export async function getPharmacyListOwned(token: string) {
     console.error("" + error);
   }
 }
+
+export async function getPharmacyDetail(token: string, id: number) {
+  try {
+    const response = await fetch(`${API_ENDPOINT}/pharmacies/${id}`, {
+      method: "GET",
+      headers: {
+        authorization: `bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("" + error);
+  }
+}

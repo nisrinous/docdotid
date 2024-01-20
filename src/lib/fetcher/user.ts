@@ -44,3 +44,26 @@ export async function putUserDetail(
     toast.error("" + error);
   }
 }
+
+export async function getUsers(token: string, roleId: number) {
+  try {
+    if (roleId == 0) {
+      roleId = 1;
+    }
+
+    const response = await fetch(
+      `${API_ENDPOINT}/users?RoleID=${roleId}&Limit=10&Page=1`,
+      {
+        method: "GET",
+        headers: {
+          authorization: `bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("" + error);
+  }
+}
