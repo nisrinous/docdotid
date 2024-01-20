@@ -2,9 +2,9 @@ import { apiBaseUrl } from "@/config";
 
 const API_ENDPOINT = apiBaseUrl;
 
-export async function getOrders(token: string) {
+export async function getOrdersReports(token: string) {
   try {
-    const response = await fetch(`${API_ENDPOINT}/reports`, {
+    const response = await fetch(`${API_ENDPOINT}/reports/sales/pharmacies`, {
       method: "GET",
       headers: {
         authorization: `Bearer ${token}`,
