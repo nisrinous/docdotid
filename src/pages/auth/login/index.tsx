@@ -8,7 +8,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-export default function Register() {
+export default function Login() {
   return (
     <>
       <div className="h-screen flex flex-row gap-5 justify-center items-center">

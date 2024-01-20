@@ -1,5 +1,6 @@
 import { apiBaseUrl } from "@/config";
 import { UserDetailResponse } from "@/types";
+import toast from "react-hot-toast";
 
 const API_ENDPOINT = apiBaseUrl;
 
@@ -32,14 +33,14 @@ export async function putUserDetail(
       },
       body: JSON.stringify(changes),
     });
-
-    if (response.ok) {
-      const data: UserDetailResponse = await response.json();
+    const data = await response.json();
+    if (data.data) {
+      toast.success("Profile updated successfully!");
       return data;
     } else {
-      console.error(`Error updating user details. Status: ${response.status}`);
+      throw new Error(data.message || "Error unknown");
     }
   } catch (error) {
-    console.error("" + error);
+    toast.error("" + error);
   }
 }
