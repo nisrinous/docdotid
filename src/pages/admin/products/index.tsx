@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Sidebar from "@/components/aside-bar";
 import { menus } from "@/utils/menus";
 import {
@@ -15,9 +15,7 @@ import { RootState } from "@/store/store";
 import { deleteProduct, getProducts } from "@/lib/fetcher/product";
 import { ProductsResponse } from "@/types";
 import useSWR from "swr";
-import { apiBaseUrl } from "@/config";
 import router from "next/router";
-import deleteCookies from "@/components/delete-cookies";
 
 interface DeleteConfirmationModalProps {
   isOpen: boolean;
@@ -68,6 +66,10 @@ const Product = () => {
     setShowDeleteModal(true);
   };
 
+  const handleAdd = () => {
+    router.push(`/admin/products/add`);
+  };
+
   const confirmDelete = async () => {
     if (productIdToDelete !== null) {
       try {
@@ -98,6 +100,9 @@ const Product = () => {
         <h1 className="text-black text-3xl mt-2 font-bold mb-5">
           Manage Products
         </h1>
+        <Button onClick={() => handleAdd()} className="mb-2">
+          Add Product
+        </Button>
         <Table>
           <TableHeader>
             <TableRow>
@@ -129,6 +134,11 @@ const Product = () => {
             ))}
           </TableBody>
         </Table>
+        {productsData.length === 0 && (
+          <div className="w-full flex justify-center mt-10">
+            <p>No data available.</p>
+          </div>
+        )}
         <DeleteConfirmationModal
           isOpen={showDeleteModal}
           onClose={closeDeleteModal}
