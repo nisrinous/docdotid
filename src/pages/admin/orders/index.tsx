@@ -32,7 +32,7 @@ import { useState } from "react";
 import useSWR from "swr";
 import SearchBar from "@/components/search-bar";
 import ColumnDropdown from "@/components/columns-dropdown";
-import { getOrders } from "@/lib/fetcher/orders";
+import { getOrdersList } from "@/lib/fetcher/orders";
 import { OrdersResponse } from "@/types";
 
 export default function Orders() {
@@ -41,7 +41,7 @@ export default function Orders() {
 
   const fetchData = async () => {
     try {
-      const data = await getOrders(token);
+      const data = await getOrdersList(token);
       console.log("ini data", data);
       const formattedData = data.data.map(
         ({ pharmacy, ...rest }: OrdersResponse) => ({
