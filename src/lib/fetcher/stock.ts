@@ -55,3 +55,20 @@ export async function updateProductStock(
     console.error("" + error);
   }
 }
+
+export async function deleteProduct(token: string, id: any) {
+  try {
+    const response = await fetch(`${API_ENDPOINT}/pharmacies/products/${id}`, {
+      method: "DELETE",
+      headers: {
+        authorization: `bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+    const data = await response.json();
+    toast.success("Delete Success!");
+    return data;
+  } catch (error) {
+    console.error("" + error);
+  }
+}
