@@ -26,7 +26,7 @@ export default function MyCart() {
             </Card>
           </div>
           <div className="flex flex-col gap-3 mb-10">
-            <DeliveryCourierCard />
+            <DeliveryCourierCard isChosen={false} />
           </div>
         </div>
         <div className="col-span-3 md:block md:col-span-1">

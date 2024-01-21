@@ -45,6 +45,7 @@ import { getStockByPharmacy } from "@/lib/fetcher/stock";
 import { getPharmacyOwnedList } from "@/lib/fetcher/pharmacy";
 import { mutate } from "swr";
 import { UpdateStockModal } from "@/components/updatestock-modal";
+import { DeleteStockModal } from "@/components/delete-modal/stock-delete";
 
 export default function Inventory() {
   const { token } = useSelector((state: RootState) => state.user);
@@ -198,7 +199,7 @@ export default function Inventory() {
               stock={stock}
               id={id}
             ></UpdateStockModal>
-            <Button>Delete</Button>
+            <DeleteStockModal token={token} id={id} />
           </div>
         );
       },
