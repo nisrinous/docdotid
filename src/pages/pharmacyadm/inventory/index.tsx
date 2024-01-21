@@ -1,20 +1,9 @@
 "use client";
 import * as React from "react";
-import { ProductCategoriesResponse } from "@/types";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
-import { getProductCategories } from "@/lib/fetcher/product-category";
-import { Label } from "@/components/ui/label";
+import { FaWhatsapp } from "react-icons/fa6";
 import { menus } from "@/utils/menus";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -40,35 +29,55 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useState } from "react";
-import { DeleteModal } from "@/components/delete-modal";
-import { addCategory } from "@/lib/fetcher/product-category";
-import useSWR, { mutate } from "swr";
-import { EditModalCategory } from "@/components/edit-modal";
-import SearchBar from "@/components/search-bar";
+import useSWR from "swr";
 import ColumnDropdown from "@/components/columns-dropdown";
+import { OrdersResponse, PharmaciesOwnedListResponse } from "@/types";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { getStockByPharmacy } from "@/lib/fetcher/stock";
+import { getPharmacyOwnedList } from "@/lib/fetcher/pharmacy";
+import { mutate } from "swr";
+import { UpdateStockModal } from "@/components/updatestock-modal";
 
-export default function Categories() {
+export default function Inventory() {
   const { token } = useSelector((state: RootState) => state.user);
-  const [productsData, setProductsData] = useState<ProductCategoriesResponse[]>(
-    []
-  );
+  const [stockData, setStockData] = useState<OrdersResponse[]>([]);
+  const [pharmacyList, setPharmacyList] = useState<
+    PharmaciesOwnedListResponse[]
+  >([]);
+  const [selectedPharmacy, setSelectedPharmacy] = useState<number>(1);
 
   const fetchData = async () => {
     try {
-      const data = await getProductCategories(token);
+      const data = await getStockByPharmacy(token, selectedPharmacy);
+      const pharmacyList = await getPharmacyOwnedList(token);
       console.log("ini data", data);
-      setProductsData(data.data);
+      setStockData(data.data);
+      setPharmacyList(pharmacyList.data);
     } catch (error) {
       console.error("" + error);
     }
   };
 
   const { error: isError, isValidating: isLoading } = useSWR(
-    ["/categories", token],
+    [`/pharmacies/${selectedPharmacy}/products`, token],
     fetchData
   );
 
-  const data: ProductCategoriesResponse[] = productsData;
+  const handleSelectChangeCategory = (value: any) => {
+    setSelectedPharmacy(value);
+    mutate([`/pharmacies/${selectedPharmacy}/products`, token]);
+  };
+
+  const data = stockData;
+
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -76,41 +85,8 @@ export default function Categories() {
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
-  const [open, setOpen] = useState(false);
-  const [newCategory, setNewCategory] = useState("");
-  const [inputError, setInputError] = useState("");
 
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const inputValue = event.target.value;
-    setNewCategory(inputValue);
-
-    if (!inputValue.trim()) {
-      setInputError("Input should not be empty.");
-    } else if (/[0-9!@#$%^&*(),.?":{}|<>]/.test(inputValue)) {
-      setInputError("Input should not contain numbers or special characters.");
-    } else {
-      setInputError("");
-    }
-  };
-  const handleAddCategory = async () => {
-    try {
-      if (!newCategory.trim()) {
-        setInputError("Input should not be empty.");
-        return;
-      }
-      const result = await addCategory(token, newCategory);
-
-      console.log("Category added:", result);
-
-      setNewCategory("");
-      setOpen(false);
-      mutate(["/categories", token]);
-    } catch (error) {
-      console.error("Error adding category:", error);
-    }
-  };
-
-  const columns: ColumnDef<ProductCategoriesResponse, any>[] = [
+  const columns: ColumnDef<any>[] = [
     {
       accessorKey: "id",
       header: ({ column }) => {
@@ -136,25 +112,93 @@ export default function Categories() {
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
             className="px-0"
           >
-            Name
+            Product Name
             <ArrowUpDown className="ml-2 h-4 w-4" />
           </Button>
         );
       },
-      cell: ({ row }) => <div>{row.getValue("name")}</div>,
+      cell: ({ row }) => (
+        <div
+          className={`rounded-lg py-1 px-2 max-w-fit
+          )}`}
+        >
+          {row.getValue("name")}
+        </div>
+      ),
     },
+    {
+      accessorKey: "category",
+      header: ({ column }) => {
+        return (
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+            className="px-0"
+          >
+            Product Category
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </Button>
+        );
+      },
+      cell: ({ row }) => (
+        <div
+          className={`rounded-lg py-1 px-2 max-w-fit
+            )}`}
+        >
+          {row.getValue("category")}
+        </div>
+      ),
+    },
+    {
+      accessorKey: "price",
+      header: ({ column }) => {
+        return (
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+            className="px-0"
+          >
+            Price
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </Button>
+        );
+      },
+      cell: ({ row }) => <div>{row.getValue("price")}</div>,
+    },
+    {
+      accessorKey: "stock",
+      header: ({ column }) => {
+        return (
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+            className="px-0"
+          >
+            Stock
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </Button>
+        );
+      },
+      cell: ({ row }) => <div>{row.getValue("stock")}</div>,
+    },
+
     {
       id: "actions",
       header: "Actions",
       enableHiding: false,
       cell: ({ row }) => {
         const id = row.getValue("id");
-        const currentCategory = row.getValue("name");
-
+        const name = row.getValue("name");
+        const stock = row.getValue("stock");
         return (
           <div className="flex gap-5">
-            <EditModalCategory token={token} name={currentCategory} id={id} />
-            <DeleteModal token={token} id={id} />
+            <UpdateStockModal
+              token={token}
+              name={name}
+              stock={stock}
+              id={id}
+            ></UpdateStockModal>
+            <Button>Delete</Button>
           </div>
         );
       },
@@ -183,61 +227,31 @@ export default function Categories() {
     <div className="flex">
       <Sidebar menus={menus} />
       <div className="w-full mx-10 mt-5">
-        <h1 className="text-black text-2xl mt-2 font-bold">
-          Manage Product Categories
+        <h1 className="text-black text-3xl mt-2 font-bold">
+          Manage Product Inventory
         </h1>
         <div className="flex items-center justify-between py-4">
-          <SearchBar table={table} placeholder="categories" searchby="name" />
+          <div>
+            <Select onValueChange={handleSelectChangeCategory}>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue
+                  placeholder="Select a pharmacy"
+                  defaultValue={selectedPharmacy}
+                />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  {Array.isArray(pharmacyList) &&
+                    pharmacyList.map((pharmacy) => (
+                      <SelectItem key={pharmacy.id} value={pharmacy.id}>
+                        {pharmacy.name}
+                      </SelectItem>
+                    ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          </div>
           <div className="flex gap-3">
-            <Dialog open={open} onOpenChange={setOpen}>
-              <DialogTrigger asChild>
-                <Button
-                  variant="outline"
-                  className="bg-sky-300 hover:bg-sky-200"
-                >
-                  Add New
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="sm:max-w-[425px]">
-                <DialogHeader>
-                  <DialogTitle>Add New Product Category</DialogTitle>
-                  <DialogDescription>
-                    Input details for the new product category here. Click save
-                    when done.
-                  </DialogDescription>
-                </DialogHeader>
-                <div className="grid gap-4 py-4">
-                  <div className="grid grid-cols-4 items-center gap-4">
-                    <Label htmlFor="name" className="text-right">
-                      Category Name
-                    </Label>
-
-                    <Input
-                      id="name"
-                      value={newCategory}
-                      onChange={handleInputChange}
-                      className={`col-span-3 focus rounded-md p-2 ${
-                        inputError ? "focus:bg-red-200" : ""
-                      }`}
-                    />
-                    {inputError && (
-                      <p className="col-span-4 text-red-500 text-s mt-1">
-                        {inputError}
-                      </p>
-                    )}
-                  </div>
-                </div>
-                <DialogFooter>
-                  <Button
-                    type="submit"
-                    onClick={handleAddCategory}
-                    disabled={inputError !== ""}
-                  >
-                    Save changes
-                  </Button>
-                </DialogFooter>
-              </DialogContent>
-            </Dialog>
             <ColumnDropdown table={table} />
           </div>
         </div>

@@ -131,7 +131,7 @@ export default function Orders() {
           </Button>
         );
       },
-      cell: ({ row }) => <div className="capitalize">{row.getValue("id")}</div>,
+      cell: ({ row }) => <div className="capitalize">{row.index + 1}</div>,
     },
     {
       accessorKey: "status",
