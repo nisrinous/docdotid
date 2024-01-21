@@ -3,7 +3,6 @@ import DoctorCategories from "@/components/categories/doctor-categories";
 import { getDoctors } from "@/lib/fetcher/doctor";
 import { RootState } from "@/store/store";
 import { DoctorResponse } from "@/types";
-import { useRouter } from "next/router";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import useSWR from "swr";
@@ -46,7 +45,7 @@ export default function Telemedicine() {
         ) : (
           <div className="flex justify-center">
             <div className="container flex flex-wrap gap-4 my-10 justify-start px-0">
-              {doctorsData.length > 0 ? (
+              {doctorsData ? (
                 doctorsData.map((item, index) => {
                   return <CardDoctor key={index} doctor={item} />;
                 })
