@@ -44,6 +44,7 @@ import {
 import { getStockByPharmacy } from "@/lib/fetcher/stock";
 import { getPharmacyOwnedList } from "@/lib/fetcher/pharmacy";
 import { mutate } from "swr";
+import { UpdateStockModal } from "@/components/updatestock-modal";
 
 export default function Inventory() {
   const { token } = useSelector((state: RootState) => state.user);
@@ -126,6 +127,29 @@ export default function Inventory() {
       ),
     },
     {
+      accessorKey: "category",
+      header: ({ column }) => {
+        return (
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+            className="px-0"
+          >
+            Product Category
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </Button>
+        );
+      },
+      cell: ({ row }) => (
+        <div
+          className={`rounded-lg py-1 px-2 max-w-fit
+            )}`}
+        >
+          {row.getValue("category")}
+        </div>
+      ),
+    },
+    {
       accessorKey: "price",
       header: ({ column }) => {
         return (
@@ -163,11 +187,17 @@ export default function Inventory() {
       header: "Actions",
       enableHiding: false,
       cell: ({ row }) => {
-        const pharmacy_number = row.getValue("pharmacy_phone");
-        console.log(pharmacy_number);
+        const id = row.getValue("id");
+        const name = row.getValue("name");
+        const stock = row.getValue("stock");
         return (
           <div className="flex gap-5">
-            <Button>Update</Button>
+            <UpdateStockModal
+              token={token}
+              name={name}
+              stock={stock}
+              id={id}
+            ></UpdateStockModal>
             <Button>Delete</Button>
           </div>
         );
@@ -204,7 +234,10 @@ export default function Inventory() {
           <div>
             <Select onValueChange={handleSelectChangeCategory}>
               <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Select a pharmacy" />
+                <SelectValue
+                  placeholder="Select a pharmacy"
+                  defaultValue={selectedPharmacy}
+                />
               </SelectTrigger>
               <SelectContent>
                 <SelectGroup>
@@ -219,7 +252,6 @@ export default function Inventory() {
             </Select>
           </div>
           <div className="flex gap-3">
-            <Button>Add New</Button>
             <ColumnDropdown table={table} />
           </div>
         </div>
