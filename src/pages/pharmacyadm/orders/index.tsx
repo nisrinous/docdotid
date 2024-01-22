@@ -19,7 +19,6 @@ import {
 import { ArrowUpDown } from "lucide-react";
 import Sidebar from "@/components/aside-bar";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import {
   Table,
   TableBody,
@@ -34,6 +33,12 @@ import SearchBar from "@/components/search-bar";
 import ColumnDropdown from "@/components/columns-dropdown";
 import { getOrdersListPharmacy } from "@/lib/fetcher/orders";
 import { OrdersResponse } from "@/types";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import Image from "next/image";
 
 export default function Orders() {
   const { token } = useSelector((state: RootState) => state.user);
@@ -158,6 +163,22 @@ export default function Orders() {
       ),
     },
     {
+      accessorKey: "order_price",
+      header: ({ column }) => {
+        return (
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+            className="px-0"
+          >
+            Order Price
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </Button>
+        );
+      },
+      cell: ({ row }) => <div>{row.getValue("order_price")}</div>,
+    },
+    {
       accessorKey: "total_price",
       header: ({ column }) => {
         return (
@@ -189,8 +210,9 @@ export default function Orders() {
       },
       cell: ({ row }) => <div>{row.getValue("pharmacy_name")}</div>,
     },
+
     {
-      accessorKey: "pharmacy_phone",
+      accessorKey: "image",
       header: ({ column }) => {
         return (
           <Button
@@ -198,12 +220,33 @@ export default function Orders() {
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
             className="px-0"
           >
-            Pharmacy Phone
+            Payment Proof
             <ArrowUpDown className="ml-2 h-4 w-4" />
           </Button>
         );
       },
-      cell: ({ row }) => <div>{row.getValue("pharmacy_phone")}</div>,
+      cell: ({ row }) => {
+        const image = row.getValue("image");
+        return (
+          <div className="flex gap-5">
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button variant="outline">Open popover</Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-80">
+                <div className="grid gap-4">
+                  <Image
+                    src={`${image}`}
+                    width={30}
+                    height={30}
+                    alt="Payment Proof"
+                  />
+                </div>
+              </PopoverContent>
+            </Popover>
+          </div>
+        );
+      },
     },
     {
       id: "actions",
