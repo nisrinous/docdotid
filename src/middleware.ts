@@ -4,13 +4,11 @@ export function middleware(request: NextRequest) {
   const MyBxyWYaeX = request.cookies.get("MyBxyWYaeX")?.value;
 
   if (request.nextUrl.pathname == "/" && MyBxyWYaeX === "A@O&XB)e7#n") {
-    return NextResponse.redirect(request.nextUrl.origin + "/admin/orders");
+    return NextResponse.redirect(request.nextUrl.origin + "/admin");
   }
 
   if (request.nextUrl.pathname == "/" && MyBxyWYaeX === "PvsHv1B[fGS") {
-    return NextResponse.redirect(
-      request.nextUrl.origin + "/pharmacyadm/orders"
-    );
+    return NextResponse.redirect(request.nextUrl.origin + "/admin");
   }
 
   if (request.nextUrl.pathname == "/" && MyBxyWYaeX === "doctor") {
@@ -28,7 +26,7 @@ export function middleware(request: NextRequest) {
   if (
     (request.nextUrl.pathname == "/" ||
       request.nextUrl.pathname.startsWith("/admin") ||
-      request.nextUrl.pathname.startsWith("/pharmacyadm") ||
+      request.nextUrl.pathname.startsWith("/admin") ||
       request.nextUrl.pathname.startsWith("/doctor") ||
       request.nextUrl.pathname.startsWith("/user")) &&
     MyBxyWYaeX !== "A@O&XB)e7#n" &&
@@ -43,9 +41,7 @@ export function middleware(request: NextRequest) {
     request.nextUrl.pathname.startsWith("/admin") &&
     MyBxyWYaeX === "PvsHv1B[fGS"
   ) {
-    return NextResponse.redirect(
-      request.nextUrl.origin + "/pharmacyadm/orders"
-    );
+    return NextResponse.redirect(request.nextUrl.origin + "/admin");
   }
 
   if (
@@ -63,21 +59,21 @@ export function middleware(request: NextRequest) {
   }
 
   if (
-    request.nextUrl.pathname.startsWith("/pharmacyadm") &&
+    request.nextUrl.pathname.startsWith("/admin") &&
     MyBxyWYaeX === "A@O&XB)e7#n"
   ) {
     return NextResponse.redirect(request.nextUrl.origin + "/admin");
   }
 
   if (
-    request.nextUrl.pathname.startsWith("/pharmacyadm") &&
+    request.nextUrl.pathname.startsWith("/admin") &&
     MyBxyWYaeX === "doctor"
   ) {
     return NextResponse.redirect(request.nextUrl.origin + "/doctor/home");
   }
 
   if (
-    request.nextUrl.pathname.startsWith("/pharmacyadm") &&
+    request.nextUrl.pathname.startsWith("/admin") &&
     MyBxyWYaeX === "UwJw+O5Wn5n"
   ) {
     return NextResponse.redirect(request.nextUrl.origin + "/");
@@ -94,9 +90,7 @@ export function middleware(request: NextRequest) {
     request.nextUrl.pathname.startsWith("/doctor") &&
     MyBxyWYaeX === "PvsHv1B[fGS"
   ) {
-    return NextResponse.redirect(
-      request.nextUrl.origin + "/pharmacyadm/orders"
-    );
+    return NextResponse.redirect(request.nextUrl.origin + "/admin");
   }
 
   if (
@@ -117,9 +111,7 @@ export function middleware(request: NextRequest) {
     request.nextUrl.pathname.startsWith("/user") &&
     MyBxyWYaeX === "PvsHv1B[fGS"
   ) {
-    return NextResponse.redirect(
-      request.nextUrl.origin + "/pharmacyadm/orders"
-    );
+    return NextResponse.redirect(request.nextUrl.origin + "/admin");
   }
 
   if (request.nextUrl.pathname.startsWith("/user") && MyBxyWYaeX === "doctor") {
@@ -139,9 +131,7 @@ export function middleware(request: NextRequest) {
       request.nextUrl.pathname.startsWith("/auth/register")) &&
     MyBxyWYaeX === "PvsHv1B[fGS"
   ) {
-    return NextResponse.redirect(
-      request.nextUrl.origin + "/pharmacyadm/orders"
-    );
+    return NextResponse.redirect(request.nextUrl.origin + "/admin");
   }
 
   if (
