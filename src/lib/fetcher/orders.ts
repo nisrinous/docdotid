@@ -23,6 +23,25 @@ export async function getOrdersReports(token: string) {
 
 export async function getOrdersList(token: string) {
   try {
+    const response = await fetch(`${API_ENDPOINT}/reports?status=4`, {
+      method: "GET",
+      headers: {
+        authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+    if (!response.ok) {
+      throw new Error(`Failed to fetch data: ${response.statusText}`);
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("" + error);
+  }
+}
+
+export async function getOrdersListPharmacy(token: string) {
+  try {
     const response = await fetch(`${API_ENDPOINT}/reports`, {
       method: "GET",
       headers: {
