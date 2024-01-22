@@ -39,13 +39,6 @@ export function middleware(request: NextRequest) {
 
   if (
     request.nextUrl.pathname.startsWith("/admin") &&
-    MyBxyWYaeX === "PvsHv1B[fGS"
-  ) {
-    return NextResponse.redirect(request.nextUrl.origin + "/admin");
-  }
-
-  if (
-    request.nextUrl.pathname.startsWith("/admin") &&
     MyBxyWYaeX === "doctor"
   ) {
     return NextResponse.redirect(request.nextUrl.origin + "/doctor/home");
