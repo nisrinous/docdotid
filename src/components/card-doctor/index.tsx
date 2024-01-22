@@ -3,6 +3,7 @@ import { CardContent, Card } from "@/components/ui/card";
 import { Badge } from "../ui/badge";
 import Link from "next/link";
 import { DoctorResponse } from "@/types";
+import { formatPrice } from "@/lib/utils";
 
 export function CardDoctor({ doctor }: { doctor: Partial<DoctorResponse> }) {
   return (
@@ -24,7 +25,11 @@ export function CardDoctor({ doctor }: { doctor: Partial<DoctorResponse> }) {
           Dr. {doctor.user_name?.split(" ")[0]}
         </h2>
         <p className="text-gray-600 mb-0">{doctor.specialist_name}</p>
-        <p className="text-lg font-bold mb-4">${doctor.fee}</p>
+        <p className="text-lg font-bold mb-4">
+          {formatPrice(doctor.fee, {
+            currency: "USD",
+          })}
+        </p>
         <Link href={`/telemedicine/${doctor?.id}`}>
           <Button
             disabled={!doctor.is_active}

@@ -1,6 +1,7 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { getDoctor } from "@/lib/fetcher/doctor";
+import { formatPrice } from "@/lib/utils";
 import { RootState } from "@/store/store";
 import { DoctorResponse } from "@/types";
 import { useRouter } from "next/router";
@@ -31,7 +32,7 @@ export default function DoctorDetails() {
   return (
     <>
       {isLoading ? (
-        <p className="text-zinc-400 mb-5">Loading...</p>
+        <p className="text-zinc-400 mb-5">Loading....</p>
       ) : isError ? (
         <div className="flex justify-center">
           <div className="flex flex-wrap justify-center">
@@ -39,7 +40,7 @@ export default function DoctorDetails() {
           </div>
         </div>
       ) : (
-        <div className="container my-10 flex flex-col justify-center items-center lg:px-20">
+        <div className="container my-10 flex flex-col justify-center items-center lg:px-20 max-w-md">
           <div className="">
             <img
               src="https://onecms-res.cloudinary.com/image/upload/s--uXpdFlVW--/c_crop,h_428,w_762,x_0,y_18/c_fill,g_auto,h_468,w_830/fl_relative,g_south_east,l_one-cms:core:watermark:afp_watermark,w_0.1/f_auto,q_auto/v1/one-cms/core/f3db88d3f76cf546544eca7199920c659d767953.jpg?itok=Ex2eUOsi"
@@ -49,24 +50,32 @@ export default function DoctorDetails() {
               <Badge className="bg-green-700/60 my-2">
                 {doctor?.is_active ? "Online" : "Offline"}
               </Badge>
-              <h3 className="font-semibold text-2xl md:text-3xl text-left leading-none">
-                {doctor?.user_name}
+              <h3 className="font-semibold text-2xl md:text-3xl text-left leading-none border-b-2 pb-2 ">
+                Dr. {doctor?.user_name}
               </h3>
-              <p className="text-zinc-600 leading-none text-base border-b-2 pb-2 text-left">
-                {doctor?.specialist_name}
-              </p>
             </div>
-            <div className="flex flex-col gap-1 justify-center items-center">
-              <h5 className="font-medium text-xl md:text-2xl text-left text-orange-500 bg-slate-100 w-full">
-                ${doctor?.fee}
-              </h5>
+            <div className="flex flex-col gap-1 justify-center items-center my-2">
+              <div className="text-3xl font-bold text-left bg-sky-100 w-full mb-6 p-1">
+                {formatPrice(doctor?.fee, {
+                  currency: "USD",
+                })}
+                <span className="text-sm font-normal text-muted-foreground">
+                  /session
+                </span>
+              </div>
             </div>
-            <p className="text-zinc-500 leading-none text-lg mt-6">
+            <p className="leading-none text-xl text-left">
+              {doctor?.specialist_name}
+            </p>
+            <h5 className="leading-none text-xl mt-6">
+              About {doctor?.specialist_name}:
+            </h5>
+            <p className="text-zinc-500 leading-none text-lg">
               {doctor?.specialist_description}
             </p>
             <p className="text-zinc-500 leading-tight text-base mt-6 mb-20">
               Years of experience: <br />
-              {doctor?.years_of_exp} years
+              {doctor?.years_of_exp || "~"} years
             </p>
 
             <Button className="w-full my-10">Continue to chat</Button>
