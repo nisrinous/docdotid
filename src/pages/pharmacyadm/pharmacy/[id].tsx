@@ -11,6 +11,9 @@ import Sidebar from "@/components/aside-bar";
 import { menus } from "@/utils/menus";
 import { Input } from "@/components/ui/input";
 import { apiBaseUrl } from "@/config";
+import { getPharmacyDetail } from "@/lib/fetcher/pharmacy";
+import { PharmacyResponse } from "@/types";
+import router from "next/router";
 
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
@@ -65,6 +68,19 @@ const IndexPage: React.FC = () => {
   const [operationalHour, setOperationalHour] = useState<string>("");
   const [operationalDay, setOperationalDay] = useState<string>("");
   const [combinedLocation, setCombinedLocation] = useState<string>("");
+  const [pharmacyData, setPharmacyData] = useState<PharmacyResponse[]>([]);
+  const { id } = router.query;
+
+  const fetchData = async () => {
+    try {
+      const data = await getPharmacyDetail(token, id);
+      setPharmacyData(data.data);
+    } catch (error) {
+      console.error("" + error);
+    }
+  };
+
+  useSWR(["/pharmacy"], fetchData);
 
   if (error) return null;
   if (!data) return null;
@@ -95,6 +111,7 @@ const IndexPage: React.FC = () => {
       if (!finalLng) finalLng = fixLng.toString();
 
       const postData = {
+        id: typeof id === "string" ? parseInt(id, 10) : undefined,
         name: receiver,
         description: description,
         address: `${selectedProvince}, ${selectedCity}, ${street}`,
@@ -108,7 +125,7 @@ const IndexPage: React.FC = () => {
       };
 
       console.log(postData);
-      const response = await axios.post(`${apiBaseUrl}/pharmacies`, postData, {
+      const response = await axios.put(`${apiBaseUrl}/pharmacies`, postData, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
@@ -130,8 +147,10 @@ const IndexPage: React.FC = () => {
           <div>
             <div className="mb-2">
               <label>Pharmacy Name: </label>
+
               <Input
                 type="text"
+                placeholder={pharmacyData.name}
                 value={receiver}
                 onChange={(e) => setReceiver(e.target.value)}
               />
@@ -195,6 +214,7 @@ const IndexPage: React.FC = () => {
               <label>Postal Code: </label>
               <Input
                 type="text"
+                placeholder={pharmacyData.postal_code}
                 value={postalCode}
                 onChange={(e) => setPostalCode(e.target.value)}
               />
@@ -203,6 +223,7 @@ const IndexPage: React.FC = () => {
               <label>Note: </label>
               <Input
                 type="text"
+                placeholder={pharmacyData.description}
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
               />
@@ -211,7 +232,7 @@ const IndexPage: React.FC = () => {
               <label>Operational Hour: </label>
               <Input
                 type="text"
-                placeholder="Example: 08.00 - 20.00"
+                placeholder={pharmacyData.operational_hour}
                 value={operationalHour}
                 onChange={(e) => setOperationalHour(e.target.value)}
               />
@@ -220,7 +241,7 @@ const IndexPage: React.FC = () => {
               <label>Operational Day: </label>
               <Input
                 type="text"
-                placeholder="Example: Monday - Friday"
+                placeholder={pharmacyData.operational_day}
                 value={operationalDay}
                 onChange={(e) => setOperationalDay(e.target.value)}
               />

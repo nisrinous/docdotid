@@ -64,6 +64,10 @@ const Product = () => {
     }
   };
 
+  const handleAdd = () => {
+    router.push(`/pharmacyadm/pharmacy/add`);
+  };
+
   const handleDelete = (productId: number) => {
     setProductIdToDelete(productId);
     setShowDeleteModal(true);
@@ -88,8 +92,8 @@ const Product = () => {
   };
   useSWR(["/products"], fetchData);
 
-  const handleEdit = (productId: number) => {
-    router.push(`/admin/products/${productId}`);
+  const handleEdit = (pharmacyId: number) => {
+    router.push(`/pharmacyadm/pharmacy/${pharmacyId}`);
   };
 
   return (
@@ -99,6 +103,9 @@ const Product = () => {
         <h1 className="text-black text-3xl mt-2 font-bold mb-5">
           Manage Pharmacy
         </h1>
+        <Button onClick={() => handleAdd()} className="mb-2">
+          Add Pharmacy
+        </Button>
         <Table>
           <TableHeader>
             <TableRow>
@@ -132,6 +139,11 @@ const Product = () => {
             ))}
           </TableBody>
         </Table>
+        {productsData.length === 0 && (
+          <div className="w-full flex justify-center mt-10">
+            <p>No pharmacy available.</p>
+          </div>
+        )}
         <DeleteConfirmationModal
           isOpen={showDeleteModal}
           onClose={closeDeleteModal}

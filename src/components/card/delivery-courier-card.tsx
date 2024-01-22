@@ -11,7 +11,7 @@ const DeliveryCourierCard = ({
   isChosen,
   deliveryCourierId,
 }: {
-  isChosen: boolean;
+  isChosen?: boolean;
   deliveryCourierId?: number;
 }) => {
   return (
@@ -22,8 +22,11 @@ const DeliveryCourierCard = ({
         </CardHeader>
         {!isChosen && (
           <Select>
-            <SelectTrigger>
-              <SelectValue placeholder="Select a delivery courier" />
+            <SelectTrigger className="w-full">
+              <SelectValue
+                placeholder="Select a delivery courier"
+                className="w-full"
+              />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="Official Instant">

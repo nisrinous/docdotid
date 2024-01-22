@@ -30,32 +30,54 @@ import {
 } from "@/components/ui/table";
 import { useState } from "react";
 import useSWR from "swr";
-import SearchBar from "@/components/search-bar";
 import ColumnDropdown from "@/components/columns-dropdown";
-import { getOrdersReports } from "@/lib/fetcher/orders";
-import { OrdersResponse } from "@/types";
+import { OrdersResponse, PharmaciesOwnedListResponse } from "@/types";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { getStockByPharmacy } from "@/lib/fetcher/stock";
+import { getPharmacyOwnedList } from "@/lib/fetcher/pharmacy";
+import { mutate } from "swr";
+import { UpdateStockModal } from "@/components/updatestock-modal";
+import { DeleteStockModal } from "@/components/delete-modal/stock-delete";
 
-export default function OrdersReportsTable() {
+export default function Inventory() {
   const { token } = useSelector((state: RootState) => state.user);
-  const [ordersData, setOrdersData] = useState<OrdersResponse[]>([]);
+  const [stockData, setStockData] = useState<OrdersResponse[]>([]);
+  const [pharmacyList, setPharmacyList] = useState<
+    PharmaciesOwnedListResponse[]
+  >([]);
+  const [selectedPharmacy, setSelectedPharmacy] = useState<number>(1);
 
   const fetchData = async () => {
     try {
-      const data = await getOrdersReports(token);
+      const data = await getStockByPharmacy(token, selectedPharmacy);
+      const pharmacyList = await getPharmacyOwnedList(token);
       console.log("ini data", data);
-      console.log(data.data);
-      setOrdersData(data.data);
+      setStockData(data.data);
+      setPharmacyList(pharmacyList.data);
     } catch (error) {
       console.error("" + error);
     }
   };
 
   const { error: isError, isValidating: isLoading } = useSWR(
-    ["/categories", token],
+    [`/pharmacies/${selectedPharmacy}/products`, token],
     fetchData
   );
 
-  const data = ordersData;
+  const handleSelectChangeCategory = (value: any) => {
+    setSelectedPharmacy(value);
+    mutate([`/pharmacies/${selectedPharmacy}/products`, token]);
+  };
+
+  const data = stockData;
 
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -64,43 +86,6 @@ export default function OrdersReportsTable() {
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
-
-  const handleContactWhatsapp = (phoneNumber: any) => {
-    const whatsappUrl = `https://wa.me/${phoneNumber}`;
-    window.open(whatsappUrl, "_blank");
-  };
-
-  const getStatusMonth = (month: number) => {
-    switch (month) {
-      case 1:
-        return "January";
-      case 2:
-        return "February";
-      case 3:
-        return "March";
-      case 4:
-        return "April";
-      case 5:
-        return "May";
-      case 6:
-        return "June";
-      case 7:
-        return "July";
-      case 8:
-        return "August";
-      case 9:
-        return "September";
-      case 10:
-        return "October";
-      case 11:
-        return "November";
-      case 12:
-        return "December";
-
-      default:
-        return "Unknown";
-    }
-  };
 
   const columns: ColumnDef<any>[] = [
     {
@@ -117,47 +102,7 @@ export default function OrdersReportsTable() {
           </Button>
         );
       },
-      cell: ({ row }) => <div className="capitalize">{row.getValue("id")}</div>,
-    },
-    {
-      accessorKey: "month",
-      header: ({ column }) => {
-        return (
-          <Button
-            variant="ghost"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-            className="px-0"
-          >
-            Month
-            <ArrowUpDown className="ml-2 h-4 w-4" />
-          </Button>
-        );
-      },
-      cell: ({ row }) => (
-        <div
-          className={`rounded-lg py-1 px-2 max-w-fit ${getStatusMonth(
-            row.getValue("month")
-          )}`}
-        >
-          {getStatusMonth(row.getValue("month"))}
-        </div>
-      ),
-    },
-    {
-      accessorKey: "order_price",
-      header: ({ column }) => {
-        return (
-          <Button
-            variant="ghost"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-            className="px-0"
-          >
-            Sales Number
-            <ArrowUpDown className="ml-2 h-4 w-4" />
-          </Button>
-        );
-      },
-      cell: ({ row }) => <div>{row.getValue("order_price")}</div>,
+      cell: ({ row }) => <div className="capitalize">{row.index + 1}</div>,
     },
     {
       accessorKey: "name",
@@ -168,15 +113,22 @@ export default function OrdersReportsTable() {
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
             className="px-0"
           >
-            Pharmacy Name
+            Product Name
             <ArrowUpDown className="ml-2 h-4 w-4" />
           </Button>
         );
       },
-      cell: ({ row }) => <div>{row.getValue("name")}</div>,
+      cell: ({ row }) => (
+        <div
+          className={`rounded-lg py-1 px-2 max-w-fit
+          )}`}
+        >
+          {row.getValue("name")}
+        </div>
+      ),
     },
     {
-      accessorKey: "phone",
+      accessorKey: "category",
       header: ({ column }) => {
         return (
           <Button
@@ -184,28 +136,70 @@ export default function OrdersReportsTable() {
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
             className="px-0"
           >
-            Pharmacy Phone
+            Product Category
             <ArrowUpDown className="ml-2 h-4 w-4" />
           </Button>
         );
       },
-      cell: ({ row }) => <div>{row.getValue("phone")}</div>,
+      cell: ({ row }) => (
+        <div
+          className={`rounded-lg py-1 px-2 max-w-fit
+            )}`}
+        >
+          {row.getValue("category")}
+        </div>
+      ),
     },
+    {
+      accessorKey: "price",
+      header: ({ column }) => {
+        return (
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+            className="px-0"
+          >
+            Price
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </Button>
+        );
+      },
+      cell: ({ row }) => <div>{row.getValue("price")}</div>,
+    },
+    {
+      accessorKey: "stock",
+      header: ({ column }) => {
+        return (
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+            className="px-0"
+          >
+            Stock
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </Button>
+        );
+      },
+      cell: ({ row }) => <div>{row.getValue("stock")}</div>,
+    },
+
     {
       id: "actions",
       header: "Actions",
       enableHiding: false,
       cell: ({ row }) => {
-        const pharmacy_number = row.getValue("phone");
-        console.log(pharmacy_number);
+        const id = row.getValue("id");
+        const name = row.getValue("name");
+        const stock = row.getValue("stock");
         return (
           <div className="flex gap-5">
-            <Button
-              className="bg-green-600 hover:bg-green-500"
-              onClick={() => handleContactWhatsapp(pharmacy_number)}
-            >
-              <FaWhatsapp size={25} /> {"  "} Chat on WhatsApp
-            </Button>
+            <UpdateStockModal
+              token={token}
+              name={name}
+              stock={stock}
+              id={id}
+            ></UpdateStockModal>
+            <DeleteStockModal token={token} id={id} />
           </div>
         );
       },
@@ -232,9 +226,32 @@ export default function OrdersReportsTable() {
 
   return (
     <div className="flex">
-      <div className="w-full mt-5">
+      <Sidebar menus={menus} />
+      <div className="w-full mx-10 mt-5">
+        <h1 className="text-black text-3xl mt-2 font-bold">
+          Manage Product Inventory
+        </h1>
         <div className="flex items-center justify-between py-4">
-          <SearchBar table={table} placeholder="by pharmacy" searchby="name" />
+          <div>
+            <Select onValueChange={handleSelectChangeCategory}>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue
+                  placeholder="Select a pharmacy"
+                  defaultValue={selectedPharmacy}
+                />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  {Array.isArray(pharmacyList) &&
+                    pharmacyList.map((pharmacy) => (
+                      <SelectItem key={pharmacy.id} value={pharmacy.id}>
+                        {pharmacy.name}
+                      </SelectItem>
+                    ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          </div>
           <div className="flex gap-3">
             <ColumnDropdown table={table} />
           </div>

@@ -13,6 +13,7 @@ import { RootState } from "@/store/store";
 import router from "next/router";
 import { ProductResponse } from "@/types";
 import { getProduct } from "@/lib/fetcher/product";
+import toast from "react-hot-toast";
 
 interface DropdownOption {
   id: number;
@@ -228,7 +229,8 @@ const AddProduct = () => {
           "Content-Type": "application/json",
         },
       });
-      console.log("Response:", response.data);
+      toast("Product edit successfully.");
+      router.push("/admin/products/");
     } catch (error) {
       console.error("Error submitting form:", error);
     }
@@ -240,7 +242,7 @@ const AddProduct = () => {
       <div className="container flex justify-start sm:mt-5 p-3">
         <div className="">
           <h1 className="text-black text-3xl mt-2 font-bold mb-5 sm:mb-[50px]">
-            Edit Products
+            Edit Product
           </h1>
           <form onSubmit={handleSubmit}>
             <div className="flex flex-col sm:flex-row gap-0 sm:gap-10 w-full">

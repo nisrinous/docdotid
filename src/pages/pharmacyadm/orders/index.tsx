@@ -19,7 +19,6 @@ import {
 import { ArrowUpDown } from "lucide-react";
 import Sidebar from "@/components/aside-bar";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import {
   Table,
   TableBody,
@@ -32,19 +31,33 @@ import { useState } from "react";
 import useSWR from "swr";
 import SearchBar from "@/components/search-bar";
 import ColumnDropdown from "@/components/columns-dropdown";
-import { getOrdersReports } from "@/lib/fetcher/orders";
+import { getOrdersListPharmacy } from "@/lib/fetcher/orders";
 import { OrdersResponse } from "@/types";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import Image from "next/image";
 
-export default function OrdersReportsTable() {
+export default function Orders() {
   const { token } = useSelector((state: RootState) => state.user);
   const [ordersData, setOrdersData] = useState<OrdersResponse[]>([]);
 
   const fetchData = async () => {
     try {
-      const data = await getOrdersReports(token);
+      const data = await getOrdersListPharmacy(token);
       console.log("ini data", data);
-      console.log(data.data);
-      setOrdersData(data.data);
+      const formattedData = data.data.map(
+        ({ pharmacy, ...rest }: OrdersResponse) => ({
+          ...rest,
+          pharmacy_id: pharmacy.id,
+          pharmacy_name: pharmacy.name,
+          pharmacy_phone: pharmacy.phone,
+        })
+      );
+      console.log(formattedData);
+      setOrdersData(formattedData);
     } catch (error) {
       console.error("" + error);
     }
@@ -70,35 +83,41 @@ export default function OrdersReportsTable() {
     window.open(whatsappUrl, "_blank");
   };
 
-  const getStatusMonth = (month: number) => {
-    switch (month) {
+  const getStatusString = (status: number) => {
+    switch (status) {
+      case 0:
+        return "Waiting for payment";
       case 1:
-        return "January";
+        return "Waiting for payment confirmation";
       case 2:
-        return "February";
+        return "Processed";
       case 3:
-        return "March";
+        return "Sent";
       case 4:
-        return "April";
-      case 5:
-        return "May";
-      case 6:
-        return "June";
-      case 7:
-        return "July";
-      case 8:
-        return "August";
-      case 9:
-        return "September";
-      case 10:
-        return "October";
-      case 11:
-        return "November";
-      case 12:
-        return "December";
-
+        return "Order confirmed";
+      case -1:
+        return "Cancelled";
       default:
-        return "Unknown";
+        return "Unknown Status";
+    }
+  };
+
+  const getStatusColor = (status: number) => {
+    switch (status) {
+      case 0:
+        return "bg-yellow-500"; // Waiting for payment
+      case 1:
+        return "bg-orange-500"; // Waiting for payment confirmation
+      case 2:
+        return "bg-green-500"; // Processed
+      case 3:
+        return "bg-blue-500"; // Sent
+      case 4:
+        return "bg-teal-500"; // Order confirmed
+      case -1:
+        return "bg-red-500"; // Canceled
+      default:
+        return "bg-gray-500"; // Unknown Status
     }
   };
 
@@ -120,7 +139,7 @@ export default function OrdersReportsTable() {
       cell: ({ row }) => <div className="capitalize">{row.getValue("id")}</div>,
     },
     {
-      accessorKey: "month",
+      accessorKey: "status",
       header: ({ column }) => {
         return (
           <Button
@@ -128,18 +147,18 @@ export default function OrdersReportsTable() {
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
             className="px-0"
           >
-            Month
+            Status
             <ArrowUpDown className="ml-2 h-4 w-4" />
           </Button>
         );
       },
       cell: ({ row }) => (
         <div
-          className={`rounded-lg py-1 px-2 max-w-fit ${getStatusMonth(
-            row.getValue("month")
+          className={`rounded-lg py-1 px-2 max-w-fit ${getStatusColor(
+            row.getValue("status")
           )}`}
         >
-          {getStatusMonth(row.getValue("month"))}
+          {getStatusString(row.getValue("status"))}
         </div>
       ),
     },
@@ -152,7 +171,7 @@ export default function OrdersReportsTable() {
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
             className="px-0"
           >
-            Sales Number
+            Order Price
             <ArrowUpDown className="ml-2 h-4 w-4" />
           </Button>
         );
@@ -160,7 +179,23 @@ export default function OrdersReportsTable() {
       cell: ({ row }) => <div>{row.getValue("order_price")}</div>,
     },
     {
-      accessorKey: "name",
+      accessorKey: "total_price",
+      header: ({ column }) => {
+        return (
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+            className="px-0"
+          >
+            Total Price
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </Button>
+        );
+      },
+      cell: ({ row }) => <div>{row.getValue("total_price")}</div>,
+    },
+    {
+      accessorKey: "pharmacy_name",
       header: ({ column }) => {
         return (
           <Button
@@ -173,10 +208,11 @@ export default function OrdersReportsTable() {
           </Button>
         );
       },
-      cell: ({ row }) => <div>{row.getValue("name")}</div>,
+      cell: ({ row }) => <div>{row.getValue("pharmacy_name")}</div>,
     },
+
     {
-      accessorKey: "phone",
+      accessorKey: "image",
       header: ({ column }) => {
         return (
           <Button
@@ -184,19 +220,40 @@ export default function OrdersReportsTable() {
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
             className="px-0"
           >
-            Pharmacy Phone
+            Payment Proof
             <ArrowUpDown className="ml-2 h-4 w-4" />
           </Button>
         );
       },
-      cell: ({ row }) => <div>{row.getValue("phone")}</div>,
+      cell: ({ row }) => {
+        const image = row.getValue("image");
+        return (
+          <div className="flex gap-5">
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button variant="outline">Open popover</Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-80">
+                <div className="grid gap-4">
+                  <Image
+                    src={`${image}`}
+                    width={30}
+                    height={30}
+                    alt="Payment Proof"
+                  />
+                </div>
+              </PopoverContent>
+            </Popover>
+          </div>
+        );
+      },
     },
     {
       id: "actions",
       header: "Actions",
       enableHiding: false,
       cell: ({ row }) => {
-        const pharmacy_number = row.getValue("phone");
+        const pharmacy_number = row.getValue("pharmacy_phone");
         console.log(pharmacy_number);
         return (
           <div className="flex gap-5">
@@ -232,9 +289,11 @@ export default function OrdersReportsTable() {
 
   return (
     <div className="flex">
-      <div className="w-full mt-5">
+      <Sidebar menus={menus} />
+      <div className="w-full mx-10 mt-5">
+        <h1 className="text-black text-3xl mt-2 font-bold">Manage Orders</h1>
         <div className="flex items-center justify-between py-4">
-          <SearchBar table={table} placeholder="by pharmacy" searchby="name" />
+          <SearchBar table={table} placeholder="orders" searchby="name" />
           <div className="flex gap-3">
             <ColumnDropdown table={table} />
           </div>

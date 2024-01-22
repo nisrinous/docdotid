@@ -11,6 +11,11 @@ export type ProductsResponse = {
   product_category_id: number;
   category_name: string;
   manufacturer_name: string;
+  category: string;
+  is_active: boolean;
+  price: string;
+  product_id: number;
+  stock: number;
 };
 
 export type ProductCategoriesResponse = {
@@ -57,6 +62,7 @@ export type PharmacyResponse = {
   is_active: boolean;
   pharmacist_id: number;
 };
+
 export type UserDetailResponse = {
   name: string;
   phone: string;
@@ -65,6 +71,7 @@ export type UserDetailResponse = {
   weight: string;
   height: string;
   image: string;
+  id: number;
 };
 
 export type OrdersResponse = {
