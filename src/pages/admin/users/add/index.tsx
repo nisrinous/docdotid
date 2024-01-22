@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { apiBaseUrl } from "@/config";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
+import toast from "react-hot-toast";
 
 const AddProduct = () => {
   const { token } = useSelector((state: RootState) => state.user);
@@ -30,7 +31,7 @@ const AddProduct = () => {
 
     try {
       const response = await axios.post(
-        `${apiBaseUrl}/auth/pharmacist`,
+        `${apiBaseUrl}/pharmacists/add-user`,
         formData,
         {
           headers: {
@@ -39,8 +40,10 @@ const AddProduct = () => {
           },
         }
       );
+      toast("Admin pharmacy added successfully.");
       console.log("Response:", response.data);
     } catch (error) {
+      toast("Failed to add admin pharmacy.");
       console.error("Error submitting form:", error);
     }
   };

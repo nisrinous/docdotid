@@ -85,7 +85,6 @@ const LoginForm = () => {
           dispatch(setUserId(userId));
           dispatch(setPersonalId(personalId));
           dispatch(setRoleId(roleId));
-          console.log(roleId);
         } else {
           throw new Error("Invalid token format or missing user_id/role");
         }

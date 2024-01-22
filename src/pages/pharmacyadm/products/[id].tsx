@@ -22,6 +22,18 @@ import useSWR from "swr";
 import router from "next/router";
 import axios from "axios";
 import { apiBaseUrl } from "@/config";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import toast from "react-hot-toast";
 
 const Product = () => {
   const { token } = useSelector((state: RootState) => state.user);
@@ -38,60 +50,6 @@ const Product = () => {
     {}
   );
 
-  const AddModal = ({
-    isOpen,
-    onClose,
-    onConfirm,
-  }: {
-    isOpen: boolean;
-    onClose: () => void;
-    onConfirm: () => void;
-  }) => (
-    <div className={`modal ${isOpen ? "block" : "hidden"}`}>
-      <div className="modal-overlay fixed w-full h-full bg-gray-900 opacity-50 top-0 left-0"></div>
-      <div className="modal-container fixed bg-white rounded shadow-lg top-center p-4 top-[300px] left-[60px] sm:top-80 sm:left-[800px]">
-        <p>Choose Product to Add</p>
-        <label htmlFor="priceInput" className="mr-2">
-          Price:
-        </label>
-        <input
-          type="number"
-          id="priceInput"
-          value={price}
-          onChange={(e) => setPrice(parseFloat(e.target.value))}
-          placeholder="Enter price"
-          className="border rounded p-1"
-        />
-
-        <div className="mt-[200px]">
-          <label htmlFor="productDropdown" className="mr-2">
-            Select a Product:
-          </label>
-          <select
-            id="productDropdown"
-            onChange={(e) => setSelectedProduct(e.target.value)}
-            value={selectedProduct || ""}
-          >
-            <option value="" disabled>
-              Choose a product
-            </option>
-            {productsDataAdd.map((product) => (
-              <option key={product.id} value={product.id}>
-                {product.name}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div className="flex justify-end mt-4">
-          <Button onClick={onClose} className="mr-2">
-            Cancel
-          </Button>
-          <Button onClick={onConfirm}>Confirm</Button>
-        </div>
-      </div>
-    </div>
-  );
-
   const fetchProductsAdd = async () => {
     try {
       const data = await getProducts(token);
@@ -101,7 +59,7 @@ const Product = () => {
     }
   };
 
-  useSWR(["siofj fdasuh"], fetchProductsAdd);
+  useSWR(["product"], fetchProductsAdd);
 
   const fetchData = async () => {
     try {
@@ -114,14 +72,6 @@ const Product = () => {
   };
 
   useSWR(["/products"], fetchData);
-
-  const handleAdd = () => {
-    setIsAddModalVisible(true);
-  };
-
-  const handleCloseAddModal = () => {
-    setIsAddModalVisible(false);
-  };
 
   const handleConfirmAdd = async () => {
     try {
@@ -141,9 +91,10 @@ const Product = () => {
           },
         }
       );
-      console.log("Product added successfully:", response.data);
-      setIsAddModalVisible(false);
+      fetchData();
+      toast("Product added successfully");
     } catch (error) {
+      toast("Product failed to add");
       console.error("Error adding product:", error);
     }
   };
@@ -184,12 +135,48 @@ const Product = () => {
         <h1 className="text-black text-3xl mt-2 font-bold mb-5">
           Manage Products
         </h1>
-        <Button onClick={() => handleAdd()}>Add</Button>
-        <AddModal
-          isOpen={isAddModalVisible}
-          onClose={handleCloseAddModal}
-          onConfirm={handleConfirmAdd}
-        />
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button>Add</Button>
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-[425px]">
+            <p>Choose Product to Add</p>
+            <label htmlFor="priceInput" className="mr-2">
+              Price:
+            </label>
+            <input
+              type="number"
+              id="priceInput"
+              value={price}
+              onChange={(e) => setPrice(parseFloat(e.target.value))}
+              placeholder="Enter price"
+              className="border rounded p-1"
+            />
+
+            <div>
+              <label htmlFor="productDropdown" className="mr-2">
+                Select a Product:
+              </label>
+              <select
+                id="productDropdown"
+                onChange={(e) => setSelectedProduct(e.target.value)}
+                value={selectedProduct || ""}
+              >
+                <option value="" disabled>
+                  Choose a product
+                </option>
+                {productsDataAdd.map((product) => (
+                  <option key={product.id} value={product.id}>
+                    {product.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="flex justify-end mt-4">
+              <Button onClick={handleConfirmAdd}>Confirm</Button>
+            </div>
+          </DialogContent>
+        </Dialog>
         <Table>
           <TableHeader>
             <TableRow>
@@ -208,38 +195,42 @@ const Product = () => {
                 <TableCell>{item.id}</TableCell>
                 <TableCell>{item.category}</TableCell>
                 <TableCell>{item.name}</TableCell>
-                <TableCell>{item.stock}</TableCell>
+                <TableCell>parseFloat{item.stock}</TableCell>
                 <TableCell>
-                  <input
-                    type="number"
-                    value={editedPrices[item.id] || item.price}
-                    onChange={(e) => {
-                      setEditedPrices((prevPrices) => ({
-                        ...prevPrices,
-                        [item.id]: parseFloat(e.target.value),
-                      }));
-                    }}
-                    placeholder="Enter price"
-                    className="border rounded p-1"
-                  />
+                  {
+                    <input
+                      type="number"
+                      value={editedPrices[item.id] || item.price}
+                      onChange={(e) => {
+                        setEditedPrices((prevPrices) => ({
+                          ...prevPrices,
+                          [item.id]: parseFloat(e.target.value),
+                        }));
+                      }}
+                      placeholder="Enter price"
+                      className="border rounded p-1"
+                    />
+                  }
                 </TableCell>
                 <TableCell>
-                  <select
-                    value={
-                      editedIsActive[item.id] !== undefined
-                        ? editedIsActive[item.id].toString()
-                        : item.is_active.toString()
-                    }
-                    onChange={(e) => {
-                      setEditedIsActive((prevIsActive) => ({
-                        ...prevIsActive,
-                        [item.id]: e.target.value === "true",
-                      }));
-                    }}
-                  >
-                    <option value="true">Active</option>
-                    <option value="false">Not Active</option>
-                  </select>
+                  {
+                    <select
+                      value={
+                        editedIsActive[item.id] !== undefined
+                          ? editedIsActive[item.id].toString()
+                          : item.is_active.toString()
+                      }
+                      onChange={(e) => {
+                        setEditedIsActive((prevIsActive) => ({
+                          ...prevIsActive,
+                          [item.id]: e.target.value === "true",
+                        }));
+                      }}
+                    >
+                      <option value="true">Active</option>
+                      <option value="false">Not Active</option>
+                    </select>
+                  }
                 </TableCell>
                 <TableCell>
                   <Button
@@ -248,6 +239,49 @@ const Product = () => {
                   >
                     Save
                   </Button>
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <Button>Add</Button>
+                    </DialogTrigger>
+                    <DialogContent className="sm:max-w-[425px]">
+                      <div>
+                        <input
+                          type="number"
+                          value={editedPrices[item.id] || item.price}
+                          onChange={(e) => {
+                            setEditedPrices((prevPrices) => ({
+                              ...prevPrices,
+                              [item.id]: parseFloat(e.target.value),
+                            }));
+                          }}
+                          placeholder="Enter price"
+                          className="border rounded p-1"
+                        />
+                        <select
+                          value={
+                            editedIsActive[item.id] !== undefined
+                              ? editedIsActive[item.id].toString()
+                              : item.is_active.toString()
+                          }
+                          onChange={(e) => {
+                            setEditedIsActive((prevIsActive) => ({
+                              ...prevIsActive,
+                              [item.id]: e.target.value === "true",
+                            }));
+                          }}
+                        >
+                          <option value="true">Active</option>
+                          <option value="false">Not Active</option>
+                        </select>
+                        <Button
+                          onClick={() => handleSaveEdit(item.id)}
+                          className="mr-3"
+                        >
+                          Save
+                        </Button>
+                      </div>
+                    </DialogContent>
+                  </Dialog>
                 </TableCell>
               </TableRow>
             ))}

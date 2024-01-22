@@ -11,6 +11,8 @@ import Sidebar from "@/components/aside-bar";
 import { menus } from "@/utils/menus";
 import { Input } from "@/components/ui/input";
 import { apiBaseUrl } from "@/config";
+import toast from "react-hot-toast";
+import router from "next/router";
 
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
@@ -114,7 +116,10 @@ const IndexPage: React.FC = () => {
           "Content-Type": "application/json",
         },
       });
+      toast("Pharmacy added successfully");
+      router.push("/pharmacyadm/pharmacy");
     } catch (error) {
+      toast("Failed add pharmacy");
       console.error("Error saving data:", error);
     }
   };
