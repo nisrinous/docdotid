@@ -59,21 +59,21 @@ export function middleware(request: NextRequest) {
   }
 
   if (
-    request.nextUrl.pathname.startsWith("/admin") &&
+    request.nextUrl.pathname.startsWith("/pharmacyadm") &&
     MyBxyWYaeX === "A@O&XB)e7#n"
   ) {
     return NextResponse.redirect(request.nextUrl.origin + "/admin");
   }
 
   if (
-    request.nextUrl.pathname.startsWith("/admin") &&
+    request.nextUrl.pathname.startsWith("/pharmacyadm") &&
     MyBxyWYaeX === "doctor"
   ) {
     return NextResponse.redirect(request.nextUrl.origin + "/doctor/home");
   }
 
   if (
-    request.nextUrl.pathname.startsWith("/admin") &&
+    request.nextUrl.pathname.startsWith("/pharmacyadm") &&
     MyBxyWYaeX === "UwJw+O5Wn5n"
   ) {
     return NextResponse.redirect(request.nextUrl.origin + "/");
