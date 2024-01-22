@@ -8,11 +8,19 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Label } from "../ui/label";
-import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { useState } from "react";
 import { mutate } from "swr";
 import { updateOrderStatus } from "@/lib/fetcher/orders";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export function EditStatusModal({
   token,
@@ -24,22 +32,21 @@ export function EditStatusModal({
   id: unknown;
 }) {
   const [open, setOpen] = useState(false);
-  const [newCategory, setNewCategory] = useState("");
+  const [newStatus, setNewStatus] = useState("");
   const [inputError, setInputError] = useState("");
 
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const inputValue = event.target.value;
-    setNewCategory(inputValue);
+  const handleSelectChangeCategory = (value: any) => {
+    setNewStatus(value);
+    handleConfirm();
   };
-  const handleEdit = async () => {
+
+  const handleConfirm = async () => {
     try {
-      if (!newCategory.trim()) {
-        setInputError("Input should not be empty.");
-        return;
+      if (newStatus === "2") {
+        await updateOrderStatus(token, id);
+        setOpen(false);
       }
-      await updateOrderStatus(token, id);
-      setOpen(false);
-      mutate(["/categories", token]);
+      //   mutate(["/categories", token]);
     } catch (error) {
       console.error("" + error);
     }
@@ -49,47 +56,54 @@ export function EditStatusModal({
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button variant="outline" className="bg-sky-600 hover:bg-sky-500">
-          Edit
+          Edit Status
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Add New Product Category</DialogTitle>
+          <DialogTitle>Edit Status of Order</DialogTitle>
           <DialogDescription>
-            Input details for the new product category here. Click save when
-            done.
+            Update Order Status using the dropdown below.
           </DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="name" className="text-right">
-              Category Name
+              Status
             </Label>
 
-            <Input
-              id="name"
-              // value={newCategory}
-              defaultValue={name}
-              onChange={handleInputChange}
-              className={`col-span-3 focus rounded-md p-2 ${
-                inputError ? "focus:bg-red-200" : ""
-              }`}
-            />
-            {inputError && (
+            <Select onValueChange={handleSelectChangeCategory}>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Update Status" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectItem value="0">Waiting For Payment</SelectItem>
+                  <SelectItem value="1">
+                    Waiting For Payment Confirmation
+                  </SelectItem>
+                  <SelectItem value="2">Processed</SelectItem>
+                  <SelectItem value="3">Sent</SelectItem>
+                  <SelectItem value="4">Order Confirmed</SelectItem>
+                  <SelectItem value="-1">Cancel Order</SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+            {/* {inputError && (
               <p className="col-span-4 text-red-500 text-s mt-1">
                 {inputError}
               </p>
-            )}
+            )} */}
           </div>
         </div>
         <DialogFooter>
-          <Button
+          {/* <Button
             type="submit"
             onClick={handleEdit}
             disabled={inputError !== ""}
           >
             Save changes
-          </Button>
+          </Button> */}
         </DialogFooter>
       </DialogContent>
     </Dialog>

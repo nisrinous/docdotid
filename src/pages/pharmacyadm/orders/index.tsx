@@ -239,9 +239,11 @@ export default function Orders() {
       header: "Actions",
       enableHiding: false,
       cell: ({ row }) => {
+        const status: any = row.getValue("status");
+        const id: any = row.getValue("id");
         return (
           <div className="flex gap-5">
-            <EditStatusModal token={token} />
+            <EditStatusModal status={status} id={id} token={token} />
           </div>
         );
       },
