@@ -15,10 +15,10 @@ import {
   FormMessage,
   UncontrolledFormMessage,
 } from "@/components/ui/form";
-import { createUser } from "@/lib/fetcher/auth";
 import { PasswordInput } from "@/components/input/password";
 import { FileDialog } from "@/components/input/file-dialog";
 import { FileWithPreview } from "@/types";
+import { createDoctor } from "@/lib/fetcher/auth-doctor";
 
 type Inputs = z.infer<typeof createDoctorSchema>;
 
@@ -35,14 +35,14 @@ export function PasswordFormDoctor() {
     defaultValues: {
       password: "",
       confirmpassword: "",
-      certificate: "",
+      //   certificate: "",
     },
   });
 
   async function onSubmit(formData: Inputs) {
     try {
       setIsSending(true);
-      await createUser(formData.password, email, code);
+      await createDoctor(formData.password, email, code);
     } catch (error) {
       console.error("Error creating account:", error);
     }
@@ -80,7 +80,7 @@ export function PasswordFormDoctor() {
             </FormItem>
           )}
         />
-        <FormItem className="flex w-full flex-col gap-1.5 mt-5">
+        {/* <FormItem className="flex w-full flex-col gap-1.5 mt-5">
           <FormLabel>Certificate</FormLabel>
           {files?.length ? (
             <div className="flex items-center gap-2">
@@ -111,7 +111,7 @@ export function PasswordFormDoctor() {
           <UncontrolledFormMessage
             message={form.formState.errors.certificate?.message}
           />
-        </FormItem>
+        </FormItem> */}
 
         <Button type="submit" disabled={isSending} className="my-5">
           Create account

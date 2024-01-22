@@ -5,7 +5,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { PasswordForm } from "@/components/form/password-form";
+import { PasswordFormDoctor } from "@/components/form/password-form-doctor";
 
 export default function VerifyEmailPage() {
   return (
@@ -21,7 +21,7 @@ export default function VerifyEmailPage() {
               </CardDescription>
             </CardHeader>
             <CardContent className="grid gap-4">
-              <PasswordForm />
+              <PasswordFormDoctor />
             </CardContent>
           </Card>
         </div>

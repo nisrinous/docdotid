@@ -18,3 +18,19 @@ export function formatBytes(
     sizeType === "accurate" ? accurateSizes[i] ?? "Bytest" : sizes[i] ?? "Bytes"
   }`;
 }
+
+export function formatPrice(
+  price: number | undefined,
+  options: {
+    currency?: "USD" | "EUR" | "GBP" | "BDT";
+    notation?: Intl.NumberFormatOptions["notation"];
+  } = {}
+) {
+  const { currency = "USD", notation = "compact" } = options;
+
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency,
+    notation,
+  }).format(Number(price));
+}
