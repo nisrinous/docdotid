@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Sidebar from "@/components/aside-bar";
 import { menus } from "@/utils/menus";
+import toast from "react-hot-toast";
 import {
   Table,
   TableBody,
@@ -51,10 +52,11 @@ const Product = () => {
   const [productIdToDelete, setProductIdToDelete] = useState<number | null>(
     null
   );
+  const [currentPage, setCurrentPage] = useState(1);
 
-  const fetchData = async () => {
+  const fetchData = async (page: number = 1) => {
     try {
-      const data = await getProducts(token);
+      const data = await getProducts(token, "", page);
       setProductsData(data.data);
     } catch (error) {
       console.error("" + error);
@@ -77,6 +79,7 @@ const Product = () => {
         setShowDeleteModal(false);
         setProductIdToDelete(null);
         fetchData();
+        toast("Product deleted successfully.");
       } catch (error) {
         console.error("" + error);
       }
@@ -87,7 +90,28 @@ const Product = () => {
     setShowDeleteModal(false);
     setProductIdToDelete(null);
   };
-  useSWR(["/products"], fetchData);
+
+  useSWR(["/products"], () => fetchData());
+
+  const handleNext = () => {
+    const nextPage = currentPage + 1;
+    if (hasDataForPage(nextPage)) {
+      fetchData(nextPage);
+      setCurrentPage(nextPage);
+    } else {
+      console.log("No data available for the next page. Page change canceled.");
+    }
+  };
+
+  const handlePrevious = () => {
+    const prevPage = currentPage - 1 >= 1 ? currentPage - 1 : 1;
+    fetchData(prevPage);
+    setCurrentPage(prevPage);
+  };
+
+  const hasDataForPage = (page: number): boolean => {
+    return productsData.length > 0;
+  };
 
   const handleEdit = (productId: number) => {
     router.push(`/admin/products/${productId}`);
@@ -100,9 +124,23 @@ const Product = () => {
         <h1 className="text-black text-3xl mt-2 font-bold mb-5">
           Manage Products
         </h1>
-        <Button onClick={() => handleAdd()} className="mb-2">
-          Add Product
-        </Button>
+        <div className="flex flex-row justify-between">
+          <div>
+            <Button onClick={() => handleAdd()} className="mb-2">
+              Add Product
+            </Button>
+          </div>
+          <div>
+            <Button
+              onClick={handlePrevious}
+              disabled={currentPage <= 1}
+              className="mr-2"
+            >
+              Previous
+            </Button>
+            <Button onClick={handleNext}>Next</Button>
+          </div>
+        </div>
         <Table>
           <TableHeader>
             <TableRow>
@@ -116,7 +154,7 @@ const Product = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {productsData.map((item) => (
+            {productsData?.map((item) => (
               <TableRow key={item.id}>
                 <TableCell>{item.id}</TableCell>
                 <TableCell>{item.category_name}</TableCell>
@@ -134,7 +172,7 @@ const Product = () => {
             ))}
           </TableBody>
         </Table>
-        {productsData.length === 0 && (
+        {productsData?.length === 0 && (
           <div className="w-full flex justify-center mt-10">
             <p>No data available.</p>
           </div>

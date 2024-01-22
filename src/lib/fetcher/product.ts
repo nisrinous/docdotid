@@ -2,12 +2,20 @@ import { apiBaseUrl } from "@/config";
 
 const API_ENDPOINT = apiBaseUrl;
 
-export async function getProducts(token: string, categoryId?: string) {
+export async function getProducts(
+  token: string,
+  categoryId?: string,
+  page?: number
+) {
   try {
-    let url = `${API_ENDPOINT}/products`;
+    let url = `${API_ENDPOINT}/products?limit=8&`;
 
     if (categoryId) {
       url += `?category_id=${categoryId}`;
+    }
+
+    if (page) {
+      url += `page=${page}`;
     }
 
     const response = await fetch(url, {

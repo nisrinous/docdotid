@@ -10,6 +10,8 @@ import { Button } from "@/components/ui/button";
 import { apiBaseUrl } from "@/config";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
+import toast from "react-hot-toast";
+import router from "next/router";
 
 interface DropdownOption {
   id: number;
@@ -187,6 +189,8 @@ const AddProduct = () => {
         },
       });
       console.log("Response:", response.data);
+      toast("Product added successfully.");
+      router.push("/admin/products/");
     } catch (error) {
       console.error("Error submitting form:", error);
     }

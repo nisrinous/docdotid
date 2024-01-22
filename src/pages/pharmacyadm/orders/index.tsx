@@ -31,7 +31,7 @@ import { useState } from "react";
 import useSWR from "swr";
 import SearchBar from "@/components/search-bar";
 import ColumnDropdown from "@/components/columns-dropdown";
-import { getOrdersList } from "@/lib/fetcher/orders";
+import { getOrdersListPharmacy } from "@/lib/fetcher/orders";
 import { OrdersResponse } from "@/types";
 import {
   Popover,
@@ -46,7 +46,7 @@ export default function Orders() {
 
   const fetchData = async () => {
     try {
-      const data = await getOrdersList(token);
+      const data = await getOrdersListPharmacy(token);
       console.log("ini data", data);
       const formattedData = data.data.map(
         ({ pharmacy, ...rest }: OrdersResponse) => ({
