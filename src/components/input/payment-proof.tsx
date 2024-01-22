@@ -9,10 +9,17 @@ import {
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import Link from "next/link";
+import { uploadProof } from "@/lib/fetcher/payment-proof";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
+import { useRouter } from "next/router";
 
 const UploadPaymentProof = () => {
+  const { token } = useSelector((state: RootState) => state.user);
   const [img, setImg] = useState<string>("");
   const [isUploading, setIsUploading] = useState<boolean>(true);
+  const router = useRouter();
+  const { id } = router.query;
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -47,7 +54,14 @@ const UploadPaymentProof = () => {
     setIsUploading(false);
   };
 
-  const uploadTodb = () => {};
+  async function uploadTodb() {
+    try {
+      await uploadProof(token, id as string, img);
+    } catch (error) {
+      console.error("Error uploading proof", error);
+    }
+  }
+
   return (
     <div className="flex flex-col gap-5">
       <Card>
@@ -62,7 +76,7 @@ const UploadPaymentProof = () => {
       </Card>
       <Link href="/user/orders">
         <Button
-          onClick={uploadTodb}
+          onClick={() => uploadTodb()}
           disabled={isUploading}
           className="items-end w-full"
         >
