@@ -48,8 +48,8 @@ const DoctorCategories = () => {
             </div>
           </div>
         ) : (
-          <ScrollArea>
-            <div className="flex flex-row gap-5">
+          <ScrollArea className="">
+            <div className="flex flex-row gap-5 pb-5">
               {doctorCategoriesData &&
                 doctorCategoriesData.map((item, index) => (
                   <Card
@@ -61,17 +61,23 @@ const DoctorCategories = () => {
                         src="https://res-console.cloudinary.com/minevf/media_explorer_thumbnails/6cb8f67a33376e09150a0ff78061df2e/detailed"
                         className="w-16 lg:w-20"
                       ></img>
-                      <p className="my-1 text-center leading-none bg-sky-100 p-1 items-center w-full">
-                        {item.name}
-                      </p>
+                      <div className="bg-sky-100 w-full my-1 h-10 flex items-center justify-center">
+                        <p className="text-center leading-none p-1">
+                          {item.name}
+                        </p>
+                      </div>
                     </CardContent>
-                    <CardFooter className="flex flex-col items-center justify-center p-0">
-                      <p className="text-zinc-400 leading-none text-sm text-center mt-2">
-                        {item.description}
-                      </p>
-                      <p className="text-zinc-600 leading-none text-sm text-center mt-1">
-                        {item.symptoms}{" "}
-                      </p>
+                    <CardFooter className="flex flex-col items-center justify-center p-0 ">
+                      <div className="w-full h-10 flex items-center justify-center">
+                        <p className="text-zinc-400 leading-none text-sm text-center">
+                          {item.description}
+                        </p>
+                      </div>
+                      <div className="w-full h-10 flex items-center justify-center">
+                        <p className="text-zinc-600 leading-none text-sm text-center">
+                          {item.symptoms}
+                        </p>
+                      </div>
                     </CardFooter>
                   </Card>
                 ))}
