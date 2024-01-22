@@ -58,7 +58,7 @@ const Product = () => {
           type="number"
           id="priceInput"
           value={price}
-          onChange={(e) => setPrice(e.target.value)}
+          onChange={(e) => setPrice(parseFloat(e.target.value))}
           placeholder="Enter price"
           className="border rounded p-1"
         />
@@ -227,19 +227,18 @@ const Product = () => {
                   <select
                     value={
                       editedIsActive[item.id] !== undefined
-                        ? editedIsActive[item.id]
-                        : item.is_active
+                        ? editedIsActive[item.id].toString()
+                        : item.is_active.toString()
                     }
                     onChange={(e) => {
-                      // Update the edited is_active state
                       setEditedIsActive((prevIsActive) => ({
                         ...prevIsActive,
                         [item.id]: e.target.value === "true",
                       }));
                     }}
                   >
-                    <option value={true}>Active</option>
-                    <option value={false}>Not Active</option>
+                    <option value="true">Active</option>
+                    <option value="false">Not Active</option>
                   </select>
                 </TableCell>
                 <TableCell>
