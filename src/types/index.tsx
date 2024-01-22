@@ -113,3 +113,32 @@ export type ProductListResponse = {
 export type FileWithPreview = FileWithPath & {
   preview: string;
 };
+
+export type DoctorCategoriesResponse = {
+  id: number;
+  name: string;
+  description: string;
+  symptoms: string;
+};
+
+export type MedicineOrderResponse = {
+  id: number;
+  quantity: number;
+  price: string;
+  pharmacy_name: string;
+  showed_product: {
+    id: number;
+    name: string;
+    unit_in_pack: string;
+    selling_unit: string;
+    image: string;
+    weight: string;
+    max_price: null;
+    min_price: null;
+    product_category_id: null;
+    category_name: null;
+    manufacturer_name: string;
+    total_stock: number;
+  };
+  created_at: string;
+};

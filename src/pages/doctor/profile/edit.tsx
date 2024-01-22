@@ -20,13 +20,14 @@ import { putDoctorDetail } from "@/lib/fetcher/doctor";
 
 type Inputs = z.infer<typeof editProfileDoctorSchema>;
 
-const EditProfileDoctor = ({ data }: { data: Partial<DoctorResponse> }) => {
+const EditProfileDoctor = ({ data }: { data: DoctorResponse }) => {
   const { token } = useSelector((state: RootState) => state.user);
   const form = useForm({
     resolver: zodResolver(editProfileDoctorSchema),
     defaultValues: {
+      ...data,
       name: data?.user_name || "",
-      image: data?.image || "",
+      specialist_id: data?.specialist_id || 1,
       years_of_exp: data?.years_of_exp || "",
     },
   });
@@ -102,27 +103,40 @@ const EditProfileDoctor = ({ data }: { data: Partial<DoctorResponse> }) => {
               )}
             />
 
-            <FormField
-              control={form.control}
-              name="image"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Image</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="text"
-                      placeholder="Enter image link"
-                      value={form.getValues("image")}
-                      onChange={(e) => {
-                        form.setValue("image", e.target.value);
-                        setFormChanged(true);
+            <div className="flex flex-col items-start gap-6 sm:flex-row">
+              <FormField
+                control={form.control}
+                name="specialist_id"
+                render={({ field }) => (
+                  <FormItem className="w-full">
+                    <FormLabel>Gender</FormLabel>
+                    <Select
+                      value={field.value}
+                      onValueChange={(value: typeof field.value) => {
+                        field.onChange(value);
                       }}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+                    >
+                      <FormControl>
+                        <SelectTrigger className="capitalize">
+                          <SelectValue placeholder="Select your specialization" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectGroup>
+                          {Array.isArray(categoryList) &&
+                            categoryList.map((category) => (
+                              <SelectItem key={category.id} value={category.id}>
+                                {category.name}
+                              </SelectItem>
+                            ))}
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
             <Button type="submit" className="my-5" disabled={!formChanged}>
               Update Profile
               <span className="sr-only">Submit</span>
