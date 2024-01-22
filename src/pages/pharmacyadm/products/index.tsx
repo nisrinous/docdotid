@@ -85,7 +85,7 @@ const Product = () => {
             ))}
           </TableBody>
         </Table>
-        {productsData.length === 0 && (
+        {productsData?.length === 0 && (
           <div className="w-full flex justify-center mt-10">
             <p>No pharmacy available.</p>
           </div>

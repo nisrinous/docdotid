@@ -45,22 +45,52 @@ export async function putUserDetail(
   }
 }
 
-export async function getUsers(token: string, roleId: number) {
+// export async function getUsers(token: string, roleId: number, page?: number) {
+//   try {
+//     let url = `${API_ENDPOINT}/users?roleID=${roleId}&limit=8`;
+
+//     if (roleId == 0) {
+//       roleId = 1;
+//     }
+
+//     if (page) {
+//       url += `page=${page}`;
+//     }
+
+//     const response = await fetch(`${url}`, {
+//       method: "GET",
+//       headers: {
+//         authorization: `bearer ${token}`,
+//         "Content-Type": "application/json",
+//       },
+//     });
+//     const data = await response.json();
+//     return data;
+//   } catch (error) {
+//     console.error("" + error);
+//   }
+// }
+
+export async function getUsers(token: string, roleId?: number, page?: number) {
   try {
-    if (roleId == 0) {
-      roleId = 1;
+    let url = `${API_ENDPOINT}/users`;
+
+    if (roleId) {
+      url += `?roleID=${roleId}`;
     }
 
-    const response = await fetch(
-      `${API_ENDPOINT}/users?RoleID=${roleId}&Limit=10&Page=1`,
-      {
-        method: "GET",
-        headers: {
-          authorization: `bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    if (page) {
+      url += `&page=${page}`;
+    }
+
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        authorization: `bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+
     const data = await response.json();
     return data;
   } catch (error) {

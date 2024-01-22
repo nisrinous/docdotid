@@ -232,6 +232,7 @@ const AddProduct = () => {
       toast("Product edit successfully.");
       router.push("/admin/products/");
     } catch (error) {
+      toast("Failed to edit product.");
       console.error("Error submitting form:", error);
     }
   };
@@ -239,9 +240,9 @@ const AddProduct = () => {
   return (
     <div className="flex">
       <Sidebar menus={menus} />
-      <div className="container flex justify-start sm:mt-5 p-3">
+      <div className="w-full mx-10 mt-5">
         <div className="">
-          <h1 className="text-black text-3xl mt-2 font-bold mb-5 sm:mb-[50px]">
+          <h1 className="text-black text-3xl mt-2 font-bold mb-5">
             Edit Product
           </h1>
           <form onSubmit={handleSubmit}>

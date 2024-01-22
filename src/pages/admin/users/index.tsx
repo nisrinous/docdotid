@@ -12,11 +12,10 @@ import {
 import { Button } from "@/components/ui/button";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
-import { deleteProduct, getProducts } from "@/lib/fetcher/product";
-import { ProductsResponse, UserDetailResponse } from "@/types";
+import { deleteProduct, getUsers } from "@/lib/fetcher/user"; // Update import
+import { UserDetailResponse } from "@/types";
 import useSWR from "swr";
 import router from "next/router";
-import { getUsers } from "@/lib/fetcher/user";
 
 interface DeleteConfirmationModalProps {
   isOpen: boolean;
@@ -33,7 +32,7 @@ const DeleteConfirmationModal: React.FC<DeleteConfirmationModalProps> = ({
     <div className={`modal ${isOpen ? "block" : "hidden"}`}>
       <div className="modal-overlay fixed w-full h-full bg-gray-900 opacity-50 top-0 left-0"></div>
       <div className="modal-container fixed bg-white rounded shadow-lg top-center p-4 top-[300px] left-[60px] sm:top-80 sm:left-[800px]">
-        <p>Are you sure you want to delete this product?</p>
+        <p>Are you sure you want to delete this user?</p>
         <div className="flex justify-end mt-4">
           <Button onClick={onClose} className="mr-2">
             Cancel
@@ -47,49 +46,42 @@ const DeleteConfirmationModal: React.FC<DeleteConfirmationModalProps> = ({
 
 const Product = () => {
   const { token } = useSelector((state: RootState) => state.user);
-  const [productsData, setProductsData] = useState<UserDetailResponse[]>([]);
+  const [usersData, setUsersData] = useState<UserDetailResponse[]>([]);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [productIdToDelete, setProductIdToDelete] = useState<number | null>(
-    null
-  );
+  const [userIdToDelete, setUserIdToDelete] = useState<number | null>(null);
   const [roleId, setRoleId] = useState(2);
+  const [currentPage, setCurrentPage] = useState(1);
 
-  const fetchData = async () => {
+  const fetchUsers = async (page: number = 1) => {
     try {
-      const data = await getUsers(token, roleId);
-      setProductsData(data.data);
+      const data = await getUsers(token, roleId, page);
+      setUsersData(data.data);
     } catch (error) {
       console.error("" + error);
     }
   };
 
   useEffect(() => {
-    const fetchDataWithRoleId = async () => {
-      try {
-        const data = await getUsers(token, roleId);
-        setProductsData(data.data);
-      } catch (error) {
-        console.error("" + error);
-      }
-    };
-
-    fetchDataWithRoleId();
+    fetchUsers();
   }, [token, roleId]);
 
-  const handleFilterAdminPharmacies = async () => {
+  const handleFilterAdminPharmacies = () => {
     setRoleId(2);
+    fetchUsers();
   };
 
-  const handleFilterDoctors = async () => {
+  const handleFilterDoctors = () => {
     setRoleId(4);
+    fetchUsers();
   };
 
-  const handleFilterUsers = async () => {
+  const handleFilterUsers = () => {
     setRoleId(3);
+    fetchUsers();
   };
 
-  const handleDelete = (productId: number) => {
-    setProductIdToDelete(productId);
+  const handleDelete = (userId: number) => {
+    setUserIdToDelete(userId);
     setShowDeleteModal(true);
   };
 
@@ -98,12 +90,12 @@ const Product = () => {
   };
 
   const confirmDelete = async () => {
-    if (productIdToDelete !== null) {
+    if (userIdToDelete !== null) {
       try {
-        await deleteProduct(token, productIdToDelete.toString());
+        await deleteProduct(token, userIdToDelete.toString());
         setShowDeleteModal(false);
-        setProductIdToDelete(null);
-        fetchData();
+        setUserIdToDelete(null);
+        fetchUsers();
       } catch (error) {
         console.error("" + error);
       }
@@ -112,13 +104,31 @@ const Product = () => {
 
   const closeDeleteModal = () => {
     setShowDeleteModal(false);
-    setProductIdToDelete(null);
+    setUserIdToDelete(null);
   };
 
-  useSWR(["/users"], fetchData);
+  const handleEdit = (userId: number) => {
+    router.push(`/admin/users/${userId}`);
+  };
 
-  const handleEdit = (productId: number) => {
-    router.push(`/admin/products/${productId}`);
+  const handleNext = () => {
+    const nextPage = currentPage + 1;
+    if (hasDataForPage(nextPage)) {
+      fetchUsers(nextPage);
+      setCurrentPage(nextPage);
+    } else {
+      console.log("No data available for the next page. Page change canceled.");
+    }
+  };
+
+  const handlePrevious = () => {
+    const prevPage = currentPage - 1 >= 1 ? currentPage - 1 : 1;
+    fetchUsers(prevPage);
+    setCurrentPage(prevPage);
+  };
+
+  const hasDataForPage = (page: number): boolean => {
+    return usersData.length > 0;
   };
 
   return (
@@ -126,23 +136,29 @@ const Product = () => {
       <Sidebar menus={menus} />
       <div className="w-full mx-10 mt-5">
         <h1 className="text-black text-3xl mt-2 font-bold mb-5">
-          Manage Products
+          Manage Users
         </h1>
-        <Button onClick={() => handleAdd()} className="mb-2">
-          Add Admin Pharmacy
-        </Button>
-        <Button
-          onClick={() => handleFilterAdminPharmacies()}
-          className="mb-2 ml-2"
-        >
-          Admin Pharmacies
-        </Button>
-        <Button onClick={() => handleFilterDoctors()} className="mb-2 ml-2">
-          Doctors
-        </Button>
-        <Button onClick={() => handleFilterUsers()} className="mb-2 ml-2">
-          Users
-        </Button>
+        <div className="flex flex-row justify-between">
+          <div>
+            <Button onClick={() => handleAdd()} className="mb-2">
+              Add Admin Pharmacy
+            </Button>
+          </div>
+          <div>
+            <Button
+              onClick={() => handleFilterAdminPharmacies()}
+              className="mb-2 ml-2"
+            >
+              Admin Pharmacies
+            </Button>
+            <Button onClick={() => handleFilterDoctors()} className="mb-2 ml-2">
+              Doctors
+            </Button>
+            <Button onClick={() => handleFilterUsers()} className="mb-2 ml-2">
+              Users
+            </Button>
+          </div>
+        </div>
         <Table>
           <TableHeader>
             <TableRow>
@@ -153,7 +169,7 @@ const Product = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {productsData.map((item) => (
+            {usersData.map((item) => (
               <TableRow key={item.id}>
                 <TableCell>{item.id}</TableCell>
                 <TableCell>{item.name}</TableCell>
@@ -177,11 +193,21 @@ const Product = () => {
             ))}
           </TableBody>
         </Table>
-        {productsData.length === 0 && (
+        {usersData.length === 0 && (
           <div className="w-full flex justify-center mt-10">
             <p>No data available.</p>
           </div>
         )}
+        <div className="flex justify-between mt-4">
+          <Button
+            onClick={handlePrevious}
+            disabled={currentPage <= 1}
+            className="mr-2"
+          >
+            Previous
+          </Button>
+          <Button onClick={handleNext}>Next</Button>
+        </div>
         <DeleteConfirmationModal
           isOpen={showDeleteModal}
           onClose={closeDeleteModal}
