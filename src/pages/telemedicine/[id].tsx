@@ -1,3 +1,4 @@
+import StartChat from "@/components/start-chat";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { getDoctor } from "@/lib/fetcher/doctor";
@@ -14,6 +15,7 @@ export default function DoctorDetails() {
   const { token } = useSelector((state: RootState) => state.user);
   const { id } = router.query;
   const [doctor, setDoctorData] = useState<DoctorResponse>();
+  const [displayForm, setDisplayForm] = useState<boolean>(false);
 
   const fetchData = async () => {
     try {
@@ -29,6 +31,7 @@ export default function DoctorDetails() {
     error: isError,
     isValidating: isLoading,
   } = useSWR(["/doctors", token], fetchData);
+
   return (
     <>
       {isLoading ? (
@@ -54,31 +57,45 @@ export default function DoctorDetails() {
                 Dr. {doctor?.user_name}
               </h3>
             </div>
-            <div className="flex flex-col gap-1 justify-center items-center my-2">
-              <div className="text-3xl font-bold text-left bg-sky-100 w-full mb-6 p-1">
-                {formatPrice(doctor?.fee, {
-                  currency: "USD",
-                })}
-                <span className="text-sm font-normal text-muted-foreground">
-                  /session
-                </span>
-              </div>
-            </div>
-            <p className="leading-none text-xl text-left">
-              {doctor?.specialist_name}
-            </p>
-            <h5 className="leading-none text-xl mt-6">
-              About {doctor?.specialist_name}:
-            </h5>
-            <p className="text-zinc-500 leading-none text-lg">
-              {doctor?.specialist_description}
-            </p>
-            <p className="text-zinc-500 leading-tight text-base mt-6 mb-20">
-              Years of experience: <br />
-              {doctor?.years_of_exp || "~"} years
-            </p>
+            {!displayForm && (
+              <>
+                <div className="flex flex-col gap-1 justify-center items-center my-3">
+                  <div className="text-3xl font-bold text-left bg-sky-100 w-full mb-6 p-1">
+                    {formatPrice(doctor?.fee, {
+                      currency: "USD",
+                    })}
+                    <span className="text-sm font-normal text-muted-foreground">
+                      /session
+                    </span>
+                  </div>
+                </div>
+                <div>
+                  <p className="leading-none text-xl text-left">
+                    {doctor?.specialist_name}
+                  </p>
+                  <h5 className="leading-none text-xl mt-6">
+                    About {doctor?.specialist_name}:
+                  </h5>
+                  <p className="text-zinc-500 leading-none text-lg">
+                    {doctor?.specialist_description}
+                  </p>
+                  <p className="text-zinc-500 leading-tight text-base mt-6 mb-20">
+                    Years of experience: <br />
+                    {doctor?.years_of_exp || "~"} years
+                  </p>
+                </div>
+              </>
+            )}
+            {displayForm && <StartChat />}
 
-            <Button className="w-full my-10">Continue to chat</Button>
+            {!displayForm ? (
+              <Button
+                className="w-full my-10"
+                onClick={() => setDisplayForm(!displayForm)}
+              >
+                Confirm
+              </Button>
+            ) : null}
           </div>
         </div>
       )}

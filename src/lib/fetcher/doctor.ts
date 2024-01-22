@@ -17,7 +17,11 @@ export async function getDoctors(token: string) {
     });
 
     const data = await response.json();
-    return data;
+    if (data.data) {
+      return data;
+    } else if (data.message) {
+      throw new Error(data.message || "Unknown error");
+    }
   } catch (error) {
     console.error("" + error);
   }
@@ -36,8 +40,11 @@ export async function getDoctor(token: string, doctorId: string) {
     });
 
     const data = await response.json();
-    console.log(data);
-    return data;
+    if (data.data) {
+      return data;
+    } else if (data.message) {
+      throw new Error(data.message || "Unknown error");
+    }
   } catch (error) {
     console.error("" + error);
   }
@@ -53,7 +60,11 @@ export async function getDoctorDetail(token: string) {
       },
     });
     const data = await response.json();
-    return data;
+    if (data.data) {
+      return data;
+    } else if (data.message) {
+      throw new Error(data.message || "Unknown error");
+    }
   } catch (error) {
     console.error("" + error);
   }
@@ -64,7 +75,7 @@ export async function putDoctorDetail(
   changes: Partial<DoctorResponse>
 ): Promise<DoctorResponse | undefined> {
   try {
-    const response = await fetch(`${API_ENDPOINT}/doctors`, {
+    const response = await fetch(`${API_ENDPOINT}/doctors/detail`, {
       method: "PUT",
       headers: {
         authorization: `bearer ${token}`,
@@ -101,7 +112,6 @@ export async function patchDoctorStatus(token: string, status: boolean) {
     );
     const data = await response.json();
     if (data.data) {
-      console.log("masu");
       toast.success("Status updated successfully!");
       return data;
     } else {
