@@ -19,7 +19,6 @@ import {
 import { ArrowUpDown } from "lucide-react";
 import Sidebar from "@/components/aside-bar";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import {
   Table,
   TableBody,
@@ -34,6 +33,8 @@ import SearchBar from "@/components/search-bar";
 import ColumnDropdown from "@/components/columns-dropdown";
 import { getOrdersListPharmacy } from "@/lib/fetcher/orders";
 import { OrdersResponse } from "@/types";
+import Link from "next/link";
+import { EditStatusModal } from "@/components/status-modal";
 
 export default function Orders() {
   const { token } = useSelector((state: RootState) => state.user);
@@ -158,6 +159,22 @@ export default function Orders() {
       ),
     },
     {
+      accessorKey: "order_price",
+      header: ({ column }) => {
+        return (
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+            className="px-0"
+          >
+            Order Price
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </Button>
+        );
+      },
+      cell: ({ row }) => <div>{row.getValue("order_price")}</div>,
+    },
+    {
       accessorKey: "total_price",
       header: ({ column }) => {
         return (
@@ -189,8 +206,9 @@ export default function Orders() {
       },
       cell: ({ row }) => <div>{row.getValue("pharmacy_name")}</div>,
     },
+
     {
-      accessorKey: "pharmacy_phone",
+      accessorKey: "image",
       header: ({ column }) => {
         return (
           <Button
@@ -198,28 +216,34 @@ export default function Orders() {
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
             className="px-0"
           >
-            Pharmacy Phone
+            Payment Proof
             <ArrowUpDown className="ml-2 h-4 w-4" />
           </Button>
         );
       },
-      cell: ({ row }) => <div>{row.getValue("pharmacy_phone")}</div>,
+      cell: ({ row }) => {
+        const image: any = row.getValue("image");
+        return (
+          <div className="flex gap-5">
+            <Button asChild>
+              <Link href={image} target="_blank" rel="noopener noreferrer">
+                View Proof
+              </Link>
+            </Button>
+          </div>
+        );
+      },
     },
     {
       id: "actions",
       header: "Actions",
       enableHiding: false,
       cell: ({ row }) => {
-        const pharmacy_number = row.getValue("pharmacy_phone");
-        console.log(pharmacy_number);
+        const status: any = row.getValue("status");
+        const id: any = row.getValue("id");
         return (
           <div className="flex gap-5">
-            <Button
-              className="bg-green-600 hover:bg-green-500"
-              onClick={() => handleContactWhatsapp(pharmacy_number)}
-            >
-              <FaWhatsapp size={25} /> {"  "} Chat on WhatsApp
-            </Button>
+            <EditStatusModal status={status} id={id} token={token} />
           </div>
         );
       },
@@ -250,7 +274,11 @@ export default function Orders() {
       <div className="w-full mx-10 mt-5">
         <h1 className="text-black text-3xl mt-2 font-bold">Manage Orders</h1>
         <div className="flex items-center justify-between py-4">
-          <SearchBar table={table} placeholder="orders" searchby="name" />
+          <SearchBar
+            table={table}
+            placeholder="by pharmacy"
+            searchby="pharmacy_name"
+          />
           <div className="flex gap-3">
             <ColumnDropdown table={table} />
           </div>
