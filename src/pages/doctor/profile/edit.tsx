@@ -12,11 +12,11 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { DoctorResponse } from "@/types";
-import { putUserDetail } from "@/lib/fetcher/user";
 import { RootState } from "@/store/store";
 import { useSelector } from "react-redux";
 import { useState } from "react";
 import { editProfileDoctorSchema } from "@/lib/validation/doctor";
+import { putDoctorDetail } from "@/lib/fetcher/doctor";
 
 type Inputs = z.infer<typeof editProfileDoctorSchema>;
 
@@ -39,7 +39,7 @@ const EditProfileDoctor = ({ data }: { data: Partial<DoctorResponse> }) => {
       const cleanedFormData = Object.fromEntries(
         Object.entries(formData).filter(([_, value]) => value !== null)
       );
-      await putUserDetail(token, cleanedFormData);
+      await putDoctorDetail(token, cleanedFormData);
       setFormChanged(false);
     } catch (error) {
       console.error("" + error);
@@ -133,5 +133,4 @@ const EditProfileDoctor = ({ data }: { data: Partial<DoctorResponse> }) => {
     </div>
   );
 };
-
 export default EditProfileDoctor;
