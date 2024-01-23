@@ -24,6 +24,33 @@ export async function getProducts(limit: number, categoryId?: string) {
   }
 }
 
+export async function getProductss(categoryId?: number, page?: number) {
+  try {
+    let url = `${API_ENDPOINT}/products?limit=8`;
+
+    if (categoryId) {
+      url += `&categoryID=${categoryId}`;
+    }
+
+    if (page) {
+      url += `&page=${page}`;
+    }
+
+    const response = await fetch(url, {
+      method: "GET",
+    });
+
+    const data = await response.json();
+    if (data.data) {
+      return data;
+    } else if (data.message) {
+      throw new Error(data.message || "Unknown error");
+    }
+  } catch (error) {
+    console.error("" + error);
+  }
+}
+
 export async function getProduct(productId: string) {
   try {
     const response = await fetch(`${API_ENDPOINT}/products/${productId}`, {

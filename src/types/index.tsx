@@ -16,6 +16,7 @@ export type ProductsResponse = {
   price: string;
   product_id: number;
   total_stock: number;
+  stock: number;
 };
 
 export type ProductCategoriesResponse = {
