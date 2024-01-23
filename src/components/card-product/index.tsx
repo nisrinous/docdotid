@@ -29,15 +29,18 @@ const CardProduct = ({ product }: { product: ProductsResponse }) => {
       <CardFooter className="flex flex-col gap-2 items-center justify-center p-0">
         <Link href={`/product/${product.id}`}>
           {product.min_price && product.max_price && (
-            <p className="text-zinc-600 leading-none text-sm text-center mt-1 p-0">
+            <p className="text-zinc-600 leading-none text-base text-center mt-1 p-0">
               {toRupiah(product.min_price)}
               {" - "}
               {toRupiah(product.max_price)}
             </p>
           )}
-          <p className="px-2 text-center text-zinc-400 text-sm mb-2">
-            {product.unit_in_pack} /pack
-          </p>
+          {product.unit_in_pack !== "" && (
+            <p className="px-2 text-center text-zinc-500 text-sm mb-2">
+              {product.unit_in_pack}{" "}
+              <span className="text-zinc-400">/pack</span>
+            </p>
+          )}
         </Link>
         <AddToCartButton productId={product.id} />
       </CardFooter>
