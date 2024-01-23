@@ -12,13 +12,13 @@ import {
 import { Button } from "@/components/ui/button";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
-import { deleteProduct, getProducts } from "@/lib/fetcher/product";
+import { deleteProduct } from "@/lib/fetcher/product";
 import { PharmacyResponse } from "@/types";
 import useSWR from "swr";
 import { apiBaseUrl } from "@/config";
 import router from "next/router";
 import deleteCookies from "@/components/delete-cookies";
-import { getPharmacyListOwned } from "@/lib/fetcher/pharmacy";
+import { deletePharmacy, getPharmacyListOwned } from "@/lib/fetcher/pharmacy";
 
 interface DeleteConfirmationModalProps {
   isOpen: boolean;
@@ -73,10 +73,10 @@ const Product = () => {
     setShowDeleteModal(true);
   };
 
-  const confirmDelete = async () => {
+  const confirmDelete = async (pharmacyId: string) => {
     if (productIdToDelete !== null) {
       try {
-        await deleteProduct(token, productIdToDelete.toString());
+        await deletePharmacy(token, pharmacyId);
         setShowDeleteModal(false);
         setProductIdToDelete(null);
         fetchData();
@@ -90,6 +90,7 @@ const Product = () => {
     setShowDeleteModal(false);
     setProductIdToDelete(null);
   };
+
   useSWR(["/products"], fetchData);
 
   const handleEdit = (pharmacyId: number) => {
@@ -119,7 +120,7 @@ const Product = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {productsData.map((item) => (
+            {productsData?.map((item) => (
               <TableRow key={item.id}>
                 <TableCell>{item.id}</TableCell>
                 <TableCell>{item.name}</TableCell>

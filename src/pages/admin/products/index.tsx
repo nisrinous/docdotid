@@ -13,7 +13,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
-import { deleteProduct, getProducts } from "@/lib/fetcher/product";
+import { deleteProduct, getProductss } from "@/lib/fetcher/product";
 import { ProductsResponse } from "@/types";
 import useSWR from "swr";
 import router from "next/router";
@@ -53,10 +53,11 @@ const Product = () => {
     null
   );
   const [currentPage, setCurrentPage] = useState(1);
+  const [currentCategoryId, setCurrentCategoryId] = useState(1);
 
-  const fetchData = async (page: number = 1) => {
+  const fetchData = async (categoryId: number = 1, page: number = 1) => {
     try {
-      const data = await getProducts(token, "", page);
+      const data = await getProductss(categoryId, page);
       setProductsData(data.data);
     } catch (error) {
       console.error("" + error);
@@ -96,7 +97,7 @@ const Product = () => {
   const handleNext = () => {
     const nextPage = currentPage + 1;
     if (hasDataForPage(nextPage)) {
-      fetchData(nextPage);
+      fetchData(currentCategoryId, nextPage);
       setCurrentPage(nextPage);
     } else {
       console.log("No data available for the next page. Page change canceled.");
@@ -105,12 +106,39 @@ const Product = () => {
 
   const handlePrevious = () => {
     const prevPage = currentPage - 1 >= 1 ? currentPage - 1 : 1;
-    fetchData(prevPage);
+    fetchData(currentCategoryId, prevPage);
     setCurrentPage(prevPage);
   };
 
   const hasDataForPage = (page: number): boolean => {
     return productsData.length > 0;
+  };
+
+  const hasDataForCategoryId = async (categoryId: number): Promise<boolean> => {
+    try {
+      const data = await getProductss(categoryId, 1);
+      const hasData = data.data.length > 0;
+
+      if (!hasData) {
+        setCurrentCategoryId(1);
+        fetchData(1, 1);
+      }
+
+      return hasData;
+    } catch (error) {
+      console.error("" + error);
+      return false;
+    }
+  };
+
+  const handleSortByCategory = async () => {
+    const newCategoryId = currentCategoryId + 1;
+    const hasData = await hasDataForCategoryId(newCategoryId);
+
+    if (hasData) {
+      setCurrentCategoryId(newCategoryId);
+      fetchData(newCategoryId, currentPage);
+    }
   };
 
   const handleEdit = (productId: number) => {
@@ -145,7 +173,9 @@ const Product = () => {
           <TableHeader>
             <TableRow>
               <TableHead>ID</TableHead>
-              <TableHead>Category</TableHead>
+              <TableHead onClick={() => handleSortByCategory()}>
+                Category
+              </TableHead>
               <TableHead>Name</TableHead>
               <TableHead>Manufacturer</TableHead>
               <TableHead>Max Price</TableHead>

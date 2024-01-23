@@ -27,7 +27,7 @@ const AddProduct = () => {
 
   const fetchData = async () => {
     try {
-      const data = await getProduct(token, id as string);
+      const data = await getProduct(id as string);
       setProduct(data.data);
     } catch (error) {
       console.error("" + error);
