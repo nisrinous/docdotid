@@ -1,25 +1,27 @@
 import CardProduct from "@/components/card-product";
 import ProductCategories from "@/components/categories/product-categories";
 import { getProducts } from "@/lib/fetcher/product";
-import { RootState } from "@/store/store";
 import { ProductsResponse } from "@/types";
 import { useRouter } from "next/router";
 
 import { useState } from "react";
-import { useSelector } from "react-redux";
 import useSWR from "swr";
 
 export default function Products() {
-  const { token } = useSelector((state: RootState) => state.user);
   const router = useRouter();
-  const categoryId = router.query.category_id as string;
+  const categoryId = router.query.categoryID as string;
 
   const [productsData, setProductsData] = useState<ProductsResponse[]>([]);
 
   const fetchData = async () => {
     try {
-      const data = await getProducts(token, categoryId);
-      setProductsData(data.data);
+      if (categoryId) {
+        const data = await getProducts(categoryId);
+        setProductsData(data.data);
+      } else {
+        const data = await getProducts();
+        setProductsData(data.data);
+      }
     } catch (error) {
       console.error("" + error);
     }
@@ -29,7 +31,7 @@ export default function Products() {
     data,
     error: isError,
     isValidating: isLoading,
-  } = useSWR([`/products?category_id=${categoryId}`, token], fetchData);
+  } = useSWR([`/products?categoryID=${categoryId}`], fetchData);
 
   return (
     <>
