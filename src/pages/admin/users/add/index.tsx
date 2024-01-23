@@ -51,9 +51,9 @@ const AddProduct = () => {
   return (
     <div className="flex">
       <Sidebar menus={menus} />
-      <div className="container flex justify-start sm:mt-5 p-3">
+      <div className="w-full mx-10 mt-5">
         <div className="">
-          <h1 className="text-black text-3xl mt-2 font-bold mb-5 sm:mb-[50px]">
+          <h1 className="text-black text-3xl mt-2 font-bold mb-5">
             Add Admin Pharmacy
           </h1>
           <form onSubmit={handleSubmit}>

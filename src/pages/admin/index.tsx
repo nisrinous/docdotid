@@ -150,7 +150,7 @@ export default function Home(): JSX.Element {
                   </SelectTrigger>
                   <SelectContent>
                     {Array.isArray(categoryList) &&
-                      categoryList.map((category) => (
+                      categoryList?.map((category) => (
                         <SelectItem key={category.id} value={category.id}>
                           {category.name}
                         </SelectItem>
@@ -197,7 +197,7 @@ export default function Home(): JSX.Element {
                   </SelectTrigger>
                   <SelectContent>
                     {Array.isArray(productList) &&
-                      productList.map((product) => (
+                      productList?.map((product) => (
                         <SelectItem key={product.id} value={product.id}>
                           {product.name}
                         </SelectItem>
