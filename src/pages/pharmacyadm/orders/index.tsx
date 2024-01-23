@@ -33,12 +33,8 @@ import SearchBar from "@/components/search-bar";
 import ColumnDropdown from "@/components/columns-dropdown";
 import { getOrdersListPharmacy } from "@/lib/fetcher/orders";
 import { OrdersResponse } from "@/types";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import Image from "next/image";
+import Link from "next/link";
+import { EditStatusModal } from "@/components/status-modal";
 
 export default function Orders() {
   const { token } = useSelector((state: RootState) => state.user);
@@ -226,24 +222,14 @@ export default function Orders() {
         );
       },
       cell: ({ row }) => {
-        const image = row.getValue("image");
+        const image: any = row.getValue("image");
         return (
           <div className="flex gap-5">
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button variant="outline">Open popover</Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-80">
-                <div className="grid gap-4">
-                  <Image
-                    src={`${image}`}
-                    width={30}
-                    height={30}
-                    alt="Payment Proof"
-                  />
-                </div>
-              </PopoverContent>
-            </Popover>
+            <Button asChild>
+              <Link href={image} target="_blank" rel="noopener noreferrer">
+                View Proof
+              </Link>
+            </Button>
           </div>
         );
       },
@@ -253,16 +239,11 @@ export default function Orders() {
       header: "Actions",
       enableHiding: false,
       cell: ({ row }) => {
-        const pharmacy_number = row.getValue("pharmacy_phone");
-        console.log(pharmacy_number);
+        const status: any = row.getValue("status");
+        const id: any = row.getValue("id");
         return (
           <div className="flex gap-5">
-            <Button
-              className="bg-green-600 hover:bg-green-500"
-              onClick={() => handleContactWhatsapp(pharmacy_number)}
-            >
-              <FaWhatsapp size={25} /> {"  "} Chat on WhatsApp
-            </Button>
+            <EditStatusModal status={status} id={id} token={token} />
           </div>
         );
       },
@@ -293,7 +274,11 @@ export default function Orders() {
       <div className="w-full mx-10 mt-5">
         <h1 className="text-black text-3xl mt-2 font-bold">Manage Orders</h1>
         <div className="flex items-center justify-between py-4">
-          <SearchBar table={table} placeholder="orders" searchby="name" />
+          <SearchBar
+            table={table}
+            placeholder="by pharmacy"
+            searchby="pharmacy_name"
+          />
           <div className="flex gap-3">
             <ColumnDropdown table={table} />
           </div>
