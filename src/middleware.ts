@@ -85,6 +85,10 @@ export default async function middleware(request: NextRequest) {
           new URL(process.env.NEXT_PUBLIC_SITE_PATH + "/doctor", request.url)
         );
       }
+    } else if (!isAuthenticated && pathname.startsWith("/user")) {
+      return NextResponse.redirect(
+        new URL(process.env.NEXT_PUBLIC_SITE_PATH + "/", request.url)
+      );
     }
   }
 
