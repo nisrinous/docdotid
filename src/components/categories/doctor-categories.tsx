@@ -52,34 +52,36 @@ const DoctorCategories = () => {
             <div className="flex flex-row gap-5 pb-5">
               {doctorCategoriesData &&
                 doctorCategoriesData.map((item, index) => (
-                  <Card
-                    key={index}
-                    className="p-2 w-44 flex flex-col justify-between"
-                  >
-                    <CardContent className="p-1 flex flex-col items-center justify-center">
-                      <img
-                        src="https://res-console.cloudinary.com/minevf/media_explorer_thumbnails/6cb8f67a33376e09150a0ff78061df2e/detailed"
-                        className="w-16 lg:w-20"
-                      ></img>
-                      <div className="bg-sky-100 w-full my-1 h-10 flex items-center justify-center">
-                        <p className="text-center leading-none p-1">
-                          {item.name}
-                        </p>
-                      </div>
-                    </CardContent>
-                    <CardFooter className="flex flex-col items-center justify-center p-0 ">
-                      <div className="w-full h-10 flex items-center justify-center">
-                        <p className="text-zinc-400 leading-none text-sm text-center">
-                          {item.description}
-                        </p>
-                      </div>
-                      <div className="w-full h-10 flex items-center justify-center">
-                        <p className="text-zinc-600 leading-none text-sm text-center">
-                          {item.symptoms}
-                        </p>
-                      </div>
-                    </CardFooter>
-                  </Card>
+                  <Link href="/telemedicine" key={index}>
+                    <Card
+                      key={index}
+                      className="p-2 w-44 flex flex-col justify-between"
+                    >
+                      <CardContent className="p-1 flex flex-col items-center justify-center">
+                        <img
+                          src="https://res-console.cloudinary.com/minevf/media_explorer_thumbnails/6cb8f67a33376e09150a0ff78061df2e/detailed"
+                          className="w-16 lg:w-20"
+                        ></img>
+                        <div className="bg-sky-100 w-full my-1 h-10 flex items-center justify-center">
+                          <p className="text-center leading-none p-1">
+                            {item.name}
+                          </p>
+                        </div>
+                      </CardContent>
+                      <CardFooter className="flex flex-col items-center justify-center p-0 ">
+                        <div className="w-full h-10 flex items-center justify-center">
+                          <p className="text-zinc-400 leading-none text-sm text-center">
+                            {item.description}
+                          </p>
+                        </div>
+                        <div className="w-full h-10 flex items-center justify-center">
+                          <p className="text-zinc-600 leading-none text-sm text-center">
+                            {item.symptoms}
+                          </p>
+                        </div>
+                      </CardFooter>
+                    </Card>
+                  </Link>
                 ))}
             </div>
             <ScrollBar orientation="horizontal" />
