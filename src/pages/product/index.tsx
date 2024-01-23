@@ -1,10 +1,11 @@
 import CardProduct from "@/components/card-product";
 import ProductCategories from "@/components/categories/product-categories";
+import { Button } from "@/components/ui/button";
 import { getProducts } from "@/lib/fetcher/product";
 import { ProductsResponse } from "@/types";
 import { useRouter } from "next/router";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import useSWR from "swr";
 
 export default function Products() {
@@ -12,14 +13,15 @@ export default function Products() {
   const categoryId = router.query.categoryID as string;
 
   const [productsData, setProductsData] = useState<ProductsResponse[]>([]);
+  const [limit, setLimit] = useState(1);
 
   const fetchData = async () => {
     try {
       if (categoryId) {
-        const data = await getProducts(categoryId);
+        const data = await getProducts(limit, categoryId);
         setProductsData(data.data);
       } else {
-        const data = await getProducts();
+        const data = await getProducts(limit);
         setProductsData(data.data);
       }
     } catch (error) {
@@ -31,7 +33,18 @@ export default function Products() {
     data,
     error: isError,
     isValidating: isLoading,
-  } = useSWR([`/products?categoryID=${categoryId}`], fetchData);
+  } = useSWR(
+    [`/products?categoryID=${categoryId}&limit=${limit * 30}`],
+    fetchData
+  );
+
+  const loadMore = () => {
+    setLimit(limit + 1);
+  };
+
+  useEffect(() => {
+    setLimit(1);
+  }, [categoryId]);
 
   return (
     <>
@@ -49,13 +62,24 @@ export default function Products() {
             </div>
           </div>
         ) : (
-          <div className="flex justify-center">
-            <div className="container flex flex-wrap my-10 gap-2 justify-start px-0">
-              {productsData.map((item, index) => {
-                return <CardProduct key={index} product={item} />;
-              })}
+          <>
+            <div className="flex justify-center">
+              <div className="container flex flex-wrap my-10 gap-2 justify-start px-0">
+                {productsData.map((item, index) => {
+                  return <CardProduct key={index} product={item} />;
+                })}
+              </div>
             </div>
-          </div>
+            <div className="flex flex-row justify-center">
+              <Button
+                variant="outline"
+                className="w-32"
+                onClick={() => loadMore()}
+              >
+                Load more..
+              </Button>
+            </div>
+          </>
         )}
       </div>
     </>

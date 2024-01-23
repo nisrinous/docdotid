@@ -42,7 +42,7 @@ const CardProduct = ({ product }: { product: ProductsResponse }) => {
             </p>
           )}
         </Link>
-        <AddToCartButton productId={product.id} />
+        <AddToCartButton product={product} />
       </CardFooter>
     </Card>
   );
