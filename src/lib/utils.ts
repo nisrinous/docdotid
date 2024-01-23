@@ -19,18 +19,11 @@ export function formatBytes(
   }`;
 }
 
-export function formatPrice(
-  price: number | undefined,
-  options: {
-    currency?: "USD" | "EUR" | "GBP" | "BDT";
-    notation?: Intl.NumberFormatOptions["notation"];
-  } = {}
-) {
-  const { currency = "USD", notation = "compact" } = options;
-
-  return new Intl.NumberFormat("en-US", {
+export const toRupiah = (price: number) => {
+  return new Intl.NumberFormat("id-ID", {
     style: "currency",
-    currency,
-    notation,
-  }).format(Number(price));
-}
+    currency: "IDR",
+  })
+    .format(price)
+    .split(",00");
+};

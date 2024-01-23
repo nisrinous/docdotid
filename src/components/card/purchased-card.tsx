@@ -3,7 +3,7 @@ import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import { Card, CardContent, CardHeader } from "../ui/card";
 import { MedicineOrderResponse } from "@/types";
-import { formatPrice } from "@/lib/utils";
+import { toRupiah } from "@/lib/utils";
 
 const PurchasedCard = ({
   order,
@@ -48,9 +48,7 @@ const PurchasedCard = ({
             <div className="flex-col justify-center gap-0 hidden md:flex">
               <p className="text-zinc-600 leading-none text-sm ">Total price</p>
               <p className="leading-none text-sm  text-orange-600">
-                {formatPrice(Number(order.price), {
-                  currency: "USD",
-                })}
+                {toRupiah(Number(order.price))}
               </p>
             </div>
           </div>

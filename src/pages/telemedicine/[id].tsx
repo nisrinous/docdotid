@@ -2,7 +2,7 @@ import StartChat from "@/components/start-chat";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { getDoctor } from "@/lib/fetcher/doctor";
-import { formatPrice } from "@/lib/utils";
+import { toRupiah } from "@/lib/utils";
 import { RootState } from "@/store/store";
 import { DoctorResponse } from "@/types";
 import { useRouter } from "next/router";
@@ -61,9 +61,7 @@ export default function DoctorDetails() {
               <>
                 <div className="flex flex-col gap-1 justify-center items-center my-3">
                   <div className="text-3xl font-bold text-left bg-sky-100 w-full mb-6 p-1">
-                    {formatPrice(doctor?.fee, {
-                      currency: "USD",
-                    })}
+                    {toRupiah(Number(doctor?.fee))}
                     <span className="text-sm font-normal text-muted-foreground">
                       /session
                     </span>

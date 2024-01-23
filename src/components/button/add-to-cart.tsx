@@ -6,15 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { decrementCart, incrementCart } from "@/store/slices/cartSlice";
 import { RootState } from "@/store/store";
 import { addToCart } from "@/lib/fetcher/cart";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "../ui/dialog";
+import { Dialog, DialogContent, DialogTrigger } from "../ui/dialog";
 import Login from "@/pages/auth/login";
 import { useRouter } from "next/router";
 

@@ -9,7 +9,7 @@ import EditProfileDoctor from "./edit";
 import { FaRegUserCircle } from "react-icons/fa";
 import { Card } from "@/components/ui/card";
 import { getDoctorDetail } from "@/lib/fetcher/doctor";
-import { formatPrice } from "@/lib/utils";
+import { toRupiah } from "@/lib/utils";
 
 export default function ProfileDoctor() {
   const { token } = useSelector((state: RootState) => state.user);
@@ -73,9 +73,7 @@ export default function ProfileDoctor() {
 
             <Card className="p-3 my-10 flex flex-col justify-center items-center gap-2">
               <h1 className="text-3xl font-extrabold tracking-tight md:text-4xl text-orange-300">
-                {formatPrice(user?.fee, {
-                  currency: "USD",
-                })}
+                {toRupiah(Number(user?.fee))}
               </h1>
               <Button variant="outline" className="my-0">
                 Update telemedicine fee
