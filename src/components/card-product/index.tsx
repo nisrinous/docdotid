@@ -1,43 +1,10 @@
 import Link from "next/link";
 import { Card, CardContent, CardFooter } from "../ui/card";
-import { Button } from "../ui/button";
-import { useEffect, useState } from "react";
 
-import { useDispatch, useSelector } from "react-redux";
-import { decrementCart, incrementCart } from "@/store/slices/cartSlice";
 import { ProductsResponse } from "@/types";
-import { RootState } from "@/store/store";
-import { addToCart } from "@/lib/fetcher/cart";
+import AddToCartButton from "../button/add-to-cart";
 
 const CardProduct = ({ product }: { product: ProductsResponse }) => {
-  const { token } = useSelector((state: RootState) => state.user);
-
-  const [addedToCart, setAddedToCart] = useState<boolean>(false);
-  const [counter, setCounter] = useState<number>(0);
-  const dispatch = useDispatch();
-
-  const increment = async () => {
-    setCounter(counter + 1);
-    dispatch(incrementCart());
-    await addToCart(token, product.id, counter);
-  };
-  const decrement = async () => {
-    setCounter(counter - 1);
-    dispatch(decrementCart());
-    await addToCart(token, product.id, counter);
-  };
-
-  const handleAddToCart = () => {
-    setAddedToCart(true);
-    increment();
-  };
-
-  useEffect(() => {
-    if (counter === 0) {
-      setAddedToCart(false);
-    }
-  }, [counter]);
-
   return (
     <Card className="p-2 w-40 flex flex-col justify-between">
       <Link href={`/product/${product.id}`}>
@@ -58,26 +25,7 @@ const CardProduct = ({ product }: { product: ProductsResponse }) => {
             {product.unit_in_pack} /pack
           </p>
         </Link>
-        {!addedToCart && (
-          <Button
-            disabled={addedToCart}
-            className="h-8 px-6"
-            onClick={handleAddToCart}
-          >
-            Add to cart
-          </Button>
-        )}
-        {addedToCart && (
-          <div className="flex flex-row items-center justify-center gap-2">
-            <Button onClick={decrement} className="h-6 w-6 p-0">
-              -
-            </Button>
-            <p className="border-b-2 px-2">{counter}</p>
-            <Button onClick={increment} className="h-6 w-6 p-0">
-              +
-            </Button>
-          </div>
-        )}
+        <AddToCartButton productId={product.id} />
       </CardFooter>
     </Card>
   );
