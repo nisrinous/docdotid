@@ -29,10 +29,10 @@ export default function Register({ type }: { type?: string }) {
                 </span>
                 <Link
                   aria-label="Log in"
-                  href="/auth/login"
+                  href={type ? "/auth/login/doctor" : "/auth/login"}
                   className="text-primary underline-offset-4 transition-colors hover:underline"
                 >
-                  Log in {type ? "as Docttor" : null}
+                  Log in {type ? "as Doctor" : null}
                 </Link>
               </div>
             </CardFooter>
