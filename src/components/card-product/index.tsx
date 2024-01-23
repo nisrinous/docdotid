@@ -10,10 +10,16 @@ const CardProduct = ({ product }: { product: ProductsResponse }) => {
     <Card className="p-2 w-52 flex flex-col justify-between">
       <Link href={`/product/${product.id}`}>
         <CardContent className="p-1 flex flex-col items-center justify-center">
-          <img
-            src="https://res-console.cloudinary.com/minevf/media_explorer_thumbnails/36edf7e6afe8045a8b67274e8226b9b7/detailed"
-            className="w-24"
-          ></img>
+          <div className="h-24 justify-center items-center flex flex-col">
+            <img
+              src={
+                product.image
+                  ? product.image
+                  : "https://res-console.cloudinary.com/minevf/media_explorer_thumbnails/36edf7e6afe8045a8b67274e8226b9b7/detailed"
+              }
+              className="w-24 max-h-24"
+            ></img>
+          </div>
           <div className="bg-orange-200 p-1 w-full my-1 h-9 flex items-center justify-center">
             <p className="text-center leading-none capitalize">
               {product.name

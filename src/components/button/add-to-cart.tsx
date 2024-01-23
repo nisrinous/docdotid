@@ -1,4 +1,3 @@
-import { NextResponse, type NextRequest } from "next/server";
 import { Button } from "../ui/button";
 import { useEffect, useState } from "react";
 
@@ -17,7 +16,6 @@ const AddToCartButton = ({ product }: { product: ProductsResponse }) => {
   const dispatch = useDispatch();
   const router = useRouter();
   const [addedToCart, setAddedToCart] = useState<boolean>(false);
-  const [displayLoginDialog, setDisplayLoginDialog] = useState<boolean>(false);
 
   const decrement = async () => {
     setCounter(counter - 1);
@@ -47,30 +45,22 @@ const AddToCartButton = ({ product }: { product: ProductsResponse }) => {
     <>
       {!addedToCart && (
         <>
-          {product.stock && product.is_active ? (
-            <Dialog>
-              <DialogTrigger>
-                <Button
-                  disabled={
-                    addedToCart && !(product.stock > 0) && !product.is_active
-                  }
-                  className="h-8 px-6"
-                  onClick={handleAddToCart}
-                >
-                  Add to cart
-                </Button>
-              </DialogTrigger>
-              {displayLoginDialog && (
-                <DialogContent className="w-lg">
-                  <Login />
-                </DialogContent>
-              )}
-            </Dialog>
-          ) : (
-            <Button disabled={true} className="h-8 px-6">
-              Add to cart
-            </Button>
-          )}
+          <Dialog>
+            <DialogTrigger>
+              <Button
+                disabled={!product.total_stock}
+                className="h-8 px-6"
+                onClick={handleAddToCart}
+              >
+                Add to cart
+              </Button>
+            </DialogTrigger>
+            {token !== "" && (
+              <DialogContent className="w-lg">
+                <Login />
+              </DialogContent>
+            )}
+          </Dialog>
         </>
       )}
       {addedToCart && (

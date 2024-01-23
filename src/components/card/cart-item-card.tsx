@@ -10,8 +10,9 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import ManageQuantityButton from "../button/manage-quantity-button";
+import { CartItemResponse } from "@/types";
 
-const CartItemCard = ({ quantity }: { quantity: number }) => {
+const CartItemCard = ({ item }: { item: CartItemResponse }) => {
   return (
     <>
       <CardContent className="p-0 pb-3 flex flex-row justify-start items-center w-full">
@@ -21,22 +22,22 @@ const CartItemCard = ({ quantity }: { quantity: number }) => {
         ></img>
         <div className="flex flex-col gap-2 md:flex-row justify-around items-center w-full">
           <div className="flex flex-col justify-start items-start md:justify-center md:items-start">
-            <p className="text-left">Product Name</p>
-            <p className="text-zinc-600 leading-none text-xs">Product Price</p>
-            <p className="text-green-700">on stock</p>
+            <p className="text-left">{item.product.name}</p>
+            <p className="text-zinc-600 leading-none text-xs">{item.price}</p>
+            <p className="text-green-700">{item.stock}</p>
           </div>
           <div className="flex flex-col justify-start items-start p-0">
-            <ManageQuantityButton quantity={quantity} />
+            <ManageQuantityButton quantity={item.quantity} />
           </div>
         </div>
         <Dialog>
           <DialogTrigger asChild>
             <Button
               variant="link"
-              disabled={quantity < 1}
+              disabled={item.quantity < 1}
               className="text-sky-700 p-0"
             >
-              {quantity > 1 ? "Delete Item" : "Cari p lain"}
+              {item.quantity > 1 ? "Delete Item" : null}
             </Button>
           </DialogTrigger>
           <DialogContent className="sm:max-w-[425px]">

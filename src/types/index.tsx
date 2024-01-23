@@ -15,7 +15,7 @@ export type ProductsResponse = {
   is_active: boolean;
   price: string;
   product_id: number;
-  stock: number;
+  total_stock: number;
 };
 
 export type ProductCategoriesResponse = {
@@ -148,4 +148,34 @@ export type MedicineOrderResponse = {
     total_stock: number;
   };
   created_at: string;
+};
+
+export type CartDataResponse = {
+  cart_items: CartItemResponse[];
+  shipping_details: string;
+  pharmacy_id: number;
+  order_price: string;
+};
+
+export type CartItemResponse = {
+  id: number;
+  quantity: number;
+  stock: number;
+  price: string;
+  product_category_id: number;
+  product: {
+    id: number;
+    name: string;
+    unit_in_pack: string;
+    selling_unit: string;
+    image: string;
+    weight: string;
+    max_price: number;
+    min_price: number;
+    product_category_id: number;
+    category_name: string;
+    manufacturer_name: string;
+    total_stock: number;
+    is_active: boolean;
+  };
 };
