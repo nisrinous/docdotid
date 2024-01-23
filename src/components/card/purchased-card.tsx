@@ -2,8 +2,18 @@ import Link from "next/link";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import { Card, CardContent, CardHeader } from "../ui/card";
+import { MedicineOrderResponse } from "@/types";
+import { toRupiah } from "@/lib/utils";
 
-const PurchasedCard = ({ type, id }: { type: string; id: number }) => {
+const PurchasedCard = ({
+  order,
+  type,
+  id,
+}: {
+  order: MedicineOrderResponse;
+  type: string;
+  id: number;
+}) => {
   return (
     <>
       <Card className="px-5 pt-2 pb-3 w-full flex flex-col justify-start items-start">
@@ -21,7 +31,9 @@ const PurchasedCard = ({ type, id }: { type: string; id: number }) => {
                 className="border-2 p-1 w-16 lg:w-24"
               ></img>
               <div className="gap-0">
-                <p className="leading-none text-sm ">Product Name</p>
+                <p className="leading-none text-sm ">
+                  {order.showed_product.name}
+                </p>
                 <p className="text-zinc-500 leading-none text-sm ">
                   + x other product
                 </p>
@@ -29,11 +41,15 @@ const PurchasedCard = ({ type, id }: { type: string; id: number }) => {
             </div>
             <div className="flex-col justify-center gap-0 hidden md:flex">
               <p className="text-zinc-600 leading-none text-sm ">Created at</p>
-              <p className="leading-none text-sm ">Mon, 13th Dec 2023</p>
+              <p className="leading-none text-sm ">
+                {new Date(order.created_at).toLocaleDateString("en-GB")}
+              </p>
             </div>
             <div className="flex-col justify-center gap-0 hidden md:flex">
               <p className="text-zinc-600 leading-none text-sm ">Total price</p>
-              <p className="leading-none text-sm  text-orange-600">$ total</p>
+              <p className="leading-none text-sm  text-orange-600">
+                {toRupiah(Number(order.price))}
+              </p>
             </div>
           </div>
 

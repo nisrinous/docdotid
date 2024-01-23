@@ -1,7 +1,32 @@
 import PurchasedCard from "@/components/card/purchased-card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { getMedicineOrders } from "@/lib/fetcher/purchase-history";
+import { RootState } from "@/store/store";
+import { MedicineOrderResponse } from "@/types";
+import { useState } from "react";
+import { useSelector } from "react-redux";
+import useSWR from "swr";
 
 export default function PurchaseHistory() {
+  const { token } = useSelector((state: RootState) => state.user);
+
+  const [ordersData, setOrdersData] = useState<MedicineOrderResponse[]>([]);
+
+  const fetchCategories = async () => {
+    try {
+      const data = await getMedicineOrders(token);
+      setOrdersData(data.data);
+    } catch (error) {
+      console.error("" + error);
+    }
+  };
+
+  const {
+    data,
+    error: isError,
+    isValidating: isLoading,
+  } = useSWR(["/specialist", token], fetchCategories);
+
   return (
     <>
       <div className="container my-10 ">
@@ -25,10 +50,32 @@ export default function PurchaseHistory() {
                 </TabsList>
                 <TabsContent value="all" className="mb-10"></TabsContent>
                 <TabsContent value="orders" className="mb-10">
-                  <PurchasedCard id={3} type="Medical " />
+                  {isLoading ? (
+                    <p className="text-zinc-400 mb-5">Loading...</p>
+                  ) : isError ? (
+                    <div className="flex justify-center">
+                      <div className="flex flex-wrap justify-center">
+                        <p className="text-zinc-400 mb-5">
+                          Error while fetching data
+                        </p>
+                      </div>
+                    </div>
+                  ) : (
+                    <>
+                      {ordersData &&
+                        ordersData.map((item, index) => (
+                          <PurchasedCard
+                            key={index}
+                            id={3}
+                            type="Medical "
+                            order={item}
+                          />
+                        ))}
+                    </>
+                  )}
                 </TabsContent>
                 <TabsContent value="telemedicines" className="mb-10">
-                  <PurchasedCard id={3} type="Telemedicine " />
+                  {/* <PurchasedCard id={3} type="Telemedicine " /> */}
                 </TabsContent>
               </Tabs>
             </div>

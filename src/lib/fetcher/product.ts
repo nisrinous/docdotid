@@ -2,16 +2,12 @@ import { apiBaseUrl } from "@/config";
 
 const API_ENDPOINT = apiBaseUrl;
 
-export async function getProducts(
-  token: string,
-  categoryId?: string,
-  page?: number
-) {
+export async function getProducts(categoryId?: string, page?: number) {
   try {
-    let url = `${API_ENDPOINT}/products?limit=8&`;
+    let url = `${API_ENDPOINT}/products?limit=1000&`;
 
     if (categoryId) {
-      url += `?category_id=${categoryId}`;
+      url += `categoryID=${categoryId}`;
     }
 
     if (page) {
@@ -20,10 +16,6 @@ export async function getProducts(
 
     const response = await fetch(url, {
       method: "GET",
-      headers: {
-        authorization: `bearer ${token}`,
-        "Content-Type": "application/json",
-      },
     });
 
     const data = await response.json();
@@ -33,14 +25,10 @@ export async function getProducts(
   }
 }
 
-export async function getProduct(token: string, productId: string) {
+export async function getProduct(productId: string) {
   try {
     const response = await fetch(`${API_ENDPOINT}/products/${productId}`, {
       method: "GET",
-      headers: {
-        authorization: `bearer ${token}`,
-        "Content-Type": "application/json",
-      },
     });
     const data = await response.json();
     return data;

@@ -1,16 +1,12 @@
-import Link from "next/link";
 import { Card, CardContent, CardFooter } from "../ui/card";
 import { getProductCategories } from "@/lib/fetcher/product-category";
 import { useState } from "react";
 import { ProductCategoriesResponse } from "@/types";
-import { useSelector } from "react-redux";
-import { RootState } from "@/store/store";
 import useSWR from "swr";
 import { Button } from "../ui/button";
 import { useRouter } from "next/router";
 
 const ProductCategories = () => {
-  const { token } = useSelector((state: RootState) => state.user);
   const router = useRouter();
   const [categories, setNewCategories] = useState<ProductCategoriesResponse[]>(
     []
@@ -18,21 +14,21 @@ const ProductCategories = () => {
 
   const fetchCategories = async () => {
     try {
-      const data = await getProductCategories(token);
+      const data = await getProductCategories();
       setNewCategories(data.data);
     } catch (error) {
       console.error("" + error);
     }
   };
   const filterByCategory = (categoryId: number) => {
-    router.replace(`/product?category_id=${categoryId}&token=${token}`);
+    router.replace(`/product?categoryID=${categoryId}`);
   };
 
   const {
     data,
     error: isError,
     isValidating: isLoading,
-  } = useSWR(["/categories", token], fetchCategories);
+  } = useSWR(["/categories"], fetchCategories);
 
   return (
     <>

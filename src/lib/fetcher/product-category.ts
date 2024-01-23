@@ -3,14 +3,10 @@ import toast from "react-hot-toast";
 
 const API_ENDPOINT = apiBaseUrl;
 
-export async function getProductCategories(token: string) {
+export async function getProductCategories() {
   try {
     const response = await fetch(`${API_ENDPOINT}/categories`, {
       method: "GET",
-      headers: {
-        authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
     });
     if (!response.ok) {
       throw new Error(`Failed to fetch data: ${response.statusText}`);

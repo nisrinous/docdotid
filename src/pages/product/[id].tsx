@@ -1,22 +1,19 @@
 import { Button } from "@/components/ui/button";
 import { getProduct } from "@/lib/fetcher/product";
-import { RootState } from "@/store/store";
 import { ProductResponse } from "@/types";
 import { useRouter } from "next/router";
 import { useState } from "react";
-import { useSelector } from "react-redux";
 import useSWR from "swr";
 
 export default function ProductDetails() {
   const router = useRouter();
   const { id } = router.query;
-  const { token } = useSelector((state: RootState) => state.user);
 
   const [product, setProduct] = useState<ProductResponse>();
 
   const fetchData = async () => {
     try {
-      const data = await getProduct(token, id as string);
+      const data = await getProduct(id as string);
       setProduct(data.data);
     } catch (error) {
       console.error("" + error);
@@ -27,7 +24,7 @@ export default function ProductDetails() {
     data,
     error: isError,
     isValidating: isLoading,
-  } = useSWR([`/products/${id}`, token], fetchData);
+  } = useSWR([`/products/${id}`], fetchData);
 
   return (
     <>

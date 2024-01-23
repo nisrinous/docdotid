@@ -1,30 +1,34 @@
 import Link from "next/link";
 import { Card, CardContent, CardFooter } from "../ui/card";
 import { ScrollArea, ScrollBar } from "../ui/scroll-area";
-// import { useEffect, useState } from "react";
 import { RootState } from "@/store/store";
 import { useSelector } from "react-redux";
-// import { DoctorCategoriesResponse } from "@/types";
+import { DoctorCategoriesResponse } from "@/types";
+import { getDoctorCategories } from "@/lib/fetcher/doctor-category";
+import useSWR from "swr";
+import { useState } from "react";
 
 const DoctorCategories = () => {
   const { token } = useSelector((state: RootState) => state.user);
 
-  // const [doctorCategoriesData, setDoctorCategoriesData] = useState<
-  //   DoctorCategoriesResponse[]
-  // >([]);
+  const [doctorCategoriesData, setDoctorCategoriesData] = useState<
+    DoctorCategoriesResponse[]
+  >([]);
 
-  // const fetcher = async () => {
-  //   try {
-  //     const data = await getProductCategories(token);
-  //     setDoctorCategoriesData(data.data);
-  //   } catch (error) {
-  //     console.error("" + error);
-  //   }
-  // };
+  const fetchCategories = async () => {
+    try {
+      const data = await getDoctorCategories();
+      setDoctorCategoriesData(data.data);
+    } catch (error) {
+      console.error("" + error);
+    }
+  };
 
-  // useEffect(() => {
-  //   fetcher();
-  // }, []);
+  const {
+    data,
+    error: isError,
+    isValidating: isLoading,
+  } = useSWR(["/specialist", token], fetchCategories);
 
   return (
     <>
@@ -35,35 +39,52 @@ const DoctorCategories = () => {
         <p className="text-zinc-400 mb-5">
           See medical specialties explanation here
         </p>
-        <ScrollArea>
-          <div className="flex flex-row gap-5">
-            {Array.from({ length: 10 }).map((_, index) => (
-              <Card
-                key={index}
-                className="p-2 w-40 flex flex-col justify-between"
-              >
-                <CardContent className="p-1 flex flex-col items-center justify-center">
-                  <img
-                    src="https://res-console.cloudinary.com/minevf/media_explorer_thumbnails/6cb8f67a33376e09150a0ff78061df2e/detailed"
-                    className="w-16 lg:w-20"
-                  ></img>
-                </CardContent>
-                <CardFooter className="items-center justify-center p-0">
-                  <Link href="/telemedicine/cardiologist">
-                    <p className="px-2 text-center">Cardiologist</p>
-                    <p className="text-zinc-400 leading-none text-xs text-center mt-2">
-                      For heart and blood pressure problems
-                    </p>
-                    <p className="text-zinc-600 leading-none text-xs text-center mt-1">
-                      Chest pain, Heart Failure, Cholesterol
-                    </p>
-                  </Link>
-                </CardFooter>
-              </Card>
-            ))}
+        {isLoading ? (
+          <p className="text-zinc-400 mb-5">Loading...</p>
+        ) : isError ? (
+          <div className="flex justify-center">
+            <div className="flex flex-wrap justify-center">
+              <p className="text-zinc-400 mb-5">Error while fetching data</p>
+            </div>
           </div>
-          <ScrollBar orientation="horizontal" />
-        </ScrollArea>
+        ) : (
+          <ScrollArea className="">
+            <div className="flex flex-row gap-5 pb-5">
+              {doctorCategoriesData &&
+                doctorCategoriesData.map((item, index) => (
+                  <Card
+                    key={index}
+                    className="p-2 w-44 flex flex-col justify-between"
+                  >
+                    <CardContent className="p-1 flex flex-col items-center justify-center">
+                      <img
+                        src="https://res-console.cloudinary.com/minevf/media_explorer_thumbnails/6cb8f67a33376e09150a0ff78061df2e/detailed"
+                        className="w-16 lg:w-20"
+                      ></img>
+                      <div className="bg-sky-100 w-full my-1 h-10 flex items-center justify-center">
+                        <p className="text-center leading-none p-1">
+                          {item.name}
+                        </p>
+                      </div>
+                    </CardContent>
+                    <CardFooter className="flex flex-col items-center justify-center p-0 ">
+                      <div className="w-full h-10 flex items-center justify-center">
+                        <p className="text-zinc-400 leading-none text-sm text-center">
+                          {item.description}
+                        </p>
+                      </div>
+                      <div className="w-full h-10 flex items-center justify-center">
+                        <p className="text-zinc-600 leading-none text-sm text-center">
+                          {item.symptoms}
+                        </p>
+                      </div>
+                    </CardFooter>
+                  </Card>
+                ))}
+            </div>
+            <ScrollBar orientation="horizontal" />
+          </ScrollArea>
+        )}
       </div>
     </>
   );
