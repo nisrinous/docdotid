@@ -8,7 +8,11 @@ export async function getDoctorCategories() {
       method: "GET",
     });
     const data = await response.json();
-    return data;
+    if (data.data) {
+      return data;
+    } else if (data.message) {
+      throw new Error(data.message || "Unknown error");
+    }
   } catch (error) {
     console.error("" + error);
   }

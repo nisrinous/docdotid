@@ -4,7 +4,7 @@ const API_ENDPOINT = apiBaseUrl;
 
 export async function getProducts(limit: number, categoryId?: string) {
   try {
-    let url = `${API_ENDPOINT}/products?limit=${limit * 24}`;
+    let url = `${API_ENDPOINT}/products?limit=${limit * 30}`;
 
     if (categoryId) {
       url += `&categoryID=${categoryId}`;
@@ -14,7 +14,11 @@ export async function getProducts(limit: number, categoryId?: string) {
     });
 
     const data = await response.json();
-    return data;
+    if (data.data) {
+      return data;
+    } else if (data.message) {
+      throw new Error(data.message || "Unknown error");
+    }
   } catch (error) {
     console.error("" + error);
   }
@@ -26,7 +30,11 @@ export async function getProduct(productId: string) {
       method: "GET",
     });
     const data = await response.json();
-    return data;
+    if (data.data) {
+      return data;
+    } else if (data.message) {
+      throw new Error(data.message || "Unknown error");
+    }
   } catch (error) {
     console.error("" + error);
   }
@@ -46,7 +54,11 @@ export async function getProductsByPharmacy(token: string, pharmacyId: any) {
     );
 
     const data = await response.json();
-    return data;
+    if (data.data) {
+      return data;
+    } else if (data.message) {
+      throw new Error(data.message || "Unknown error");
+    }
   } catch (error) {
     console.error("" + error);
   }
@@ -63,7 +75,11 @@ export async function deleteProduct(token: string, productId: string) {
     });
 
     const data = await response.json();
-    return data;
+    if (data.data) {
+      return data;
+    } else if (data.message) {
+      throw new Error(data.message || "Unknown error");
+    }
   } catch (error) {
     console.error("" + error);
   }
