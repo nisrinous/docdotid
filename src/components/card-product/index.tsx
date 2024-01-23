@@ -48,7 +48,10 @@ const CardProduct = ({ product }: { product: ProductsResponse }) => {
             </p>
           )}
         </Link>
-        <AddToCartButton product={product} />
+        <AddToCartButton
+          product={product}
+          isDisable={!(product.total_stock > 0)}
+        />
       </CardFooter>
     </Card>
   );
