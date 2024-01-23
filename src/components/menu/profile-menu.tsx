@@ -13,6 +13,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { deleteUser } from "@/store/slices/authSlice";
 import { Button } from "../ui/button";
 import { RootState } from "@/store/store";
+import deleteCookies from "../delete-cookies";
 
 const ProfileMenu = () => {
   const { email } = useSelector((state: RootState) => state.user);
@@ -20,6 +21,7 @@ const ProfileMenu = () => {
   const dispatch = useDispatch();
 
   const handleLogout = () => {
+    deleteCookies();
     dispatch(deleteUser());
   };
 
