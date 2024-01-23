@@ -9,8 +9,9 @@ import { addToCart } from "@/lib/fetcher/cart";
 import { Dialog, DialogContent, DialogTrigger } from "../ui/dialog";
 import Login from "@/pages/auth/login";
 import { useRouter } from "next/router";
+import { ProductsResponse } from "@/types";
 
-const AddToCartButton = ({ productId }: { productId: number }) => {
+const AddToCartButton = ({ product }: { product: ProductsResponse }) => {
   const { token } = useSelector((state: RootState) => state.user);
   const [counter, setCounter] = useState<number>(0);
   const dispatch = useDispatch();
@@ -21,12 +22,12 @@ const AddToCartButton = ({ productId }: { productId: number }) => {
   const decrement = async () => {
     setCounter(counter - 1);
     dispatch(decrementCart());
-    await addToCart(token, productId, counter);
+    await addToCart(token, product.id, counter);
   };
   const increment = async () => {
     setCounter(counter + 1);
     dispatch(incrementCart());
-    await addToCart(token, productId, counter);
+    await addToCart(token, product.id, counter);
   };
 
   const handleAddToCart = () => {
@@ -46,22 +47,30 @@ const AddToCartButton = ({ productId }: { productId: number }) => {
     <>
       {!addedToCart && (
         <>
-          <Dialog>
-            <DialogTrigger>
-              <Button
-                disabled={addedToCart}
-                className="h-8 px-6"
-                onClick={handleAddToCart}
-              >
-                Add to cart
-              </Button>
-            </DialogTrigger>
-            {displayLoginDialog && (
-              <DialogContent className="w-lg">
-                <Login />
-              </DialogContent>
-            )}
-          </Dialog>
+          {product.stock && product.is_active ? (
+            <Dialog>
+              <DialogTrigger>
+                <Button
+                  disabled={
+                    addedToCart && !(product.stock > 0) && !product.is_active
+                  }
+                  className="h-8 px-6"
+                  onClick={handleAddToCart}
+                >
+                  Add to cart
+                </Button>
+              </DialogTrigger>
+              {displayLoginDialog && (
+                <DialogContent className="w-lg">
+                  <Login />
+                </DialogContent>
+              )}
+            </Dialog>
+          ) : (
+            <Button disabled={true} className="h-8 px-6">
+              Add to cart
+            </Button>
+          )}
         </>
       )}
       {addedToCart && (
