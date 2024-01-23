@@ -33,12 +33,7 @@ export const menus = [
     icon: FaFilePrescription,
     margin: true,
   },
-  {
-    name: "Manage Pharmacy",
-    link: "/admin/pharmacy",
-    icon: RiHospitalFill,
-    margin: true,
-  },
+
   { name: "Dashboard", link: "/pharmacyadm", icon: BiSolidDashboard },
   {
     name: "Manage Pharmacy",
