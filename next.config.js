@@ -2,7 +2,7 @@
 const nextConfig = {
   reactStrictMode: false,
   env: {
-    BASE_URL: process.env.NEXT_PUBLIC_DB_URL,
+    BASE_URL: process.env.NEXT_PUBLIC_API_URL,
   },
   basePath: process.env.NEXT_PUBLIC_SITE_PATH,
 };

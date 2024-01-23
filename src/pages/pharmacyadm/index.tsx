@@ -5,7 +5,7 @@ import {
   getProductList,
 } from "@/lib/fetcher/orders";
 import { menus } from "@/utils/menus";
-import React, { PureComponent, useState } from "react";
+import React, { useState } from "react";
 import {
   BarChart,
   Bar,
