@@ -1,16 +1,12 @@
 import Link from "next/link";
 import { Card, CardContent, CardFooter } from "../ui/card";
 import { ScrollArea, ScrollBar } from "../ui/scroll-area";
-import { RootState } from "@/store/store";
-import { useSelector } from "react-redux";
 import { DoctorCategoriesResponse } from "@/types";
 import { getDoctorCategories } from "@/lib/fetcher/doctor-category";
 import useSWR from "swr";
 import { useState } from "react";
 
 const DoctorCategories = () => {
-  const { token } = useSelector((state: RootState) => state.user);
-
   const [doctorCategoriesData, setDoctorCategoriesData] = useState<
     DoctorCategoriesResponse[]
   >([]);
@@ -28,7 +24,7 @@ const DoctorCategories = () => {
     data,
     error: isError,
     isValidating: isLoading,
-  } = useSWR(["/specialist", token], fetchCategories);
+  } = useSWR(["/specialist"], fetchCategories);
 
   return (
     <>
