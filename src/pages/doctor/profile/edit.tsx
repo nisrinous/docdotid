@@ -11,36 +11,66 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
-import { DoctorResponse } from "@/types";
+import { DoctorCategoriesResponse, DoctorResponse } from "@/types";
 import { RootState } from "@/store/store";
 import { useSelector } from "react-redux";
 import { useState } from "react";
 import { editProfileDoctorSchema } from "@/lib/validation/doctor";
 import { putDoctorDetail } from "@/lib/fetcher/doctor";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { getDoctorCategories } from "@/lib/fetcher/doctor-category";
+import useSWR from "swr";
 
 type Inputs = z.infer<typeof editProfileDoctorSchema>;
 
 const EditProfileDoctor = ({ data }: { data: DoctorResponse }) => {
   const { token } = useSelector((state: RootState) => state.user);
+  const [doctorCategoriesData, setDoctorCategoriesData] = useState<
+    DoctorCategoriesResponse[]
+  >([]);
+
+  const fetchCategories = async () => {
+    try {
+      const data = await getDoctorCategories();
+      setDoctorCategoriesData(data.data);
+    } catch (error) {
+      console.error("" + error);
+    }
+  };
+
+  const { error: isError, isValidating: isLoading } = useSWR(
+    ["/specialist"],
+    fetchCategories
+  );
+
   const form = useForm({
     resolver: zodResolver(editProfileDoctorSchema),
     defaultValues: {
       ...data,
-      name: data?.user_name || "",
+      user_name: data?.user_name || "",
       specialist_id: data?.specialist_id || 1,
-      years_of_exp: data?.years_of_exp || "",
+      years_of_experience: data?.years_of_experience || "",
     },
   });
 
   const [formChanged, setFormChanged] = useState<boolean>(false);
 
   const onSubmit = async (formData: Inputs) => {
-    console.log(formData);
     try {
-      const cleanedFormData = Object.fromEntries(
-        Object.entries(formData).filter(([_, value]) => value !== null)
-      );
-      await putDoctorDetail(token, cleanedFormData);
+      const updatedData = {
+        user_name: formData.user_name,
+        specialist_id: formData.specialist_id,
+        years_of_experience: Number(formData.years_of_experience),
+      };
+      await putDoctorDetail(token, updatedData);
+      console.log("ini");
       setFormChanged(false);
     } catch (error) {
       console.error("" + error);
@@ -57,7 +87,7 @@ const EditProfileDoctor = ({ data }: { data: DoctorResponse }) => {
           >
             <FormField
               control={form.control}
-              name="name"
+              name="user_name"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Full Name</FormLabel>
@@ -65,9 +95,9 @@ const EditProfileDoctor = ({ data }: { data: DoctorResponse }) => {
                     <Input
                       type="text"
                       placeholder="Enter full name"
-                      value={form.getValues("name")}
+                      value={form.getValues("user_name")}
                       onChange={(e) => {
-                        form.setValue("name", e.target.value);
+                        form.setValue("user_name", e.target.value);
                         setFormChanged(true);
                       }}
                     />
@@ -79,7 +109,7 @@ const EditProfileDoctor = ({ data }: { data: DoctorResponse }) => {
 
             <FormField
               control={form.control}
-              name="years_of_exp"
+              name="years_of_experience"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Years of Experience</FormLabel>
@@ -91,9 +121,9 @@ const EditProfileDoctor = ({ data }: { data: DoctorResponse }) => {
                           ? `Enter your years of experience as ${data?.specialist_name}`
                           : `Enter your years of experience`
                       }
-                      value={form.getValues("years_of_exp")}
+                      value={form.getValues("years_of_experience")}
                       onChange={(e) => {
-                        form.setValue("years_of_exp", e.target.value);
+                        form.setValue("years_of_experience", e.target.value);
                         setFormChanged(true);
                       }}
                     />
@@ -110,12 +140,7 @@ const EditProfileDoctor = ({ data }: { data: DoctorResponse }) => {
                 render={({ field }) => (
                   <FormItem className="w-full">
                     <FormLabel>Gender</FormLabel>
-                    <Select
-                      value={field.value}
-                      onValueChange={(value: typeof field.value) => {
-                        field.onChange(value);
-                      }}
-                    >
+                    <Select>
                       <FormControl>
                         <SelectTrigger className="capitalize">
                           <SelectValue placeholder="Select your specialization" />
@@ -123,9 +148,13 @@ const EditProfileDoctor = ({ data }: { data: DoctorResponse }) => {
                       </FormControl>
                       <SelectContent>
                         <SelectGroup>
-                          {Array.isArray(categoryList) &&
-                            categoryList.map((category) => (
-                              <SelectItem key={category.id} value={category.id}>
+                          {Array.isArray(doctorCategoriesData) &&
+                            doctorCategoriesData.map((category) => (
+                              <SelectItem
+                                key={category.id}
+                                value={category.id.toString()}
+                                className="hover:cursor-pointer"
+                              >
                                 {category.name}
                               </SelectItem>
                             ))}

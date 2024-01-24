@@ -75,6 +75,7 @@ export async function putDoctorDetail(
   changes: Partial<DoctorResponse>
 ): Promise<DoctorResponse | undefined> {
   try {
+    console.log(changes);
     const response = await fetch(`${API_ENDPOINT}/doctors/detail`, {
       method: "PUT",
       headers: {

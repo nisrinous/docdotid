@@ -97,7 +97,7 @@ export type DoctorResponse = {
   specialist_name: string;
   specialist_description: string;
   image: string;
-  years_of_exp: string;
+  years_of_experience: number;
 };
 
 export type PharmaciesOwnedListResponse = {

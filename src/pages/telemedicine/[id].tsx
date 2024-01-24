@@ -79,7 +79,7 @@ export default function DoctorDetails() {
                   </p>
                   <p className="text-zinc-500 leading-tight text-base mt-6 mb-20">
                     Years of experience: <br />
-                    {doctor?.years_of_exp || "~"} years
+                    {doctor?.years_of_experience || "~"} years
                   </p>
                 </div>
               </>
