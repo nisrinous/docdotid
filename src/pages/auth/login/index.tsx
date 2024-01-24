@@ -20,7 +20,7 @@ export default function Login({ type }: { type?: string }) {
               </CardTitle>
             </CardHeader>
             <CardContent className="grid gap-4">
-              <LoginForm />
+              {type ? <LoginForm type="doctor" /> : <LoginForm />}
             </CardContent>
             <CardFooter className="flex flex-wrap items-center justify-center gap-2">
               <div className="text-sm text-muted-foreground">

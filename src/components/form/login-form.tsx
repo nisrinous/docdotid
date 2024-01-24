@@ -27,13 +27,14 @@ import {
 import jwt from "jsonwebtoken";
 import toast from "react-hot-toast";
 import Cookies from "js-cookie";
+import { useRouter } from "next/router";
 
 type Inputs = z.infer<typeof LoginSchema>;
 
-const LoginForm = () => {
+const LoginForm = ({ type }: { type?: string }) => {
   const [isSending, setIsSending] = React.useState(false);
   const dispatch = useDispatch();
-
+  const router = useRouter();
   const form = useForm<Inputs>({
     resolver: zodResolver(LoginSchema),
     defaultValues: {
@@ -85,6 +86,9 @@ const LoginForm = () => {
           dispatch(setUserId(userId));
           dispatch(setPersonalId(personalId));
           dispatch(setRoleId(roleId));
+          {
+            type ? router.push("/doctor") : null;
+          }
         } else {
           throw new Error("Invalid token format or missing user_id/role");
         }
