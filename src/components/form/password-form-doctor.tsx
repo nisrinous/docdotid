@@ -28,21 +28,27 @@ export function PasswordFormDoctor() {
   const code = router.query.code as string;
 
   const [isSending, setIsSending] = React.useState(false);
-  const [files, setFiles] = React.useState<FileWithPreview[] | null>(null);
+  const [files, setFiles] = React.useState<FileWithPreview | null>(null);
 
   const form = useForm<Inputs>({
     resolver: zodResolver(createDoctorSchema),
     defaultValues: {
       password: "",
       confirmpassword: "",
-      //   certificate: "",
+      certificate: "",
     },
   });
 
   async function onSubmit(formData: Inputs) {
+    console.log(files);
     try {
       setIsSending(true);
-      await createDoctor(formData.password, email, code);
+      await createDoctor(
+        formData.password,
+        email,
+        code,
+        formData.certificate.toString()
+      );
     } catch (error) {
       console.error("Error creating account:", error);
     }
@@ -80,26 +86,21 @@ export function PasswordFormDoctor() {
             </FormItem>
           )}
         />
-        {/* <FormItem className="flex w-full flex-col gap-1.5 mt-5">
-          <FormLabel>Certificate</FormLabel>
-          {files?.length ? (
+        <FormItem className="flex w-full flex-col gap-1.5 mt-5">
+          <FormLabel>Upload Certificate(s)</FormLabel>
+          {files && (
             <div className="flex items-center gap-2">
-              {files.map((file, i) => (
-                <img
-                  key={i}
-                  src={file.preview}
-                  alt={file.name}
-                  className="h-20 w-20 shrink-0 rounded-md object-cover object-center"
-                  width={80}
-                  height={80}
-                />
-              ))}
+              <img
+                src={files.preview}
+                alt={files.name}
+                className="h-20 w-20 shrink-0 rounded-md object-cover object-center"
+                width={80}
+                height={80}
+              />
             </div>
-          ) : null}
+          )}
           <FormControl>
             <FileDialog
-              title="Upload Certificate"
-              description="Upload your certificate"
               setValue={form.setValue}
               name="certificate"
               maxFiles={1}
@@ -111,9 +112,16 @@ export function PasswordFormDoctor() {
           <UncontrolledFormMessage
             message={form.formState.errors.certificate?.message}
           />
-        </FormItem> */}
+        </FormItem>
 
-        <Button type="submit" disabled={isSending} className="my-5">
+        <Button
+          type="submit"
+          disabled={isSending}
+          className="my-5"
+          onClick={() =>
+            console.log(form.setValue("certificate", files?.preview as string))
+          }
+        >
           Create account
           <span className="sr-only">Create account</span>
         </Button>

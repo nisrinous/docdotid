@@ -55,12 +55,7 @@ export const createDoctorSchema = z
         message:
           "Password must contain at least 8 characters, one uppercase, one lowercase, one number and one special character",
       }),
-    // certificate: z
-    //   .unknown()
-    //   .refine((val) => val instanceof File || val === null, "Must be a File")
-    //   .optional()
-    //   .nullable()
-    //   .default(null),
+    certificate: z.string(),
   })
   .refine((data) => data.password === data.confirmpassword, {
     message: "Passwords do not match",
