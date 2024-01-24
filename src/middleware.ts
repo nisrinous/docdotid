@@ -1,4 +1,5 @@
 import { NextResponse, type NextRequest } from "next/server";
+import path from "path";
 
 export default async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -34,6 +35,7 @@ export default async function middleware(request: NextRequest) {
       new URL(process.env.NEXT_PUBLIC_SITE_PATH + "/", request.url)
     );
   }
+
   if (superAdminProtectedPath) {
     if (!isAuthenticated) {
       return NextResponse.redirect(
@@ -48,7 +50,10 @@ export default async function middleware(request: NextRequest) {
   } else if (doctorProtectedPath) {
     if (!isAuthenticated) {
       return NextResponse.redirect(
-        new URL(process.env.NEXT_PUBLIC_SITE_PATH + `/auth/login`, request.url)
+        new URL(
+          process.env.NEXT_PUBLIC_SITE_PATH + `/auth/login/doctor`,
+          request.url
+        )
       );
     }
     if (MyBxyWYaeX !== "doctor") {

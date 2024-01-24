@@ -139,7 +139,12 @@ const Sidebar: FC<SidebarProps> = ({ menus }) => {
             </h2>
           </Link>
         ))}
-        <button onClick={deleteCookies} className="flex flex-row gap-4 ml-1">
+        <button
+          onClick={deleteCookies}
+          className={`flex flex-row gap-4 ml-1" ${
+            !open && "opacity-0 translate-x-28 overflow-hidden"
+          }`}
+        >
           <IoLogOut size={25} /> Log Out
         </button>
       </div>
