@@ -148,7 +148,7 @@ const Product = () => {
         <DeleteConfirmationModal
           isOpen={showDeleteModal}
           onClose={closeDeleteModal}
-          onConfirm={confirmDelete}
+          onConfirm={() => confirmDelete}
         />
       </div>
     </div>

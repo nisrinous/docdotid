@@ -68,12 +68,14 @@ const IndexPage: React.FC = () => {
   const [operationalHour, setOperationalHour] = useState<string>("");
   const [operationalDay, setOperationalDay] = useState<string>("");
   const [combinedLocation, setCombinedLocation] = useState<string>("");
-  const [pharmacyData, setPharmacyData] = useState<PharmacyResponse[]>([]);
+  const [pharmacyData, setPharmacyData] = useState<PharmacyResponse>(
+    {} as PharmacyResponse
+  );
   const { id } = router.query;
 
   const fetchData = async () => {
     try {
-      const data = await getPharmacyDetail(token, id);
+      const data = await getPharmacyDetail(token, id as string);
       setPharmacyData(data.data);
     } catch (error) {
       console.error("" + error);
@@ -214,7 +216,7 @@ const IndexPage: React.FC = () => {
               <label>Postal Code: </label>
               <Input
                 type="text"
-                placeholder={pharmacyData.postal_code}
+                placeholder={pharmacyData.postal_code.toString()}
                 value={postalCode}
                 onChange={(e) => setPostalCode(e.target.value)}
               />

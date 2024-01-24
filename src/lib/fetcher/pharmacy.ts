@@ -97,7 +97,7 @@ export async function getPharmacyListOwned(token: string) {
   }
 }
 
-export async function getPharmacyDetail(token: string, id: number) {
+export async function getPharmacyDetail(token: string, id: string) {
   try {
     const response = await fetch(`${API_ENDPOINT}/pharmacies/${id}`, {
       method: "GET",

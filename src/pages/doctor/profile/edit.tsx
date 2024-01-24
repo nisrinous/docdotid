@@ -56,7 +56,7 @@ const EditProfileDoctor = ({ data }: { data: DoctorResponse }) => {
       ...data,
       user_name: data?.user_name || "",
       specialist_id: data?.specialist_id || 1,
-      years_of_experience: data?.years_of_experience || "",
+      years_of_experience: data?.years_of_experience?.toString(),
     },
   });
 
@@ -70,7 +70,6 @@ const EditProfileDoctor = ({ data }: { data: DoctorResponse }) => {
         years_of_experience: Number(formData.years_of_experience),
       };
       await putDoctorDetail(token, updatedData);
-      console.log("ini");
       setFormChanged(false);
     } catch (error) {
       console.error("" + error);

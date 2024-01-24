@@ -151,7 +151,10 @@ export default function Home(): JSX.Element {
                   <SelectContent>
                     {Array.isArray(categoryList) &&
                       categoryList?.map((category) => (
-                        <SelectItem key={category.id} value={category.id}>
+                        <SelectItem
+                          key={category.id}
+                          value={category.id.toString()}
+                        >
                           {category.name}
                         </SelectItem>
                       ))}
@@ -198,7 +201,10 @@ export default function Home(): JSX.Element {
                   <SelectContent>
                     {Array.isArray(productList) &&
                       productList?.map((product) => (
-                        <SelectItem key={product.id} value={product.id}>
+                        <SelectItem
+                          key={product.id}
+                          value={product.id.toString()}
+                        >
                           {product.name}
                         </SelectItem>
                       ))}

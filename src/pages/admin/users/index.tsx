@@ -12,10 +12,10 @@ import {
 import { Button } from "@/components/ui/button";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
-import { deleteProduct, getUsers } from "@/lib/fetcher/user"; // Update import
+import { getUsers } from "@/lib/fetcher/user"; // Update import
 import { UserDetailResponse } from "@/types";
-import useSWR from "swr";
 import router from "next/router";
+import { deleteProduct } from "@/lib/fetcher/product";
 
 interface DeleteConfirmationModalProps {
   isOpen: boolean;

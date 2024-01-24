@@ -62,6 +62,7 @@ export type PharmacyResponse = {
   operational_day: string;
   is_active: boolean;
   pharmacist_id: number;
+  description: string;
 };
 
 export type UserDetailResponse = {
