@@ -55,7 +55,7 @@ export default function Categories() {
 
   const fetchData = async () => {
     try {
-      const data = await getProductCategories(token);
+      const data = await getProductCategories();
       console.log("ini data", data);
       setProductsData(data.data);
     } catch (error) {
