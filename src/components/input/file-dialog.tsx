@@ -18,14 +18,9 @@ import { toast } from "react-hot-toast";
 import "cropperjs/dist/cropper.css";
 
 import Image from "next/image";
-import { PiTrashLight } from "react-icons/pi";
-import { RxCross2 } from "react-icons/rx";
 import { RiUploadCloud2Line } from "react-icons/ri";
 
 import { cn, formatBytes } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import { Description } from "@radix-ui/react-dialog";
 
 interface FileDialogProps<
   TFieldValues extends FieldValues = FieldValues,
@@ -36,12 +31,10 @@ interface FileDialogProps<
   accept?: Accept;
   maxSize?: number;
   maxFiles?: number;
-  files: FileWithPreview[] | null;
-  setFiles: React.Dispatch<React.SetStateAction<FileWithPreview[] | null>>;
+  files: FileWithPreview | null;
+  setFiles: React.Dispatch<React.SetStateAction<FileWithPreview | null>>;
   isUploading?: boolean;
   disabled?: boolean;
-  title: string;
-  description: string;
 }
 
 export function FileDialog<TFieldValues extends FieldValues>({
@@ -58,7 +51,6 @@ export function FileDialog<TFieldValues extends FieldValues>({
   disabled = false,
   className,
   title,
-  description,
   ...props
 }: FileDialogProps<TFieldValues>) {
   const onDrop = React.useCallback(
@@ -67,7 +59,7 @@ export function FileDialog<TFieldValues extends FieldValues>({
         const fileWithPreview = Object.assign(file, {
           preview: URL.createObjectURL(file),
         });
-        setFiles((prev) => [...(prev ?? []), fileWithPreview]);
+        setFiles(fileWithPreview);
       });
 
       if (rejectedFiles.length > 0) {
@@ -102,22 +94,13 @@ export function FileDialog<TFieldValues extends FieldValues>({
   React.useEffect(() => {
     return () => {
       if (!files) return;
-      files.forEach((file) => URL.revokeObjectURL(file.preview));
+      if (files) URL.revokeObjectURL(files.preview);
     };
   }, []);
 
   return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <Button variant="outline" disabled={disabled}>
-          {title}
-          <span className="sr-only">{title}</span>
-        </Button>
-      </DialogTrigger>
-      <DialogContent className="sm:max-w-[480px]">
-        <p className="absolute left-5 top-4 text-base font-medium text-muted-foreground">
-          {description}
-        </p>
+    !files && (
+      <div className="sm:max-w-[480px]">
         <div
           {...getRootProps()}
           className={cn(
@@ -160,37 +143,8 @@ export function FileDialog<TFieldValues extends FieldValues>({
             </div>
           )}
         </div>
-        <p className="text-center text-sm font-medium text-muted-foreground">
-          You can upload up to {maxFiles} {maxFiles === 1 ? "file" : "files"}
-        </p>
-        {files?.length ? (
-          <div className="grid gap-5">
-            {files?.map((file, i) => (
-              <FileCard
-                key={i}
-                i={i}
-                files={files}
-                setFiles={setFiles}
-                file={file}
-              />
-            ))}
-          </div>
-        ) : null}
-        {files?.length ? (
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            className="mt-2.5 w-full"
-            onClick={() => setFiles(null)}
-          >
-            <PiTrashLight className="mr-2 h-4 w-4" aria-hidden="true" />
-            Remove All
-            <span className="sr-only">Remove all</span>
-          </Button>
-        ) : null}
-      </DialogContent>
-    </Dialog>
+      </div>
+    )
   );
 }
 
@@ -203,7 +157,6 @@ interface FileCardProps {
 
 function FileCard({ i, file, files, setFiles }: FileCardProps) {
   const [isOpen, setIsOpen] = React.useState(false);
-  const [cropData, setCropData] = React.useState<string | null>(null);
 
   React.useEffect(() => {
     function handleKeydown(e: KeyboardEvent) {
@@ -219,7 +172,7 @@ function FileCard({ i, file, files, setFiles }: FileCardProps) {
     <div className="relative flex items-center justify-between gap-2.5">
       <div className="flex items-center gap-2">
         <Image
-          src={cropData ? cropData : file.preview}
+          src={file.preview}
           alt={file.name}
           className="h-10 w-10 shrink-0 rounded-md"
           width={40}
@@ -234,21 +187,6 @@ function FileCard({ i, file, files, setFiles }: FileCardProps) {
             {(file.size / 1024 / 1024).toFixed(2)}MB
           </p>
         </div>
-      </div>
-      <div className="flex items-center gap-2">
-        <Button
-          type="button"
-          variant="outline"
-          size="icon"
-          className="h-7 w-7"
-          onClick={() => {
-            if (!files) return;
-            setFiles(files.filter((_, j) => j !== i));
-          }}
-        >
-          <RxCross2 className="h-4 w-4" aria-hidden="true" />
-          <span className="sr-only">Remove file</span>
-        </Button>
       </div>
     </div>
   );

@@ -40,6 +40,8 @@ export function PasswordForm() {
       await createUser(formData.password, email, code);
     } catch (error) {
       console.error("Error creating account:", error);
+    } finally {
+      setIsSending(false);
     }
   }
 

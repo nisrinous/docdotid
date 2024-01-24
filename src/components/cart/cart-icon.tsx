@@ -20,18 +20,17 @@ const CartIcon = () => {
     try {
       const data = await getCartItems(token);
       setCartItems(data.data.cart_items);
+      dispatch(
+        setCartAttribute({ cartItemsCount: countItems(data.data.cart_items) })
+      );
     } catch (error) {
       console.error("" + error);
     }
   };
 
   const countItems = (items: CartItemResponse[]): number => {
-    return items.reduce((sum, item) => sum + item.quantity, 0);
+    return items?.reduce((sum, item) => sum + item.quantity, 0);
   };
-
-  useEffect(() => {
-    dispatch(setCartAttribute({ cartItemsCount: countItems(cartItems) }));
-  });
 
   const { data } = useSWR(["/carts", token], fetchCart);
 

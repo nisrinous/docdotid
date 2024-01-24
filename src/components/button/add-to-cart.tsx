@@ -8,9 +8,15 @@ import { addToCart } from "@/lib/fetcher/cart";
 import { Dialog, DialogContent, DialogTrigger } from "../ui/dialog";
 import Login from "@/pages/auth/login";
 import { useRouter } from "next/router";
-import { ProductsResponse } from "@/types";
+import { ProductResponse, ProductsResponse } from "@/types";
 
-const AddToCartButton = ({ product }: { product: ProductsResponse }) => {
+const AddToCartButton = ({
+  product,
+  isDisable,
+}: {
+  product: ProductsResponse | ProductResponse;
+  isDisable: boolean;
+}) => {
   const { token } = useSelector((state: RootState) => state.user);
   const [counter, setCounter] = useState<number>(0);
   const dispatch = useDispatch();
@@ -48,7 +54,7 @@ const AddToCartButton = ({ product }: { product: ProductsResponse }) => {
           <Dialog>
             <DialogTrigger>
               <Button
-                disabled={!product.total_stock}
+                disabled={isDisable}
                 className="h-8 px-6"
                 onClick={handleAddToCart}
               >

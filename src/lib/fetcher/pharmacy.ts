@@ -112,3 +112,25 @@ export async function getPharmacyDetail(token: string, id: number) {
     console.error("" + error);
   }
 }
+
+export async function deletePharmacy(token: string, id: string) {
+  try {
+    const response = await fetch(`${API_ENDPOINT}/pharmacies/${id}`, {
+      method: "DELETE",
+      headers: {
+        authorization: `bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (response.ok) {
+      console.log(`Pharmacy with ID ${id} deleted successfully`);
+    } else {
+      console.error(
+        `Error deleting pharmacy with ID ${id}: ${response.statusText}`
+      );
+    }
+  } catch (error) {
+    console.error("" + error);
+  }
+}

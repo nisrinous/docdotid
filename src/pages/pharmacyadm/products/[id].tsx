@@ -14,7 +14,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import {
   deleteProduct,
-  getProducts,
+  getProductss,
   getProductsByPharmacy,
 } from "@/lib/fetcher/product";
 import { ProductsResponse } from "@/types";
@@ -52,7 +52,7 @@ const Product = () => {
 
   const fetchProductsAdd = async () => {
     try {
-      const data = await getProducts(token);
+      const data = await getProductss();
       setProductsDataAdd(data.data);
     } catch (error) {
       console.error("" + error);
@@ -123,6 +123,8 @@ const Product = () => {
           },
         }
       );
+      toast("Produc edit success");
+      await fetchData();
       console.log("Product updated successfully:", response.data);
     } catch (error) {
       console.error("Error updating product:", error);
@@ -165,7 +167,7 @@ const Product = () => {
                 <option value="" disabled>
                   Choose a product
                 </option>
-                {productsDataAdd.map((product) => (
+                {productsDataAdd?.map((product) => (
                   <option key={product.id} value={product.id}>
                     {product.name}
                   </option>
@@ -195,68 +197,33 @@ const Product = () => {
                 <TableCell>{item.id}</TableCell>
                 <TableCell>{item.category}</TableCell>
                 <TableCell>{item.name}</TableCell>
-                <TableCell>parseFloat{item.stock}</TableCell>
+                <TableCell>{item.stock}</TableCell>
+                <TableCell>{item.price}</TableCell>
                 <TableCell>
-                  {
-                    <input
-                      type="number"
-                      value={editedPrices[item.id] || item.price}
-                      onChange={(e) => {
-                        setEditedPrices((prevPrices) => ({
-                          ...prevPrices,
-                          [item.id]: parseFloat(e.target.value),
-                        }));
-                      }}
-                      placeholder="Enter price"
-                      className="border rounded p-1"
-                    />
-                  }
+                  {item.is_active ? "Active" : "Not Active"}
                 </TableCell>
                 <TableCell>
-                  {
-                    <select
-                      value={
-                        editedIsActive[item.id] !== undefined
-                          ? editedIsActive[item.id].toString()
-                          : item.is_active.toString()
-                      }
-                      onChange={(e) => {
-                        setEditedIsActive((prevIsActive) => ({
-                          ...prevIsActive,
-                          [item.id]: e.target.value === "true",
-                        }));
-                      }}
-                    >
-                      <option value="true">Active</option>
-                      <option value="false">Not Active</option>
-                    </select>
-                  }
-                </TableCell>
-                <TableCell>
-                  <Button
-                    onClick={() => handleSaveEdit(item.id)}
-                    className="mr-3"
-                  >
-                    Save
-                  </Button>
                   <Dialog>
                     <DialogTrigger asChild>
                       <Button>Add</Button>
                     </DialogTrigger>
                     <DialogContent className="sm:max-w-[425px]">
-                      <div>
+                      <div className="flex flex-col">
+                        <label>Price</label>
                         <input
                           type="number"
                           value={editedPrices[item.id] || item.price}
                           onChange={(e) => {
                             setEditedPrices((prevPrices) => ({
                               ...prevPrices,
-                              [item.id]: parseFloat(e.target.value),
+                              [item.id]: parseInt(e.target.value),
                             }));
                           }}
                           placeholder="Enter price"
-                          className="border rounded p-1"
+                          className="border rounded p-1 mb-2"
                         />
+
+                        <label>Pharmacy status</label>
                         <select
                           value={
                             editedIsActive[item.id] !== undefined
@@ -269,6 +236,7 @@ const Product = () => {
                               [item.id]: e.target.value === "true",
                             }));
                           }}
+                          className="mb-3"
                         >
                           <option value="true">Active</option>
                           <option value="false">Not Active</option>

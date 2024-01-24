@@ -32,7 +32,7 @@ export async function createDoctor(
   password: string,
   email: string,
   code: string,
-  certificate?: string
+  certificate: string
 ) {
   try {
     const response = await fetch(
@@ -42,7 +42,7 @@ export async function createDoctor(
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           password: password,
-          certificate: "certif",
+          certificate: certificate,
         }),
       }
     );

@@ -1,5 +1,6 @@
-import { Button } from "@/components/ui/button";
+import AddToCartButton from "@/components/button/add-to-cart";
 import { getProduct } from "@/lib/fetcher/product";
+import { toRupiah } from "@/lib/utils";
 import { ProductResponse } from "@/types";
 import { useRouter } from "next/router";
 import { useState } from "react";
@@ -9,12 +10,15 @@ export default function ProductDetails() {
   const router = useRouter();
   const { id } = router.query;
 
-  const [product, setProduct] = useState<ProductResponse>();
+  const [product, setProduct] = useState<ProductResponse>(
+    {} as ProductResponse
+  );
 
   const fetchData = async () => {
     try {
       const data = await getProduct(id as string);
       setProduct(data.data);
+      console.log(data.data);
     } catch (error) {
       console.error("" + error);
     }
@@ -60,13 +64,17 @@ export default function ProductDetails() {
             </p>
             <div className="flex flex-col gap-1 justify-center items-center md:justify-start md:items-start">
               <h5 className="font-medium text-xl md:text-2xl text-center md:text-left text-orange-500 mt-5">
-                ${product?.min_price} - ${product?.max_price}
+                {toRupiah(product.min_price)}
+                {" - "}
+                {toRupiah(product.max_price)}{" "}
               </h5>
               <p className="text-zinc-500 leading-none text-sm">
                 *Prices differ based on pharmacy
               </p>
-
-              <Button className="w-32 my-5">Add to cart</Button>
+              <AddToCartButton
+                product={product}
+                isDisable={!product.is_active}
+              />
             </div>
 
             <div className="flex flex-col mt-5">
