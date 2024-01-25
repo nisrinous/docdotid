@@ -36,12 +36,6 @@ export const menus = [
 
   { name: "Dashboard", link: "/pharmacyadm", icon: BiSolidDashboard },
   {
-    name: "Manage Pharmacy",
-    link: "/pharmacyadm/pharmacy",
-    icon: RiHospitalFill,
-    margin: true,
-  },
-  {
     name: "Manage Product Categories",
     link: "/pharmacyadm/categories",
     icon: FaBriefcaseMedical,
@@ -56,12 +50,6 @@ export const menus = [
   {
     name: "Manage Product Inventory",
     link: "/pharmacyadm/inventory",
-    icon: RiHospitalFill,
-    margin: true,
-  },
-  {
-    name: "Manage Stock Mutation",
-    link: "/pharmacyadm/stock",
     icon: RiHospitalFill,
     margin: true,
   },

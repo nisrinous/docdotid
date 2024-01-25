@@ -3,7 +3,6 @@ import {
   FormControl,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
@@ -17,11 +16,10 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { useState } from "react";
 import { Link } from "lucide-react";
-import { DoctorResponse } from "@/types";
 
 type Inputs = z.infer<typeof TelemedicineSymptoms>;
 
-const StartChat = ({ doctorId }: { doctorId: number }) => {
+const StartChat = ({ doctorId }: { doctorId: number | undefined }) => {
   const { token } = useSelector((state: RootState) => state.user);
   const [formIsFilled, setFormIsFilled] = useState<boolean>(false);
   const [isSubmissionSuccess, setIsSubmissionSuccess] =

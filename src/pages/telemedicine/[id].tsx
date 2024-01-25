@@ -95,7 +95,7 @@ export default function DoctorDetails() {
                 </div>
               </>
             )}
-            {displayForm && <StartChat doctor={doctor as DoctorResponse} />}
+            {displayForm && <StartChat doctorId={doctor?.id} />}
 
             {!displayForm ? (
               <Button

@@ -1,9 +1,9 @@
 import router from "next/router";
 import toast from "react-hot-toast";
-import { apiBaseUrl } from "@/config";
+import { apiBaseUrl, appBaseUrl } from "@/config";
 
 const API_ENDPOINT = apiBaseUrl;
-const APP_ENDPOINT = "http://localhost:3000";
+const APP_ENDPOINT = appBaseUrl;
 
 export async function registerEmailDoctor(email: string) {
   try {
