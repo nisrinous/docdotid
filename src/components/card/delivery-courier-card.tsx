@@ -47,7 +47,7 @@ const DeliveryCourierCard = ({
         {isChosen && (
           <div className="flex flex-row gap-5 justify-start items-center">
             <img
-              src="https://res-console.cloudinary.com/minevf/media_explorer_thumbnails/f92808fec203cf5720831ec8186a054f/detailed"
+              src="https://i.imgur.com/gVxBPae.png"
               className="w-16 lg:w-24"
             />
             <p className="leading-none text-base">

@@ -16,10 +16,12 @@ import { startChat } from "@/lib/fetcher/telemedicine-symptoms";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { useState } from "react";
+import { Link } from "lucide-react";
+import { DoctorResponse } from "@/types";
 
 type Inputs = z.infer<typeof TelemedicineSymptoms>;
 
-const StartChat = () => {
+const StartChat = ({ doctorId }: { doctorId: number }) => {
   const { token } = useSelector((state: RootState) => state.user);
   const [formIsFilled, setFormIsFilled] = useState<boolean>(false);
   const [isSubmissionSuccess, setIsSubmissionSuccess] =
@@ -64,7 +66,7 @@ const StartChat = () => {
           </li>
         </ol>
       </div>
-      <div className="flex justify-center w-full mt-5">
+      <div className="flex flex-col justify-center w-full mt-5">
         <Form {...form}>
           <form
             className="text-lg w-full p-0"
@@ -100,6 +102,9 @@ const StartChat = () => {
             </Button>
           </form>
         </Form>
+        <Button className="bottom-4 right-0" variant="outline">
+          <Link href={`/telemedicine/${doctorId}`}>Start Chat</Link>
+        </Button>
       </div>
     </>
   );

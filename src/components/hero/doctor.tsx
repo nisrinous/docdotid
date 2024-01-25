@@ -127,11 +127,17 @@ const HeroDoctor = () => {
                   </Form>
                 </div>
               </div>
-              <img src="hero-doctor.svg" className="w-1/4 px-5"></img>
+              <img
+                src="https://imgur.com/a/V2m4YyV"
+                className="w-1/4 px-5"
+              ></img>
             </Card>
             <div className="p-5">
               <Card className="container flex md:hidden flex-col justify-center items-center max-w-sm p-3">
-                <img src="hero-doctor.svg" className="px-5 w-2/3"></img>
+                <img
+                  src="https://imgur.com/a/V2m4YyV"
+                  className="px-5 w-2/3"
+                ></img>
                 <div className="text-center md:text-left">
                   <h2 className="text-xl font-extrabold tracking-tight md:text-2xl">
                     Welcome,

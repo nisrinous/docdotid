@@ -51,22 +51,13 @@ const AddToCartButton = ({
     <>
       {!addedToCart && (
         <>
-          <Dialog>
-            <DialogTrigger>
-              <Button
-                disabled={isDisable}
-                className="h-8 px-6"
-                onClick={handleAddToCart}
-              >
-                Add to cart
-              </Button>
-            </DialogTrigger>
-            {token !== "" && (
-              <DialogContent className="w-lg">
-                <Login />
-              </DialogContent>
-            )}
-          </Dialog>
+          <Button
+            disabled={isDisable}
+            className="h-8 px-6"
+            onClick={handleAddToCart}
+          >
+            Add to cart
+          </Button>
         </>
       )}
       {addedToCart && (

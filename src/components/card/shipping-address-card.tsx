@@ -140,7 +140,10 @@ const ShippingAddressCard = () => {
           </Dialog>
         </CardHeader>
         <CardContent className="p-0 flex flex-row justify-start items-center gap-10 w-full">
-          <img src="Place Holder.svg" className="h-16 w-16 p-0"></img>
+          <img
+            src="https://i.imgur.com/8tdJsy1.png"
+            className="h-16 w-16 p-0"
+          ></img>
 
           <div className="flex flex-col justify-center items-start">
             <p className="text-zinc-400 leading-none text-xs mt-2">

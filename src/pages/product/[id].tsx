@@ -44,13 +44,13 @@ export default function ProductDetails() {
         <div className="container my-10 grid grid-cols-1 md:grid-cols-3 md:grid-rows-1 md:gap-10 px-20 lg:px-40">
           <div className="col-span-1 md:col-span-1 mt-10">
             <img
-              src="https://res-console.cloudinary.com/minevf/media_explorer_thumbnails/36edf7e6afe8045a8b67274e8226b9b7/detailed"
+              src="https://imgur.com/o3VPiNq.png"
               className="border-[1px] p-5"
             ></img>
           </div>
 
           <div className="col-span-1 md:col-span-2 mt-10 md:mt-0">
-            <h3 className="font-semibold text-2xl md:text-3xl text-center md:text-left">
+            <h3 className="font-semibold text-2xl md:text-3xl text-center md:text-left capitalize">
               {product?.name}
             </h3>
             <p className="text-zinc-700 leading-none text-lg border-b-2 mt-1 mb-3 pb-3 ">

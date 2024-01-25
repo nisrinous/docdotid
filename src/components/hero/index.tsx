@@ -16,7 +16,7 @@ const Hero = () => {
         <div className="px-10 flex flex-row justify-center items-center gap-20 md:justify-start md:items-start md:gap-10">
           <Link href="/telemedicine">
             <div className="flex flex-col justify-center items-center">
-              <img src="Phonendoscope.svg" className="h-20"></img>
+              <img src="https://i.imgur.com/Bfdrk2m.png" className="h-20"></img>
               <p className="leading-7 [&:not(:first-child)]:mt-6">
                 Telemedicine
               </p>
@@ -24,10 +24,7 @@ const Hero = () => {
           </Link>
           <Link href="/product">
             <div className="flex flex-col justify-center items-center">
-              <img
-                src="https://res-console.cloudinary.com/minevf/media_explorer_thumbnails/671ced60670f98cc3aa7a40e901548a5/detailed"
-                className="h-20"
-              ></img>
+              <img src="https://i.imgur.com/WA3Vrlf.png" className="h-20"></img>
               <p className="leading-7 [&:not(:first-child)]:mt-6">
                 Shop Wellness Essentials
               </p>
@@ -35,7 +32,10 @@ const Hero = () => {
           </Link>
         </div>
       </div>
-      <img src="hero.svg" className="hidden md:block w-1/2 px-10"></img>
+      <img
+        src="https://i.imgur.com/XU152ou.png"
+        className="hidden md:block w-1/2 px-10"
+      ></img>
     </div>
   );
 };

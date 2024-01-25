@@ -43,16 +43,20 @@ export default function DoctorDetails() {
           </div>
         </div>
       ) : (
-        <div className="container my-10 flex flex-col justify-center items-center lg:px-20 max-w-md">
+        <div className="container my-10 flex flex-col justify-center items-center lg:px-20 w-full">
           <div className="">
             <img
-              src="https://onecms-res.cloudinary.com/image/upload/s--uXpdFlVW--/c_crop,h_428,w_762,x_0,y_18/c_fill,g_auto,h_468,w_830/fl_relative,g_south_east,l_one-cms:core:watermark:afp_watermark,w_0.1/f_auto,q_auto/v1/one-cms/core/f3db88d3f76cf546544eca7199920c659d767953.jpg?itok=Ex2eUOsi"
-              className="max-w-sm"
+              src={
+                doctor?.image ? doctor.image : "https://i.imgur.com/EqBviP4.png"
+              }
+              className="h-60 mx-auto w-[350px]"
             ></img>
             <div className="my-3">
-              <Badge className="bg-green-700/60 my-2">
-                {doctor?.is_active ? "Online" : "Offline"}
-              </Badge>
+              {doctor?.is_active === true ? (
+                <Badge className="bg-green-700/60 my-2">Online</Badge>
+              ) : (
+                <Badge className=" bg-gray-400 my-2">Offline</Badge>
+              )}
               <h3 className="font-semibold text-2xl md:text-3xl text-left leading-none border-b-2 pb-2 ">
                 Dr. {doctor?.user_name}
               </h3>
@@ -60,12 +64,19 @@ export default function DoctorDetails() {
             {!displayForm && (
               <>
                 <div className="flex flex-col gap-1 justify-center items-center my-3">
-                  <div className="text-3xl font-bold text-left bg-sky-100 w-full mb-6 p-1">
-                    {toRupiah(Number(doctor?.fee))}
-                    <span className="text-sm font-normal text-muted-foreground">
-                      /session
-                    </span>
-                  </div>
+                  {doctor?.fee !== 0 && (
+                    <div className="text-3xl font-bold text-left bg-sky-100 w-full mb-6 p-1">
+                      {toRupiah(Number(doctor?.fee))}
+                      <span className="text-sm font-normal text-muted-foreground">
+                        /session
+                      </span>
+                    </div>
+                  )}
+                  {doctor?.fee === 0 && (
+                    <div className="text-3xl font-bold text-left bg-green-100 w-full mb-6 p-1">
+                      Free
+                    </div>
+                  )}
                 </div>
                 <div>
                   <p className="leading-none text-xl text-left">
@@ -84,11 +95,11 @@ export default function DoctorDetails() {
                 </div>
               </>
             )}
-            {displayForm && <StartChat />}
+            {displayForm && <StartChat doctor={doctor as DoctorResponse} />}
 
             {!displayForm ? (
               <Button
-                className="w-full my-10"
+                className="w-full my-20"
                 onClick={() => setDisplayForm(!displayForm)}
               >
                 Confirm

@@ -39,7 +39,7 @@ export default function MyCart() {
               <h5 className="py-2">Debit Card</h5>
               <PaymentMethodCard
                 method="Debit Card"
-                img_path="https://res.cloudinary.com/dk0z4ums3/image/upload/v1536832522/payment_method/kartu-kredit.png"
+                img_path="https://i.imgur.com/mUwfVNk.png"
               />
             </div>
             <div className="px-10">

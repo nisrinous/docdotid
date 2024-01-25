@@ -27,7 +27,7 @@ const PurchasedCard = ({
           <div className="flex flex-row gap-10">
             <div className="flex flex-row justify-center items-center gap-3">
               <img
-                src="https://res-console.cloudinary.com/minevf/media_explorer_thumbnails/671ced60670f98cc3aa7a40e901548a5/detailed"
+                src="https://imgur.com/o3VPiNq.png"
                 className="border-2 p-1 w-16 lg:w-24"
               ></img>
               <div className="gap-0">

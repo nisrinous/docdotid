@@ -55,7 +55,7 @@ const DoctorCategories = () => {
                     >
                       <CardContent className="p-1 flex flex-col items-center justify-center">
                         <img
-                          src="https://res-console.cloudinary.com/minevf/media_explorer_thumbnails/6cb8f67a33376e09150a0ff78061df2e/detailed"
+                          src="https://i.imgur.com/dHv4DCj.png"
                           className="w-16 lg:w-20"
                         ></img>
                         <div className="bg-sky-100 w-full my-1 h-10 flex items-center justify-center">

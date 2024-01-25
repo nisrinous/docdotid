@@ -17,7 +17,7 @@ const CartItemCard = ({ item }: { item: CartItemResponse }) => {
     <>
       <CardContent className="p-0 pb-3 flex flex-row justify-start items-center w-full">
         <img
-          src="https://res-console.cloudinary.com/minevf/media_explorer_thumbnails/671ced60670f98cc3aa7a40e901548a5/detailed"
+          src="https://imgur.com/o3VPiNq.png"
           className="h-16 w-16 p-1 border-2"
         ></img>
         <div className="flex flex-col gap-2 md:flex-row justify-around items-center w-full">

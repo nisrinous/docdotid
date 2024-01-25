@@ -55,7 +55,7 @@ const ProductCategories = () => {
                 >
                   <CardContent className="p-1 flex flex-col items-center justify-between">
                     <img
-                      src="https://res-console.cloudinary.com/minevf/media_explorer_thumbnails/a1a09951f71f23c5c437607fbd2a5e1f/detailed"
+                      src="https://i.imgur.com/qYfnnNy.png"
                       className="w-12 lg:w-16"
                     ></img>
                   </CardContent>

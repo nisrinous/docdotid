@@ -67,7 +67,7 @@ export default function MyCart() {
                 ) : (
                   <div className="py-5 flex flex-col gap-3 justify-center items-center leading-none">
                     <img
-                      src="https://res-console.cloudinary.com/minevf/media_explorer_thumbnails/7d333a1c68dc88e243758f04c44f0959/detailed"
+                      src="https://i.imgur.com/YMuSLO6.png"
                       className="w-80 h-80"
                     ></img>
                     <h3 className="scroll-m-20 text-2xl md:text-3xl tracking-tight text-left mt-5">

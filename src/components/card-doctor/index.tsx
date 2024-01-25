@@ -12,7 +12,7 @@ export function CardDoctor({ doctor }: { doctor: Partial<DoctorResponse> }) {
         <img
           alt="Profile Image"
           className="w-24 items-center"
-          src="https://res-console.cloudinary.com/minevf/media_explorer_thumbnails/6cb8f67a33376e09150a0ff78061df2e/detailed"
+          src={doctor.image ? doctor.image : "https://i.imgur.com/dHv4DCj.png"}
         />
         {doctor.is_active ? (
           <Badge className="bg-green-600/60">Online</Badge>
@@ -26,15 +26,13 @@ export function CardDoctor({ doctor }: { doctor: Partial<DoctorResponse> }) {
         </h2>
         <p className="text-gray-600 mb-0">{doctor.specialist_name}</p>
         <p className="text-lg font-bold mb-4">{toRupiah(Number(doctor.fee))}</p>
-        <Link href={`/telemedicine/${doctor?.id}`}>
-          <Button
-            disabled={!doctor.is_active}
-            className="bottom-4 right-0"
-            variant="outline"
-          >
-            Start Chat
-          </Button>
-        </Link>
+        <Button
+          disabled={!doctor.is_active}
+          className="bottom-4 right-0"
+          variant="outline"
+        >
+          <Link href={`/telemedicine/${doctor?.id}`}>Start Chat</Link>
+        </Button>
       </CardContent>
     </Card>
   );

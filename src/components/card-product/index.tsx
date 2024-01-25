@@ -12,11 +12,7 @@ const CardProduct = ({ product }: { product: ProductsResponse }) => {
         <CardContent className="p-1 flex flex-col items-center justify-center">
           <div className="h-24 justify-center items-center flex flex-col">
             <img
-              src={
-                product.image
-                  ? product.image
-                  : "https://res-console.cloudinary.com/minevf/media_explorer_thumbnails/36edf7e6afe8045a8b67274e8226b9b7/detailed"
-              }
+              src="https://i.imgur.com/o3VPiNq.png"
               className="w-24 max-h-24"
             ></img>
           </div>
