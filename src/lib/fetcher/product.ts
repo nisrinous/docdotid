@@ -23,6 +23,22 @@ export async function getProducts(limit: number, categoryId?: string) {
     console.error("" + error);
   }
 }
+export async function filterProducts(query: string) {
+  try {
+    const response = await fetch(`${API_ENDPOINT}/products?name=${query}`, {
+      method: "GET",
+    });
+
+    const data = await response.json();
+    if (data.data) {
+      return data;
+    } else if (data.message) {
+      throw new Error(data.message || "Unknown error");
+    }
+  } catch (error) {
+    console.error("" + error);
+  }
+}
 
 export async function getProductss(categoryId?: number, page?: number) {
   try {
